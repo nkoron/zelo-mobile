@@ -46,7 +46,7 @@ fun SignInScreen(
 
         // Card Icon
         Image(
-            painter = painterResource(id = R.drawable.card), // Usa tu propio nombre de imagen
+            painter = painterResource(id = R.drawable.card),
             contentDescription = null,
             modifier = Modifier.size(256.dp),
             alignment = Alignment.Center)

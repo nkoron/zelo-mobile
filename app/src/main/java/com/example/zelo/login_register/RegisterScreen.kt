@@ -4,6 +4,7 @@ import android.app.DatePickerDialog
 import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -80,25 +82,29 @@ fun RegisterScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF1A1B25)),
+            .background(Color(0xFF1A1B25))
+            .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(48.dp))
 
         // Icono de la tarjeta
         Image(
-            painter = painterResource(id = R.drawable.card), // Usa tu propio nombre de imagen
+            painter = painterResource(id = R.drawable.card),
             contentDescription = null,
             modifier = Modifier.size(256.dp),
             alignment = Alignment.Center)
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Título de la pantalla
         Text(
-            text = "Sign Up",
-            style = MaterialTheme.typography.headlineLarge,
-            color = Color.White
+            text = "Registrarse",
+            style = MaterialTheme.typography.headlineLarge.copy(
+                fontWeight = FontWeight.Bold,
+            ),
+            color = Color.White,
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start),
         )
+
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -284,6 +290,27 @@ fun RegisterScreen(
 
             }
         }
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center
+        ) {
+            Text(
+                text = "Ya tienes una cuenta? ",
+                color = Color.Gray
+            )
+            Text(
+                text = "Iniciar sesión",
+                color = Color(0xFF6C63FF),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.clickable {
+                    navController.navigate("login") // Navegar a la pantalla de registro
+                }
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         // Botón de registro
         Button(
