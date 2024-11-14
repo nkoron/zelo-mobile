@@ -23,10 +23,12 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.zelo.R
+import com.example.zelo.ui.AuthViewModel
 
 @Composable
 fun SignInScreen(
     navController: NavController,
+    authViewModel: AuthViewModel,
     modifier: Modifier = Modifier,
     onSignIn: (email: String, password: String) -> Unit = { _, _ -> }
 ) {
@@ -135,7 +137,9 @@ fun SignInScreen(
 
         // Login Button
         Button(
-            onClick = { onSignIn(email, password) },
+            onClick = { onSignIn(email, password)
+                authViewModel.logIn()
+                navController.navigate("home") },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
