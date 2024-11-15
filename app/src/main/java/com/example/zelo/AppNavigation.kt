@@ -19,6 +19,7 @@ import com.example.zelo.ui.AuthViewModel
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.zelo.cards.CardsScreen
 
 @Composable
 fun AppNavigation() {
@@ -64,7 +65,7 @@ fun AppNavigation() {
             composable("home") { DashboardScreen(navController) }
             // You can uncomment these screens as needed
             // composable("movements") { MovementsScreen(navController) }
-            // composable("cards") { CardsScreen(navController) }
+             composable("cards") { CardsScreen(navController) }
             // composable("profile") { ProfileScreen(navController) }
         }
     }
