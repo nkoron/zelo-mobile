@@ -227,7 +227,7 @@ private fun QuickActionButton(
 }
 
 @Composable
-private fun TransactionItem(
+fun TransactionItem(
     name: String,
     description: String,
     time: String,
