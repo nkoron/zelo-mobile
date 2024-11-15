@@ -70,7 +70,7 @@ fun BottomNavBar(
                 NavBarItem(
                     icon = Icons.Outlined.Home,
                     label = "Home",
-                    isSelected = currentRoute == "home",
+                    isSelected = currentRoute == "home" || currentRoute.startsWith("transference") ,
                     onClick = { navController.navigate("home") }
                 )
 

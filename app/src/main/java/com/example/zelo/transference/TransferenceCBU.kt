@@ -32,7 +32,7 @@ fun TransferDetailScreen(
         topBar = {
             TopAppBar(title = { Text("Transferencias") },
                 navigationIcon = {
-                    IconButton(onClick = { /* Handle back */ }) {
+                    IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -155,7 +155,7 @@ fun TransferDetailScreen(
 
             // Transfer Button
             Button(
-                onClick = { /* Handle transfer */ },
+                onClick = { navController.navigate("transference/confirm") },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
