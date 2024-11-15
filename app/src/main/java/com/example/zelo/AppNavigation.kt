@@ -3,6 +3,7 @@ package com.example.zelo
 import BottomNavBar
 import DashboardScreen
 import MovementsScreen
+import ProfileScreen
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -74,7 +75,7 @@ fun AppNavigation() {
             // You can uncomment these screens as needed
             // composable("movements") { MovementsScreen(navController) }
              composable("cards") { CardsScreen(navController) }
-            // composable("profile") { ProfileScreen(navController) }
+             composable("profile") { ProfileScreen(navController) }
         }
     }
 }
