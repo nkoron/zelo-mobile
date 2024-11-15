@@ -19,6 +19,8 @@ import com.example.zelo.ui.AuthViewModel
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.zelo.transference.TransferDetailScreen
+import com.example.zelo.transference.TransferScreen
 
 @Composable
 fun AppNavigation() {
@@ -62,6 +64,8 @@ fun AppNavigation() {
 
             // Screens for logged-in users
             composable("home") { DashboardScreen(navController) }
+            composable("transference") { TransferScreen(navController) }
+            composable("transference/form") {TransferDetailScreen(navController)}
             // You can uncomment these screens as needed
             // composable("movements") { MovementsScreen(navController) }
             // composable("cards") { CardsScreen(navController) }

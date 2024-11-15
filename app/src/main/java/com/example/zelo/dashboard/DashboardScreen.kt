@@ -102,7 +102,7 @@ fun DashboardScreen(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     Button(
-                        onClick = { /* Handle transfer */ },
+                        onClick = { navController.navigate("transference")},
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF1A1B25)
                         )
