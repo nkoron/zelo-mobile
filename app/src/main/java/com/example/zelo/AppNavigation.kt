@@ -22,9 +22,11 @@ import com.example.zelo.ui.AuthViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.zelo.cards.CardsScreen
+import com.example.zelo.contacts.ContactsScreen
 import com.example.zelo.transference.TransferConfirmationScreen
 import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
+import com.example.zelo.ui.AppBar
 
 @Composable
 fun AppNavigation() {
@@ -42,8 +44,15 @@ fun AppNavigation() {
 
     // Wrap the navigation with Scaffold to add the bottom bar
     Scaffold(
+        topBar = {
+        if (isLoggedIn) {
+            AppBar(
+                userName = "Fer Galan",
+                onNotificationsClick = {},
+            )
+        }
+    },
         bottomBar = {
-            // Show BottomNavBar if the user is logged in
             if (isLoggedIn) {
                 BottomNavBar(
                     navController = navController,
@@ -72,8 +81,8 @@ fun AppNavigation() {
             composable("transference") {TransferScreen(navController)}
             composable("transference/form") { TransferDetailScreen(navController)  }
             composable("transference/confirm") { TransferConfirmationScreen()  }
+            composable("transference/contacts") { ContactsScreen(navController)}
             // You can uncomment these screens as needed
-            // composable("movements") { MovementsScreen(navController) }
              composable("cards") { CardsScreen(navController) }
              composable("profile") { ProfileScreen(navController) }
         }

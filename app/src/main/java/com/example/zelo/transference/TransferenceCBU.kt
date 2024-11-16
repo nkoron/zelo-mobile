@@ -92,7 +92,7 @@ fun TransferDetailScreen(
                         value = cbuAlias,
                         onValueChange = { cbuAlias = it },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Ingresar...") },
+                        placeholder = { Text("0000 0000 0000 2222 2222") },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = containerColor,
                             unfocusedContainerColor = containerColor,
@@ -116,7 +116,7 @@ fun TransferDetailScreen(
                         value = amount,
                         onValueChange = { amount = it },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("Ingresar...") },
+                        placeholder = { Text("30000") },
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = containerColor,
                             unfocusedContainerColor = containerColor,
@@ -160,7 +160,7 @@ fun TransferDetailScreen(
                     .fillMaxWidth()
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6C63FF)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {

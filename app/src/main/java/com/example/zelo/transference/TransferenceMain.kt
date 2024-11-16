@@ -65,7 +65,7 @@ fun TransferScreen(
                     Text("CBU, CVU O ALIAS")
                 }
                 Button(
-                    onClick = { /* Handle Contacts */ },
+                    onClick = { navController.navigate("transference/contacts") },
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),
@@ -128,7 +128,7 @@ fun TransferScreen(
                         Button(
                             onClick = { /* Handle transfer */ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF6C63FF)
+                                containerColor = Color(0xFF854EF9)
                             )
                         ) {
                             Text("Transferir")

@@ -17,8 +17,17 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
 
 @Composable
@@ -35,39 +44,39 @@ fun DashboardScreen(
             .padding(16.dp)
     ) {
         // Profile Section
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Surface(
-                    shape = CircleShape,
-                    color = Color(0xFF6C63FF),
-                    modifier = Modifier.size(48.dp)
-                ) {
-                    Text(
-                        text = userName.first().toString(),
-                        color = Color.White,
-                        modifier = Modifier.padding(16.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.width(12.dp))
-                Column {
-                    Text(
-                        text = "Hola, $userName!",
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-            IconButton(onClick = { /* Toggle notifications */ }) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Notificaciones"
-                )
-            }
-        }
+//        Row(
+//            modifier = Modifier.fillMaxWidth(),
+//            horizontalArrangement = Arrangement.SpaceBetween,
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Row(verticalAlignment = Alignment.CenterVertically) {
+//                Surface(
+//                    shape = CircleShape,
+//                    color = Color(0xFF6C63FF),
+//                    modifier = Modifier.size(48.dp)
+//                ) {
+//                    Text(
+//                        text = userName.first().toString(),
+//                        color = Color.White,
+//                        modifier = Modifier.padding(16.dp)
+//                    )
+//                }
+//                Spacer(modifier = Modifier.width(12.dp))
+//                Column {
+//                    Text(
+//                        text = "Hola, $userName!",
+//                        style = MaterialTheme.typography.titleMedium,
+//                        fontWeight = FontWeight.Bold
+//                    )
+//                }
+//            }
+//            IconButton(onClick = { /* Toggle notifications */ }) {
+//                Icon(
+//                    imageVector = Icons.Default.Notifications,
+//                    contentDescription = "Notificaciones"
+//                )
+//            }
+//        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -132,7 +141,19 @@ fun DashboardScreen(
         }
 
         Spacer(modifier = Modifier.height(24.dp))
+        var showDialog by remember { mutableStateOf(false) }
 
+        if (showDialog) {
+            UserDataDialog(
+                onDismiss = { showDialog = false },
+                userData = UserData(
+                    fullName = "Juan Rodriguez",
+                    alias = "perro.overo.bien.cl",
+                    cbu = "0000120043456552634343",
+                    cuit = "20-20979631-9"
+                )
+            )
+        }
         // Quick Actions
         Card(
             modifier = Modifier.fillMaxWidth(),
@@ -149,6 +170,7 @@ fun DashboardScreen(
                     text = "Link de pago"
                 )
                 QuickActionButton(
+                    onClick = {showDialog = ! showDialog},
                     icon = Icons.Default.Person,
                     text = "Tus datos"
                 )
@@ -292,6 +314,194 @@ fun TransactionItem(
             text = time,
             style = MaterialTheme.typography.bodySmall,
             color = Color.Gray
+        )
+    }
+}
+
+@Composable
+fun UserDataDialog(
+    onDismiss: () -> Unit,
+    userData: UserData = UserData(
+        fullName = "Juan Rodriguez",
+        alias = "perro.overo.bien.cl",
+        cbu = "0000120043456552634343",
+        cuit = "20-20979631-9"
+    )
+) {
+    val clipboardManager = LocalClipboardManager.current
+
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(
+            dismissOnBackPress = true,
+            dismissOnClickOutside = true
+        )
+    ) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = Color.White
+            )
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Header
+                Box(
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = "Tus Datos",
+                        style = MaterialTheme.typography.titleLarge,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                    IconButton(
+                        onClick = onDismiss,
+                        modifier = Modifier.align(Alignment.CenterEnd)
+                    ) {
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Close",
+                            tint = Color.Black
+                        )
+                    }
+                }
+
+                // Data Fields
+                DataField(
+                    label = "Nombre y Apellido",
+                    value = userData.fullName,
+                    canEdit = true,
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName)) }
+                )
+
+                DataField(
+                    label = "Alias",
+                    value = userData.alias,
+                    canEdit = true,
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.alias)) }
+                )
+
+                DataField(
+                    label = "CBU",
+                    value = userData.cbu,
+                    canEdit = false,
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu)) }
+                )
+
+                DataField(
+                    label = "CUIT",
+                    value = userData.cuit,
+                    canEdit = false,
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cuit)) }
+                )
+
+                // Share Button
+                Button(
+                    onClick = { /* Handle sharing */ },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF6C63FF)
+                    ),
+                    shape = RoundedCornerShape(8.dp)
+                ) {
+                    Text(
+                        "COMPARTIR",
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DataField(
+    label: String,
+    value: String,
+    canEdit: Boolean,
+    onCopy: () -> Unit
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Color.Gray
+        )
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(8.dp))
+                .background(Color(0xFFF5F5F5))
+                .padding(12.dp)
+        ) {
+            Text(
+                text = value,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.Black,
+                modifier = Modifier.align(Alignment.CenterStart)
+            )
+
+            Row(
+                modifier = Modifier.align(Alignment.CenterEnd),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                if (canEdit) {
+                    IconButton(
+                        onClick = { /* Handle edit */ },
+                        modifier = Modifier.size(20.dp)
+                    ) {
+                        Icon(
+                            Icons.Default.Edit,
+                            contentDescription = "Edit",
+                            tint = Color.Gray
+                        )
+                    }
+                }
+
+                IconButton(
+                    onClick = onCopy,
+                    modifier = Modifier.size(20.dp)
+                ) {
+                    Icon(
+                        Icons.Default.ContentCopy,
+                        contentDescription = "Copy",
+                        tint = Color.Gray
+                    )
+                }
+            }
+        }
+    }
+}
+
+data class UserData(
+    val fullName: String,
+    val alias: String,
+    val cbu: String,
+    val cuit: String
+)
+
+@Preview(showBackground = true)
+@Composable
+fun UserDataDialogPreview() {
+    MaterialTheme {
+        UserDataDialog(
+            onDismiss = {}
         )
     }
 }

@@ -114,7 +114,7 @@ fun TransferConfirmationScreen(
                     .padding(bottom = 24.dp)
                     .height(48.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6C63FF)
+                    containerColor = MaterialTheme.colorScheme.primary
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
