@@ -28,6 +28,7 @@ import com.example.zelo.transference.TransferConfirmationScreen
 import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
+import com.example.zelo.activity.*
 
 @Composable
 fun AppNavigation() {
@@ -79,6 +80,8 @@ fun AppNavigation() {
             // Screens for logged-in users
             composable("home") { DashboardScreen(navController) }
             composable("movements") { MovementsScreen(navController) }
+            composable("movements/incomes") { IncomeScreen(navController) }
+            composable("movements/expenses") { ExpensesScreen(navController) }
             composable("transference") {TransferScreen(navController)}
             composable("transference/form") { TransferDetailScreen(navController)  }
             composable("transference/confirm") { TransferConfirmationScreen()  }

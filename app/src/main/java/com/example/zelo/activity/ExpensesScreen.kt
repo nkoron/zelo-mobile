@@ -1,3 +1,6 @@
+package com.example.zelo.activity
+
+import TransactionItem
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -23,109 +26,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
-@SuppressLint("DefaultLocale")
-@Composable
-fun SummaryCard(
-    title: String,
-    amount: Double,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 2.dp
-        ),
-        onClick = onClick
-    ) {
-        Column(
-            modifier = Modifier
-                .padding(15.dp)
-                .fillMaxWidth()
-        ) {
-            Text(
-                text = title,
-                fontSize = 16.sp,
-                color = Color.Gray,
-                modifier = Modifier.padding(bottom = 8.dp)
-            )
-
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "$${String.format("%,.2f", amount)}",
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Icon(
-                    imageVector = Icons.Outlined.ChevronRight,
-                    contentDescription = "Ver detalles",
-                    tint = Color(0xFF6C63FF),
-                )
-            }
-        }
-    }
-}
-
-@Composable
-fun MonthSummaryCard(
-    month: String,
-    income: Double,
-    expenses: Double,
-    onIncomeClick: () -> Unit,
-    onExpensesClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
-    ) {
-        // Month Title
-        Text(
-            text = month,
-            fontSize = 24.sp,
-            color = Color.Black,
-            fontWeight = FontWeight.Medium,
-            modifier = Modifier.padding(bottom = 16.dp)
-        )
-
-        // Summary Cards Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Income Card
-            SummaryCard(
-                title = "Ingresado",
-                amount = income,
-                onClick = onIncomeClick,
-                modifier = Modifier.weight(1f)
-            )
-
-            // Expenses Card
-            SummaryCard(
-                title = "Gastado",
-                amount = expenses,
-                onClick = onExpensesClick,
-                modifier = Modifier.weight(1f)
-            )
-        }
-    }
-
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovementsScreen(
+fun ExpensesScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
 ) {
@@ -134,9 +38,9 @@ fun MovementsScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text("Movimientos") },
+            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text("Gastado") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home")}) {
+                    IconButton(onClick = { navController.popBackStack()}) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -149,18 +53,8 @@ fun MovementsScreen(
                 .padding(paddingValues)
                 .padding(16.dp)
         ) {
-
-            // Action Buttons
-            MonthSummaryCard(
-                month = "Agosto",
-                income = 21500.00,
-                expenses = 50000.00,
-                onIncomeClick = { navController.navigate("movements/incomes") },
-                onExpensesClick = { navController.navigate("movements/expenses") }
-            )
-
             Text(
-                "Tu actividad reciente",
+                "Tus gastos recientes",
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -188,7 +82,7 @@ fun MovementsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             LazyColumn {
-                items(5) { index ->
+                items(4) { index ->
                     when (index) {
                         0 -> TransactionItem(
                             name = "Jose",
@@ -197,24 +91,18 @@ fun MovementsScreen(
                             showAvatar = true
                         )
                         1 -> TransactionItem(
-                            name = "Open 25",
-                            description = "Enviaste $1000",
-                            time = "15m",
-                            showLogo = true
-                        )
-                        2 -> TransactionItem(
                             name = "Fer Galan",
                             description = "Enviaste $3,000",
                             time = "6h",
                             showAvatar = true
                         )
-                        3 -> TransactionItem(
+                        2 -> TransactionItem(
                             name = "Carlos GPT",
                             description = "Enviaste $3,000",
                             time = "2h",
                             showAvatar = true
                         )
-                        4 -> TransactionItem(
+                        3 -> TransactionItem(
                             name = "Miguel Cero",
                             description = "Enviaste $3,000",
                             time = "Ahora",
@@ -226,4 +114,4 @@ fun MovementsScreen(
         }
     }
 
-    }
+}
