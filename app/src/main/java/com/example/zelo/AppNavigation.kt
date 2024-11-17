@@ -16,6 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.zelo.login_register.EmailVerificationScreen
 import com.example.zelo.login_register.RegisterScreen
 import com.example.zelo.login_register.ResetPasswordScreen
+import com.example.zelo.profile.ResetPassScreen
 import com.example.zelo.login_register.SignInScreen
 import com.example.zelo.ui.AuthViewModel
 
@@ -29,6 +30,13 @@ import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
 import com.example.zelo.activity.*
+import com.example.zelo.profile.AccessibilityScreen
+import com.example.zelo.profile.AccountDataScreen
+import com.example.zelo.profile.HelpScreen
+import com.example.zelo.profile.MessagesScreen
+import com.example.zelo.profile.PersonalInfoScreen
+import com.example.zelo.profile.PrivacyScreen
+import com.example.zelo.profile.SecurityScreen
 
 @Composable
 fun AppNavigation() {
@@ -87,8 +95,16 @@ fun AppNavigation() {
             composable("transference/confirm") { TransferConfirmationScreen()  }
             composable("transference/contacts") { ContactsScreen(navController)}
             // You can uncomment these screens as needed
-             composable("cards") { CardsScreen(navController) }
-             composable("profile") { ProfileScreen(navController) }
+            composable("cards") { CardsScreen(navController) }
+            composable("profile") { ProfileScreen(navController) }
+            composable("profile/accessibility") { AccessibilityScreen(navController) }
+            composable("profile/security") { SecurityScreen(navController) }
+            composable("profile/account_data") { AccountDataScreen(navController) }
+            composable("profile/personal_info") { PersonalInfoScreen(navController) }
+            composable("profile/reset_password") { ResetPassScreen(navController) }
+            composable("profile/privacy") { PrivacyScreen(navController) }
+            composable("profile/messages") { MessagesScreen(navController) }
+            composable("profile/help") { HelpScreen(navController) }
             composable("home/deposit") { DepositScreen(onBack = {navController.navigate("home")}, )  }
         }
     }

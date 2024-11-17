@@ -53,7 +53,7 @@ fun ProfileScreen(navController: NavController) {
         ) {
             item { ProfileCard() }
             items(menuItems) { item ->
-                MenuItem(item)
+                MenuItem(item, navController)
             }
             item {
                 Spacer(modifier = Modifier.height(80.dp))
@@ -117,23 +117,24 @@ fun ProfileCard() {
 data class MenuItemData(
     val icon: ImageVector,
     val title: String,
-    val description: String
+    val description: String,
+    val path: String
 )
 
 val menuItems = listOf(
-    MenuItemData(Icons.Outlined.Accessibility, "Accesibilidad", "Accede a las funciones de accesibilidad de la app"),
-    MenuItemData(Icons.Outlined.Security, "Seguridad", "Administra la seguridad de tu cuenta"),
-    MenuItemData(Icons.Outlined.Person, "Datos de tu cuenta", "Valida y consulta los datos de tu cuenta"),
-    MenuItemData(Icons.Outlined.Info, "Información personal", "Información de tu documento de identidad y de tu actividad fiscal"),
-    MenuItemData(Icons.Outlined.Lock, "Reestablecer mi contraseña", "¿Olvidaste tu contraseña? Reestablécela"),
-    MenuItemData(Icons.Outlined.PrivacyTip, "Privacidad", "Preferencias y control sobre el uso de tus datos"),
-    MenuItemData(Icons.Outlined.Message, "Mensajes", "Elige qué tipo de información quieres recibir"),
-    MenuItemData(Icons.Outlined.Help, "Ayuda", "Obtén asistencia y soporte")
+    MenuItemData(Icons.Outlined.Accessibility, "Accesibilidad", "Accede a las funciones de accesibilidad de la app", "profile/accessibility"),
+    MenuItemData(Icons.Outlined.Security, "Seguridad", "Administra la seguridad de tu cuenta", "profile/security"),
+    MenuItemData(Icons.Outlined.Person, "Datos de tu cuenta", "Valida y consulta los datos de tu cuenta", "profile/account_data"),
+    MenuItemData(Icons.Outlined.Info, "Información personal", "Información de tu documento de identidad y de tu actividad fiscal", "profile/personal_info"),
+    MenuItemData(Icons.Outlined.Lock, "Reestablecer mi contraseña", "¿Olvidaste tu contraseña? Reestablécela", "profile/reset_password"),
+    MenuItemData(Icons.Outlined.PrivacyTip, "Privacidad", "Preferencias y control sobre el uso de tus datos", "profile/privacy"),
+    MenuItemData(Icons.Outlined.Message, "Mensajes", "Elige qué tipo de información quieres recibir", "profile/messages"),
+    MenuItemData(Icons.Outlined.Help, "Ayuda", "Obtén asistencia y soporte", "profile/help")
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuItem(item: MenuItemData) {
+fun MenuItem(item: MenuItemData, navController: NavController) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -142,7 +143,7 @@ fun MenuItem(item: MenuItemData) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(12.dp),
-        onClick = { }
+        onClick = { navController.navigate(item.path) }
     ) {
         Column(
             modifier = Modifier
