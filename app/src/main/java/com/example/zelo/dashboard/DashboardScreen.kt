@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.zelo.transference.TransferDetailsDialog
 
 @Composable
 fun DashboardScreen(
@@ -257,6 +258,17 @@ fun TransactionItem(
     showAvatar: Boolean = false,
     showLogo: Boolean = false
 ) {
+
+    var showDetailsDialog by remember { mutableStateOf(false) }
+
+    if(showDetailsDialog) {
+        TransferDetailsDialog(
+            onDismiss = { showDetailsDialog = false },
+            onRepeatTransfer = { /* Handle repeat transfer */ },
+            onViewReceipt = { /* Handle view receipt */ },
+            onRequestRefund = { /* Handle refund request */ }
+        )
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -307,7 +319,8 @@ fun TransactionItem(
                 Text(
                     text = "Detalles",
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF6C63FF)
+                    color = Color(0xFF6C63FF),
+                    modifier = Modifier.clickable { showDetailsDialog =! showDetailsDialog }
                 )
             }
         }
