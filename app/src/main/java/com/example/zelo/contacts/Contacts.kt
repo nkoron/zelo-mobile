@@ -15,9 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,7 +24,7 @@ import androidx.navigation.NavController
 fun ContactsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {},
+    onBack: () -> Unit = {navController.navigate("transference")},
     onTransfer: (Contact) -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
@@ -54,7 +51,7 @@ fun ContactsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Transferencias") },
+                title = { Text("Contactos") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
@@ -127,12 +124,6 @@ fun ContactsScreen(
                     )
                 }
             }
-
-            Text(
-                "Frecuentes",
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)

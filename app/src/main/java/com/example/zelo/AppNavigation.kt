@@ -23,6 +23,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.zelo.cards.CardsScreen
 import com.example.zelo.contacts.ContactsScreen
+import com.example.zelo.enter_money.DepositScreen
 import com.example.zelo.transference.TransferConfirmationScreen
 import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
@@ -85,6 +86,7 @@ fun AppNavigation() {
             // You can uncomment these screens as needed
              composable("cards") { CardsScreen(navController) }
              composable("profile") { ProfileScreen(navController) }
+            composable("home/deposit") { DepositScreen(onBack = {navController.navigate("home")}, )  }
         }
     }
 }

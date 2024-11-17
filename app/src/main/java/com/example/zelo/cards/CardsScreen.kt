@@ -136,6 +136,9 @@ fun CardsScreen(
 
         Button(
             onClick = { showAddCardDialog = true },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF6C63FF)
+            ) ,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(vertical = 16.dp)
