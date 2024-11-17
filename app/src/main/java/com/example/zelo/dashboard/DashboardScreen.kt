@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.zelo.dashboard.PaymentLinkDialog
 import com.example.zelo.transference.TransferDetailsDialog
 
 @Composable
@@ -144,7 +145,7 @@ fun DashboardScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
         var showDialog by remember { mutableStateOf(false) }
-
+        var showPaymentLink by remember { mutableStateOf(false) }
         if (showDialog) {
             UserDataDialog(
                 onDismiss = { showDialog = false },
@@ -155,6 +156,11 @@ fun DashboardScreen(
                     cuit = "20-20979631-9"
                 )
             )
+        }
+        if(showPaymentLink){
+            PaymentLinkDialog(
+                onDismiss = {showPaymentLink = false},
+                )
         }
         // Quick Actions
         Card(
@@ -168,6 +174,7 @@ fun DashboardScreen(
                 horizontalArrangement = Arrangement.SpaceAround
             ) {
                 QuickActionButton(
+                    onClick = {showPaymentLink= ! showPaymentLink},
                     icon = Icons.Default.Link,
                     text = "Link de pago"
                 )
