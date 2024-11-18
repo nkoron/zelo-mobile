@@ -49,5 +49,16 @@
     <string name="link_copied">Enlace copiado</string>
     <string name="share">Compartir</string>
     <string name="edit">Editar</string>
-
+    <string name="generate_link">Generar enlace</string>
+    <string name="amount_to_receive">Monto a recibir</string>
+    <string name="amount_to_deposit">Monto a ingresar</string>
+    <string name="description">Descripción (opcional)</string>
+    <string name="deposit_by_bank">Ingresar por banco</string>
+    <string name="select_your_bank">Selecciona tu banco</string>
+    <string name="target_account">Cuenta a la cual transferir</string>
+    <string name="start_deposit">Iniciar ingreso</string>
+    <string name="successful_deposit">Depósito realizado con éxito</string>
+    <string name="last_deposits">Últimos depósitos</string>
+    <string name="date_format">dd \'de\' MMMM \'de\' yyyy</string>
+    <string name="repeat_transfer">Repetir transferencia</string>
 </resources>

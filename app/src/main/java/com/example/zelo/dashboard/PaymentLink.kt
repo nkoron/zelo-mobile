@@ -10,12 +10,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.zelo.R
 
 @Composable
 fun PaymentLinkDialog(
@@ -75,7 +77,7 @@ fun PaymentLinkDialog(
                     value = amount,
                     onValueChange = { amount = it },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Monto a recibir") },
+                    placeholder = { Text(stringResource(R.string.amount_to_receive)) },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color(0xFFF5F5F5),
                         unfocusedContainerColor = Color(0xFFF5F5F5),
@@ -92,7 +94,7 @@ fun PaymentLinkDialog(
                     value = description,
                     onValueChange = { description = it },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Descripción (opcional)") },
+                    placeholder = { Text(stringResource(R.string.description)) },
                     colors = TextFieldDefaults.colors(
                         focusedContainerColor = Color(0xFFF5F5F5),
                         unfocusedContainerColor = Color(0xFFF5F5F5),
@@ -157,7 +159,7 @@ fun PaymentLinkDialog(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        if (generatedLink == null) "GENERAR LINK" else "COMPARTIR LINK",
+                        if (generatedLink == null) stringResource(R.string.generate_link) else stringResource(R.string.share_link),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = Color.White,
                             fontWeight = FontWeight.Medium,

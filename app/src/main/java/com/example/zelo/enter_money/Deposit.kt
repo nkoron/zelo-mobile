@@ -12,9 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.zelo.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -44,10 +46,10 @@ fun DepositScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Ingresar dinero") },
+                title = { Text(stringResource(R.string.deposit)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -65,7 +67,7 @@ fun DepositScreen(
                 .padding(horizontal = 16.dp)
         ) {
             Text(
-                "Ingreso por Banco",
+                stringResource(R.string.deposit_by_bank),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
@@ -79,7 +81,7 @@ fun DepositScreen(
                     value = selectedBank,
                     onValueChange = {},
                     readOnly = true,
-                    placeholder = { Text("Selecciona tu banco") },
+                    placeholder = { Text(stringResource(R.string.select_your_bank)) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .menuAnchor(),
@@ -113,7 +115,7 @@ fun DepositScreen(
             OutlinedTextField(
                 value = amount,
                 onValueChange = { amount = it },
-                placeholder = { Text("Monto a ingresar") },
+                placeholder = { Text(stringResource(R.string.amount_to_deposit)) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
@@ -148,7 +150,7 @@ fun DepositScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            "Cuenta de la cual transferir:",
+                            stringResource(R.string.target_account)+ ":",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -174,7 +176,7 @@ fun DepositScreen(
                 ),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text("INICIAR INGRESO")
+                Text(stringResource(R.string.start_deposit))
             }
 
             if (showSuccessMessage) {
@@ -197,7 +199,7 @@ fun DepositScreen(
                         modifier = Modifier.size(24.dp)
                     )
                     Text(
-                        "Depósito realizado con éxito",
+                        stringResource(R.string.successful_deposit),
                         color = Color.White,
                         modifier = Modifier.padding(start = 8.dp)
                     )
@@ -206,7 +208,7 @@ fun DepositScreen(
 
             // Recent Deposits
             Text(
-                "Últimos depósitos",
+                stringResource(R.string.last_deposits),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -244,7 +246,7 @@ private fun DepositItem(deposit: Deposit, onRepeat: (deposit:Deposit)-> Unit) {
                 )
             )
             Text(
-                deposit.date.format(DateTimeFormatter.ofPattern("dd 'de' MMMM 'de' yyyy")),
+                deposit.date.format(DateTimeFormatter.ofPattern(stringResource(R.string.date_format))),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )
@@ -261,7 +263,7 @@ private fun DepositItem(deposit: Deposit, onRepeat: (deposit:Deposit)-> Unit) {
         ) {
             Icon(
                 Icons.Default.Repeat,
-                contentDescription = "Repetir transferencia",
+                contentDescription = stringResource(R.string.repeat_transfer),
                 tint = Color.White
             )
         }
