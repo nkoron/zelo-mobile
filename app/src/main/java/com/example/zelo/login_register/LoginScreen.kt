@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -58,7 +59,7 @@ fun SignInScreen(
 
 
         Text(
-            text = "Iniciar sesión",
+            text = stringResource(R.string.login),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
             ),
@@ -72,7 +73,7 @@ fun SignInScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text("Correo Electronico", color = Color.Gray) },
+            label = { Text(stringResource(R.string.email), color = Color.Gray) },
             singleLine = true,
             textStyle = TextStyle(color = Color.White), // Usa textStyle en lugar de textColor
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -89,14 +90,14 @@ fun SignInScreen(
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
-            label = { Text("Contraseña", color = Color.Gray) },
+            label = { Text(stringResource(R.string.password), color = Color.Gray) },
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             trailingIcon = {
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                         tint = Color.Gray
                     )
                 }
@@ -126,7 +127,7 @@ fun SignInScreen(
                 )
             )
             Text(
-                text = "Utilizar huella digital la próxima vez que inices sesion",
+                text = stringResource(R.string.use_fingerprint),
                 color = Color.White,
                 style = MaterialTheme.typography.bodySmall,
                 modifier = Modifier.padding(start = 8.dp)
@@ -157,11 +158,11 @@ fun SignInScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "No tienes una cuenta? ",
+                text = stringResource(R.string.have_account),
                 color = Color.Gray
             )
             Text(
-                text = "Registrarse",
+                text = stringResource(R.string.register),
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
@@ -178,11 +179,11 @@ fun SignInScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Olvidaste tu contraseña? ",
+                text = stringResource(R.string.forgot_password),
                 color = Color.Gray
             )
             Text(
-                text = "Restablecer",
+                text = stringResource(R.string.reset),
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {

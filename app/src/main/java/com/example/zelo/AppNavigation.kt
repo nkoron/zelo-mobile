@@ -71,7 +71,6 @@ fun AppNavigation() {
             }
         }
     ) { paddingValues ->
-        // Set up navigation for different screens
         NavHost(
             navController = navController,
             startDestination = if (isLoggedIn) "home" else "login",

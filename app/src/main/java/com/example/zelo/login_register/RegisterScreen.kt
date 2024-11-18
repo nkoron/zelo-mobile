@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -97,7 +98,7 @@ fun RegisterScreen(
         Spacer(modifier = Modifier.height(24.dp))
 
         Text(
-            text = "Registrarse",
+            text = stringResource(R.string.register),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
             ),
@@ -122,7 +123,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = email,
                     onValueChange = { email = it },
-                    label = { Text("Correo Electrónico", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.email), color = Color.Gray) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
                     textStyle = TextStyle(color = Color.White),
@@ -140,7 +141,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
-                    label = { Text("Contraseña", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.password), color = Color.Gray) },
                     singleLine = true,
                     visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -148,7 +149,7 @@ fun RegisterScreen(
                         IconButton(onClick = { passwordVisible = !passwordVisible }) {
                             Icon(
                                 imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                                contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                                 tint = Color.Gray
                             )
                         }
@@ -168,7 +169,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = confirmPassword,
                     onValueChange = { confirmPassword = it },
-                    label = { Text("Repetir Contraseña", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.repeat_password), color = Color.Gray) },
                     singleLine = true,
                     visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -176,7 +177,7 @@ fun RegisterScreen(
                         IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                             Icon(
                                 imageVector = if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (confirmPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                                contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                                 tint = Color.Gray
                             )
                         }
@@ -196,7 +197,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Nombre", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.name), color = Color.Gray) },
                     singleLine = true,
                     textStyle = TextStyle(color = Color.White),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -213,7 +214,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = surname,
                     onValueChange = { surname = it },
-                    label = { Text("Apellido", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.surname), color = Color.Gray) },
                     singleLine = true,
                     textStyle = TextStyle(color = Color.White),
                     colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -230,7 +231,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = dni,
                     onValueChange = { dni = it },
-                    label = { Text("DNI", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.id), color = Color.Gray) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     textStyle = TextStyle(color = Color.White),
@@ -248,7 +249,7 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = phone,
                     onValueChange = { phone = it },
-                    label = { Text("Teléfono", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.phone), color = Color.Gray) },
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
                     textStyle = TextStyle(color = Color.White),
@@ -266,13 +267,13 @@ fun RegisterScreen(
                 OutlinedTextField(
                     value = birthDate,
                     onValueChange = {},
-                    label = { Text("Fecha de Nacimiento", color = Color.Gray) },
+                    label = { Text(stringResource(R.string.birth_date), color = Color.Gray) },
                     singleLine = true,
                     trailingIcon = {
                         IconButton(onClick = { openDatePicker() }) {
                             Icon(
                                 imageVector = Icons.Filled.DateRange,
-                                contentDescription = "Seleccionar Fecha",
+                                contentDescription = stringResource(R.string.select_date),
                                 tint = Color.Gray
                             )
                         }
@@ -297,11 +298,11 @@ fun RegisterScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Ya tienes una cuenta? ",
+                text = stringResource(R.string.already_have_account),
                 color = Color.Gray
             )
             Text(
-                text = "Iniciar sesión",
+                text = stringResource(R.string.login),
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
@@ -320,7 +321,7 @@ fun RegisterScreen(
                 .padding(horizontal = 16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
         ) {
-            Text(text = "Registrarse", color = Color.White)
+            Text(text = stringResource(R.string.register), color = Color.White)
         }
     }
 }

@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -26,6 +27,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -158,7 +160,7 @@ fun ResetPasswordScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Restablecer Contraseña",
+            text = stringResource(R.string.reset_password),
             style = MaterialTheme.typography.headlineLarge,
             color = Color.White,
             modifier = Modifier.padding(vertical = 32.dp)
@@ -170,7 +172,7 @@ fun ResetPasswordScreen(
                 password = it
                 showValidation = false
             },
-            label = { Text("Nueva Contraseña", color = Color.Gray) },
+            label = { Text(stringResource(R.string.new_password), color = Color.Gray) },
             singleLine = true,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -178,7 +180,7 @@ fun ResetPasswordScreen(
                 IconButton(onClick = { passwordVisible = !passwordVisible }) {
                     Icon(
                         imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                         tint = Color.Gray
                     )
                 }
@@ -200,7 +202,7 @@ fun ResetPasswordScreen(
                 confirmPassword = it
                 showValidation = true
             },
-            label = { Text("Repetir Contraseña", color = Color.Gray) },
+            label = { Text(stringResource(R.string.repeat_password), color = Color.Gray) },
             singleLine = true,
             visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
@@ -208,7 +210,7 @@ fun ResetPasswordScreen(
                 IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
                     Icon(
                         imageVector = if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (confirmPasswordVisible) "Ocultar contraseña" else "Mostrar contraseña",
+                        contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
                         tint = Color.Gray
                     )
                 }
@@ -226,11 +228,11 @@ fun ResetPasswordScreen(
 
         // Mostrar mensajes de validación
         if (showValidation) {
-            ValidationMessage("Debe de ser de mínimo 6 caracteres", hasMinLength)
-            ValidationMessage("Debe contener una mayúscula", hasUpperCase)
-            ValidationMessage("Debe contener un número", hasNumber)
-            ValidationMessage("No debe contener caracteres no alfanuméricos", hasOnlyAlphanumeric)
-            ValidationMessage("Las contraseñas deben coincidir", passwordsMatch)
+            ValidationMessage(stringResource(R.string.password_min_length), hasMinLength)
+            ValidationMessage(stringResource(R.string.uppercase_passwords), hasUpperCase)
+            ValidationMessage(stringResource(R.string.number_passwords), hasNumber)
+            ValidationMessage(stringResource(R.string.alpha_passwords), hasOnlyAlphanumeric)
+            ValidationMessage(stringResource(R.string.matching_passwords), passwordsMatch)
         }
 
         Spacer(modifier = Modifier.height(32.dp))
@@ -240,11 +242,11 @@ fun ResetPasswordScreen(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "Recordaste tu contraseña? ",
+                text = stringResource(R.string.remembered_password),
                 color = Color.Gray
             )
             Text(
-                text = "Iniciar sesión",
+                text = stringResource(R.string.login),
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
@@ -266,7 +268,7 @@ fun ResetPasswordScreen(
             shape = RoundedCornerShape(28.dp),
             enabled = hasMinLength && hasUpperCase && hasNumber && hasOnlyAlphanumeric && passwordsMatch
         ) {
-            Text("Restablecer", fontSize = 18.sp)
+            Text(stringResource(R.string.reset), fontSize = 18.sp)
         }
     }
 }
@@ -281,7 +283,7 @@ private fun ValidationMessage(text: String, isValid: Boolean) {
     ) {
         Icon(
             imageVector = if (isValid) Icons.Default.CheckCircle else Icons.Default.Cancel,
-            contentDescription = if (isValid) "Válido" else "Inválido",
+            contentDescription = if (isValid) stringResource(R.string.valid) else stringResource(R.string.invalid),
             tint = if (isValid) Color(0xFF4CAF50) else Color(0xFFE57373),
             modifier = Modifier.padding(end = 8.dp)
         )

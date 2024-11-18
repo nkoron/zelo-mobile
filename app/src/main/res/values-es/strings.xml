@@ -61,4 +61,35 @@
     <string name="last_deposits">Últimos depósitos</string>
     <string name="date_format">dd \'de\' MMMM \'de\' yyyy</string>
     <string name="repeat_transfer">Repetir transferencia</string>
+    <string name="reset_password">Restablecer Contraseña</string>
+    <string name="new_password">Nueva Contraseña</string>
+    <string name="hide_password">Ocultar contraseña</string>
+    <string name="show_password">Mostrar contraseña</string>
+    <string name="repeat_password">Repetir contraseña</string>
+    <string name="confirm_reset">Confirmar restablecimiento</string>
+    <string name="password_reset">Contraseña restablecida</string>
+    <string name="password_reset_success">Contraseña restablecida con éxito</string>
+    <string name="password_min_length">Debe de ser de mínimo 6 caracteres</string>
+    <string name="uppercase_passwords">Debe contener una mayúscula</string>
+    <string name="number_passwords">Debe contener un número</string>
+    <string name="alpha_passwords">Solo debe tener caracteres alfanuméricos</string>
+    <string name="matching_passwords">Las contraseñas deben coincidir</string>
+    <string name="remembered_password">¿Recordaste tu contraseña?</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="reset">Restablecer</string>
+    <string name="valid">Válido</string>
+    <string name="invalid">Inválido</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="use_fingerprint">Utilizar huella digital la próxima vez que inices sesion</string>
+    <string name="have_account">¿No tienes una cuenta?</string>
+    <string name="already_have_account">¿Ya tienes una cuenta?</string>
+    <string name="register">Registrarse</string>
+    <string name="forgot_password">¿Olvidaste tu contraseña?</string>
+    <string name="surname">Apellido</string>
+    <string name="id">DNI</string>
+    <string name="phone">teléfono</string>
+    <string name="birth_date">Fecha de nacimiento</string>
+    <string name="select_date">Seleccionar fecha</string>
+
 </resources>
