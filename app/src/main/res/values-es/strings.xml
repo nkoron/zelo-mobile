@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Zelo</string>
+    <string name="spent">Gastado</string>
+    <string name="recent_expenses">Tus gastos recientes</string>
+    <string name="search">Buscar</string>
+    <string name="filter">Filtrar</string>
+    <string name="sent">Enviaste</string>
+    <string name="now">Ahora</string>
+    <string name="incomes">Ingresos</string>
+    <string name="back">Volver</string>
+    <string name="recent_incomes">Tus ingresos recientes</string>
+    <string name="transferred">Te transfirió</string>
+    <string name="details">Ver detalles</string>
+    <string name="transactions">Transacciones</string>
+    <string name="recent_activity">Tu actividad reciente</string>
+    <string name="my_cards">Mis tarjetas</string>
+    <string name="delete">Borrar</string>
+    <string name="add_card">Agregar Tarjeta</string>
+    <string name="hide_details">Ocultar detalles</string>
+    <string name="show_details">Mostrar detalles</string>
+    <string name="add_new_card">Agregar Nueva Tarjeta</string>
+    <string name="last_four_digits">Últimos 4 dígitos</string>
+    <string name="add">Agregar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="name">Nombre</string>
+    <string name="last_name">Apellido</string>
+    <string name="group">Grupo</string>
+    <string name="custom_avatar">Avatar personalizado</string>
+    <string name="friend">Amigo</string>
+    <string name="family">Familia</string>
+    <string name="work">Trabajo</string>
+    <string name="bank">Banco</string>
+    <string name="contacts">Contactos</string>
+    <string name="all">Todos</string>
+    <string name="transfer">Transferir</string>
+    <string name="deposit">Ingresar</string>
+    <string name="balance_visibility">Mostrar/Ocultar saldo</string>
+    <string name="payment_link">Enlace de pago</string>
+    <string name="share_link">Compartir enlace</string>
+    <string name="your_info">Tus datos</string>
+    <string name="close">Cerrar</string>
+    <string name="name_and_surname">Nombre y apellido</string>
+    <string name="alias">Alias</string>
+    <string name="cbu">CBU</string>
+    <string name="cuit">CUIT</string>
+    <string name="copy">Copiar</string>
+    <string name="link_copied">Enlace copiado</string>
+    <string name="share">Compartir</string>
+    <string name="edit">Editar</string>
+
+</resources>

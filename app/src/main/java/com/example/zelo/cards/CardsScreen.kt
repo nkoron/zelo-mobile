@@ -20,8 +20,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 data class CreditCard(
     val id: Int,
@@ -66,14 +68,14 @@ fun CardsScreen(
             IconButton(onClick = onBackPress) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription = stringResource(R.string.back),
                     tint = Color.Black
                 )
             }
 
             // Text aligned vertically to the center of the Row
             Text(
-                text = "Mis tarjetas",
+                text = stringResource(R.string.my_cards),
                 fontSize = 24.sp,
                 modifier = Modifier
                     .padding(start = 75.dp) // Adds space between the icon and the text
@@ -118,7 +120,7 @@ fun CardsScreen(
                         ) {
                             Icon(
                                 Icons.Default.Delete,
-                                contentDescription = "Delete",
+                                contentDescription = stringResource(R.string.delete),
                                 modifier = Modifier.scale(scale)
                             )
                         }
@@ -145,10 +147,10 @@ fun CardsScreen(
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
-                contentDescription = "Add Card"
+                contentDescription = stringResource(R.string.add_card)
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Agregar Tarjeta")
+            Text(stringResource(R.string.add_card))
         }
     }
 
@@ -199,7 +201,7 @@ fun CardItem(card: CreditCard) {
             ) {
                 Icon(
                     imageVector = if (showDetails) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                    contentDescription = if (showDetails) "Hide details" else "Show details",
+                    contentDescription = if (showDetails) stringResource(R.string.hide_details) else stringResource(R.string.show_details),
                     tint = Color.White
                 )
             }
@@ -219,13 +221,13 @@ fun AddCardDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Agregar Nueva Tarjeta") },
+        title = { Text(stringResource(R.string.add_new_card)) },
         text = {
             Column {
                 TextField(
                     value = bank,
                     onValueChange = { bank = it },
-                    label = { Text("Banco") },
+                    label = { Text(stringResource(R.string.bank)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -233,7 +235,7 @@ fun AddCardDialog(
                 TextField(
                     value = lastFourDigits,
                     onValueChange = { if (it.length <= 4) lastFourDigits = it },
-                    label = { Text("Últimos 4 dígitos") },
+                    label = { Text(stringResource(R.string.last_four_digits)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -247,12 +249,12 @@ fun AddCardDialog(
                     }
                 }
             ) {
-                Text("Agregar")
+                Text(stringResource(R.string.add))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancelar")
+                Text(stringResource(R.string.cancel))
             }
         }
     )

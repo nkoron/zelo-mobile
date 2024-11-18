@@ -25,11 +25,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavController
+import com.example.zelo.R
 import com.example.zelo.dashboard.PaymentLinkDialog
 import com.example.zelo.transference.TransferDetailsDialog
 
@@ -46,41 +48,6 @@ fun DashboardScreen(
             .background(Color(0xFFF5F5F5))
             .padding(16.dp)
     ) {
-        // Profile Section
-//        Row(
-//            modifier = Modifier.fillMaxWidth(),
-//            horizontalArrangement = Arrangement.SpaceBetween,
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
-//            Row(verticalAlignment = Alignment.CenterVertically) {
-//                Surface(
-//                    shape = CircleShape,
-//                    color = Color(0xFF6C63FF),
-//                    modifier = Modifier.size(48.dp)
-//                ) {
-//                    Text(
-//                        text = userName.first().toString(),
-//                        color = Color.White,
-//                        modifier = Modifier.padding(16.dp)
-//                    )
-//                }
-//                Spacer(modifier = Modifier.width(12.dp))
-//                Column {
-//                    Text(
-//                        text = "Hola, $userName!",
-//                        style = MaterialTheme.typography.titleMedium,
-//                        fontWeight = FontWeight.Bold
-//                    )
-//                }
-//            }
-//            IconButton(onClick = { /* Toggle notifications */ }) {
-//                Icon(
-//                    imageVector = Icons.Default.Notifications,
-//                    contentDescription = "Notificaciones"
-//                )
-//            }
-//        }
-
         Spacer(modifier = Modifier.height(24.dp))
 
         // Balance Card
@@ -105,7 +72,7 @@ fun DashboardScreen(
                 IconButton(onClick = { /* Toggle balance visibility */ }) {
                     Icon(
                         imageVector = Icons.Default.Visibility,
-                        contentDescription = "Toggle balance visibility"
+                        contentDescription = stringResource(R.string.balance_visibility)
                     )
                 }
                 Spacer(modifier = Modifier.height(16.dp))
@@ -119,7 +86,7 @@ fun DashboardScreen(
                             containerColor = Color(0xFF1A1B25)
                         )
                     ) {
-                        Text("Transferir")
+                        Text(stringResource(R.string.transfer))
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                             contentDescription = null,
@@ -127,12 +94,12 @@ fun DashboardScreen(
                         )
                     }
                     Button(
-                        onClick = { /* Handle deposit */ },
+                        onClick = { navController.navigate("home/deposit") },
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF1A1B25)
                         )
                     ) {
-                        Text("Ingresar")
+                        Text(stringResource(R.string.deposit))
                         Icon(
                             imageVector = Icons.Default.ArrowDownward,
                             contentDescription = null,
@@ -176,16 +143,16 @@ fun DashboardScreen(
                 QuickActionButton(
                     onClick = {showPaymentLink= ! showPaymentLink},
                     icon = Icons.Default.Link,
-                    text = "Link de pago"
+                    text = stringResource(R.string.payment_link)
                 )
                 QuickActionButton(
                     onClick = {showDialog = ! showDialog},
                     icon = Icons.Default.Person,
-                    text = "Tus datos"
+                    text = stringResource(R.string.your_info)
                 )
                 QuickActionButton(
                     icon = Icons.Default.PersonAdd,
-                    text = "Añadir contacto"
+                    text = stringResource(R.string.contacts)
                 )
             }
         }
@@ -194,7 +161,7 @@ fun DashboardScreen(
 
         // Recent Movements
         Text(
-            text = "Movimientos",
+            text = stringResource(R.string.transactions),
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(vertical = 8.dp)
         )
@@ -204,19 +171,19 @@ fun DashboardScreen(
                 when (index) {
                     0 -> TransactionItem(
                         name = "Jose",
-                        description = "Te transfirió $10,000",
+                        description = stringResource(R.string.transferred) + " $10000",
                         time = "Ahora",
                         showAvatar = true
                     )
                     1 -> TransactionItem(
                         name = "Open 25",
-                        description = "Pagaste $1000",
+                        description = stringResource(R.string.sent) + "$1000",
                         time = "15m",
                         showLogo = true
                     )
                     2 -> TransactionItem(
                         name = "Fer Galan",
-                        description = "Enviaste $3,000",
+                        description = stringResource(R.string.sent) + "$1000",
                         time = "6h",
                         showAvatar = true
                     )
@@ -378,7 +345,7 @@ fun UserDataDialog(
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        text = "Tus Datos",
+                        text = stringResource(R.string.your_info),
                         style = MaterialTheme.typography.titleLarge,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -388,7 +355,7 @@ fun UserDataDialog(
                     ) {
                         Icon(
                             Icons.Default.Close,
-                            contentDescription = "Close",
+                            contentDescription = stringResource(R.string.close),
                             tint = Color.Black
                         )
                     }
@@ -435,7 +402,7 @@ fun UserDataDialog(
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        "COMPARTIR",
+                        stringResource(R.string.share),
                         style = MaterialTheme.typography.bodyLarge.copy(
                             color = Color.White,
                             fontWeight = FontWeight.Bold
@@ -489,7 +456,7 @@ private fun DataField(
                     ) {
                         Icon(
                             Icons.Default.Edit,
-                            contentDescription = "Edit",
+                            contentDescription = stringResource(R.string.edit),
                             tint = Color.Gray
                         )
                     }
@@ -501,7 +468,7 @@ private fun DataField(
                 ) {
                     Icon(
                         Icons.Default.ContentCopy,
-                        contentDescription = "Copy",
+                        contentDescription = stringResource(R.string.copy),
                         tint = Color.Gray
                     )
                 }

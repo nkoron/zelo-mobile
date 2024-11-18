@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.zelo.R
+import com.example.zelo.components.ZeloSearchBar
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -38,10 +41,10 @@ fun IncomeScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text("Ingresos") },
+            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text(stringResource( R.string.incomes)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack()}) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription =stringResource( R.string.back) )
                     }
                 }
             )
@@ -54,30 +57,11 @@ fun IncomeScreen(
                 .padding(16.dp)
         ) {
             Text(
-                "Tus ingresos recientes",
+                stringResource( R.string.recent_incomes),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
-
-
-            // Search Bar
-            val containerColor = Color(0xFFF3F0F7)
-            TextField(
-                value = searchQuery,
-                onValueChange = { searchQuery = it },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(24.dp)),
-                placeholder = { Text("Buscar") },
-                leadingIcon = { Icon(Icons.Default.Search, "Search") },
-                trailingIcon = { Icon(Icons.Default.FilterList, "Filter") },
-                colors = TextFieldDefaults.colors(
-                    focusedContainerColor = containerColor,
-                    unfocusedContainerColor = containerColor,
-                    disabledContainerColor = containerColor,
-                ),
-                singleLine = true
-            )
+            ZeloSearchBar(searchQuery= searchQuery, valueChange = { searchQuery = it })
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -86,26 +70,26 @@ fun IncomeScreen(
                     when (index) {
                         0 -> TransactionItem(
                             name = "Jose",
-                            description = "Te transfirió $10,000",
-                            time = "Ahora",
+                            description = stringResource(R.string.transferred) +" $10,000",
+                            time = stringResource(R.string.now),
                             showAvatar = true
                         )
                         1 -> TransactionItem(
                             name = "Fer Galan",
-                            description = "Te transfirio $3,000",
+                            description = stringResource(R.string.transferred) + " $3,000",
                             time = "6h",
                             showAvatar = true
                         )
                         2 -> TransactionItem(
-                            name = "Carlos GPT",
-                            description = "Te transfirio $3,000",
+                            name = "Carlos",
+                            description = stringResource(R.string.transferred) + " $3,000",
                             time = "2h",
                             showAvatar = true
                         )
                         3 -> TransactionItem(
                             name = "Miguel Cero",
-                            description = "Te transfirio $3,000",
-                            time = "Ahora",
+                            description = stringResource(R.string.transferred) + " $3,000",
+                            time = stringResource(R.string.now),
                             showAvatar = true
                         )
                     }

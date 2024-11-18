@@ -15,9 +15,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -30,18 +32,18 @@ fun ContactsScreen(
     var searchQuery by remember { mutableStateOf("") }
     var showFilters by remember { mutableStateOf(false) }
 
-    val contacts = remember {
+    val contacts =
         listOf(
-            Contact("Jose", "Rodriguez", "Amigo", true),
-            Contact("Martin", "Garcia", "Familia", true),
-            Contact("Miguel", "Lopez", "Trabajo", true),
-            Contact("Juan", "Martinez", "Amigo", true),
-            Contact("Ana", "Gonzalez", "Familia", false),
-            Contact("Carlos", "Fernandez", "Trabajo", false),
-            Contact("Laura", "Diaz", "Amigo", false),
-            Contact("Pedro", "Sanchez", "Familia", false)
+            Contact(firstName = "Jose", lastName = "Rodriguez", group = stringResource(R.string.friend), hasCustomAvatar = true),
+            Contact(firstName = "Martin", lastName = "Garcia", group = stringResource(R.string.family), hasCustomAvatar = true),
+            Contact(firstName = "Miguel", lastName = "Lopez", group = stringResource(R.string.work), hasCustomAvatar = true),
+            Contact(firstName = "Juan", lastName = "Martinez", group = stringResource(R.string.friend), hasCustomAvatar = true),
+            Contact(firstName = "Ana", lastName = "Gonzalez", group = stringResource(R.string.family), hasCustomAvatar = false),
+            Contact(firstName = "Carlos", lastName = "Fernandez", group = stringResource(R.string.work), hasCustomAvatar = false),
+            Contact(firstName = "Laura", lastName = "Diaz", group = stringResource(R.string.friend), hasCustomAvatar = false),
+            Contact(firstName = "Pedro", lastName = "Sanchez", group = stringResource(R.string.family), hasCustomAvatar = false)
         )
-    }
+
 
     val filteredContacts = contacts.filter {
         it.firstName.contains(searchQuery, ignoreCase = true) ||
@@ -51,10 +53,10 @@ fun ContactsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Contactos") },
+                title = { Text(stringResource(R.string.contacts)) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
@@ -78,13 +80,13 @@ fun ContactsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 16.dp),
-                placeholder = { Text("Buscar") },
+                placeholder = { Text(stringResource(R.string.search)) },
                 leadingIcon = {
-                    Icon(Icons.Default.Search, contentDescription = "Search")
+                    Icon(Icons.Default.Search, contentDescription = stringResource(R.string.search))
                 },
                 trailingIcon = {
                     IconButton(onClick = { showFilters = !showFilters }) {
-                        Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                        Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.filter))
                     }
                 },
                 colors = TextFieldDefaults.textFieldColors(
@@ -105,22 +107,22 @@ fun ContactsScreen(
                     FilterChip(
                         selected = true,
                         onClick = { /* Handle filter */ },
-                        label = { Text("Todos") }
+                        label = { Text( stringResource(R.string.all)) }
                     )
                     FilterChip(
                         selected = false,
                         onClick = { /* Handle filter */ },
-                        label = { Text("Familia") }
+                        label = { Text(stringResource(R.string.family)) }
                     )
                     FilterChip(
                         selected = false,
                         onClick = { /* Handle filter */ },
-                        label = { Text("Amigos") }
+                        label = { Text(stringResource(R.string.friend)) }
                     )
                     FilterChip(
                         selected = false,
                         onClick = { /* Handle filter */ },
-                        label = { Text("Trabajo") }
+                        label = { Text(stringResource(R.string.work)) }
                     )
                 }
             }
@@ -199,14 +201,15 @@ private fun ContactItem(
             contentPadding = PaddingValues(horizontal = 16.dp),
             modifier = Modifier.height(36.dp)
         ) {
-            Text("Transferir")
+            Text(stringResource(R.string.transfer))
         }
     }
 }
-
 data class Contact(
     val firstName: String,
     val lastName: String,
     val group: String,
-    val hasCustomAvatar: Boolean
+    val hasCustomAvatar: Boolean = false // Default value for hasCustomAvatar
 )
+
+
