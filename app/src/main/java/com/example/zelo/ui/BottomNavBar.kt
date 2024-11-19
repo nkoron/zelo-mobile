@@ -30,7 +30,7 @@ fun BottomNavBar(
     ) {
         // QR Code Button (Floating) with zIndex to ensure it floats above the bottom nav
         FloatingActionButton(
-            onClick = { navController.navigate("qr-scanner") },
+            onClick = { navController.navigate("qr") },
             modifier = Modifier
                 .align(Alignment.Center) // Center the QR button
                 .offset(y = (-16).dp, x = (5).dp) // Adjust offset to float above the navbar

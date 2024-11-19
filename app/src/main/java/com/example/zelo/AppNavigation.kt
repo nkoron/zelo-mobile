@@ -37,6 +37,7 @@ import com.example.zelo.profile.MessagesScreen
 import com.example.zelo.profile.PersonalInfoScreen
 import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
+import com.example.zelo.qr.QRScannerScreen
 
 @Composable
 fun AppNavigation() {
@@ -105,6 +106,7 @@ fun AppNavigation() {
             composable("profile/messages") { MessagesScreen(navController) }
             composable("profile/help") { HelpScreen(navController) }
             composable("home/deposit") { DepositScreen(onBack = {navController.navigate("home")}, )  }
+            composable("qr") { QRScannerScreen() }
         }
     }
 }
