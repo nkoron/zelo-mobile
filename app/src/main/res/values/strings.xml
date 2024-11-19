@@ -142,4 +142,9 @@
     <string name="security_config">Configure your account\'s security settings</string>
     <string name="two_factor_auth">Two factor authentication</string>
     <string name="bio_auth">Login using biometric information</string>
+    <string name="verify">Verify</string>
+    <string name="verify_account">Verify Your Account</string>
+    <string name="verify_account_email">Enter the verification code sent to your email</string>
+    <string name="verification_code">Verification Code</string>
+    <string name="resend_code">Resend code</string>
 </resources>

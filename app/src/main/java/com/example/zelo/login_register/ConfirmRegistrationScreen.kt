@@ -1,0 +1,98 @@
+package com.example.zelo.login_register
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.example.zelo.R
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun VerificationScreen(
+    navController: NavController,
+    onVerify: (String) -> Unit = { _ -> }
+) {
+    var verificationCode by remember { mutableStateOf("") }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFF1A1B25))
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            (stringResource(R.string.verify_account)),
+            style = MaterialTheme.typography.headlineMedium,
+            color = Color.White
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Text(
+            (stringResource(R.string.verify_account_email)),
+            color = Color.Gray
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        OutlinedTextField(
+            value = verificationCode,
+            onValueChange = { verificationCode = it },
+            label = { Text(stringResource(R.string.verification_code), color = Color.Gray) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(32.dp))
+
+        Button(
+            onClick = { onVerify(verificationCode) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(50.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
+        ) {
+            Text((stringResource(R.string.verify)), color = Color.White)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { /* Handle resend code logic */ }
+        ) {
+            Text(stringResource(R.string.resend_code), color = Color(0xFF6C63FF))
+        }
+    }
+}
+
+// Usage in your app
+@Preview
+@Composable
+fun Component() {
+    val navController = rememberNavController()
+    VerificationScreen(
+        navController = navController,
+        onVerify = { code ->
+
+        }
+    )
+}
