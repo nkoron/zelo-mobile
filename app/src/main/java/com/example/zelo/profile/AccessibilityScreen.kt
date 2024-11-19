@@ -6,22 +6,24 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AccessibilityScreen(navController: NavController) {
-    var textSizeMultiplier by remember { mutableStateOf(1f) }
+    var textSizeMultiplier by remember { mutableFloatStateOf(1f) }
     var highContrastMode by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Accesibilidad") },
+                title = { Text(stringResource(R.string.accessibility)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -33,10 +35,10 @@ fun AccessibilityScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Ajusta las opciones de accesibilidad para mejorar tu experiencia en la app.")
+            Text(stringResource(R.string.adjust_access_options))
             Spacer(modifier = Modifier.height(16.dp))
 
-            Text("Tamaño del texto")
+            Text(stringResource(R.string.text_size))
             Slider(
                 value = textSizeMultiplier,
                 onValueChange = { textSizeMultiplier = it },
@@ -50,7 +52,7 @@ fun AccessibilityScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Modo de alto contraste")
+                Text(stringResource(R.string.high_contrast_mode))
                 Switch(
                     checked = highContrastMode,
                     onCheckedChange = { highContrastMode = it }
@@ -60,7 +62,7 @@ fun AccessibilityScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Save accessibility settings */ }) {
-                Text("Guardar cambios")
+                Text(stringResource(R.string.save_changes))
             }
         }
     }

@@ -8,7 +8,9 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -20,10 +22,10 @@ fun ResetPassScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Reestablecer contraseña") },
+                title = { Text(stringResource(R.string.reset_password)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -35,13 +37,13 @@ fun ResetPassScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Cambia tu contraseña para mantener tu cuenta segura.")
+            Text(stringResource(R.string.change_pass))
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = currentPassword,
                 onValueChange = { currentPassword = it },
-                label = { Text("Contraseña actual") },
+                label = { Text(stringResource(R.string.current_password)) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation()
             )
@@ -51,7 +53,7 @@ fun ResetPassScreen(navController: NavController) {
             OutlinedTextField(
                 value = newPassword,
                 onValueChange = { newPassword = it },
-                label = { Text("Nueva contraseña") },
+                label = { Text(stringResource(R.string.new_password)) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation()
             )
@@ -61,7 +63,7 @@ fun ResetPassScreen(navController: NavController) {
             OutlinedTextField(
                 value = confirmPassword,
                 onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar nueva contraseña") },
+                label = { Text(stringResource(R.string.confirm_password)) },
                 modifier = Modifier.fillMaxWidth(),
                 visualTransformation = PasswordVisualTransformation()
             )
@@ -69,13 +71,13 @@ fun ResetPassScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Reset password */ }) {
-                Text("Cambiar contraseña")
+                Text(stringResource(R.string.chnge_pass))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = { /* Forgot password flow */ }) {
-                Text("¿Olvidaste tu contraseña?")
+                Text(stringResource(R.string.forgot_password))
             }
         }
     }

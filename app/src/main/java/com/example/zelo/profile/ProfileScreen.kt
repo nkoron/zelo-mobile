@@ -15,23 +15,34 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(navController: NavController) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-
+    val menuItems = listOf(
+        MenuItemData(Icons.Outlined.Accessibility, stringResource(R.string.accessibility), stringResource(R.string.adjust_access_options), "profile/accessibility"),
+        MenuItemData(Icons.Outlined.Security, stringResource(R.string.security), stringResource(R.string.admin_sec), "profile/security"),
+        MenuItemData(Icons.Outlined.Person, stringResource(R.string.account_data), stringResource(R.string.validate_data), "profile/account_data"),
+        MenuItemData(Icons.Outlined.Info, stringResource(R.string.personal_info), stringResource(R.string.personal_info_desc), "profile/personal_info"),
+        MenuItemData(Icons.Outlined.Lock, stringResource(R.string.reset_password), stringResource(R.string.forgot_password) + stringResource(R.string.reset_it), "profile/reset_password"),
+        MenuItemData(Icons.Outlined.PrivacyTip, stringResource(R.string.privacy), stringResource(R.string.data_preferences), "profile/privacy"),
+        MenuItemData(Icons.Outlined.Message, stringResource(R.string.messages), stringResource(R.string.message_settings), "profile/messages"),
+        MenuItemData(Icons.Outlined.Help, stringResource(R.string.help), stringResource(R.string.assistance), "profile/help")
+    )
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Perfil", fontWeight = FontWeight.Bold) },
+                title = { Text(stringResource(R.string.profile), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -108,7 +119,7 @@ fun ProfileCard() {
                 onClick = { /* Handle logout */ },
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
-                Text("Cerrar sesión", color = MaterialTheme.colorScheme.onError)
+                Text(stringResource(R.string.close_session), color = MaterialTheme.colorScheme.onError)
             }
         }
     }
@@ -121,16 +132,7 @@ data class MenuItemData(
     val path: String
 )
 
-val menuItems = listOf(
-    MenuItemData(Icons.Outlined.Accessibility, "Accesibilidad", "Accede a las funciones de accesibilidad de la app", "profile/accessibility"),
-    MenuItemData(Icons.Outlined.Security, "Seguridad", "Administra la seguridad de tu cuenta", "profile/security"),
-    MenuItemData(Icons.Outlined.Person, "Datos de tu cuenta", "Valida y consulta los datos de tu cuenta", "profile/account_data"),
-    MenuItemData(Icons.Outlined.Info, "Información personal", "Información de tu documento de identidad y de tu actividad fiscal", "profile/personal_info"),
-    MenuItemData(Icons.Outlined.Lock, "Reestablecer mi contraseña", "¿Olvidaste tu contraseña? Reestablécela", "profile/reset_password"),
-    MenuItemData(Icons.Outlined.PrivacyTip, "Privacidad", "Preferencias y control sobre el uso de tus datos", "profile/privacy"),
-    MenuItemData(Icons.Outlined.Message, "Mensajes", "Elige qué tipo de información quieres recibir", "profile/messages"),
-    MenuItemData(Icons.Outlined.Help, "Ayuda", "Obtén asistencia y soporte", "profile/help")
-)
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

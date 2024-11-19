@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,10 +20,10 @@ fun PrivacyScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Privacidad") },
+                title = { Text(stringResource(R.string.privacy)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -33,14 +35,14 @@ fun PrivacyScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Controla cómo se utilizan tus datos personales.")
+            Text(stringResource(R.string.control_data))
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Compartir datos con terceros")
+                Text(stringResource(R.string.data_third_party))
                 Switch(
                     checked = dataSharing,
                     onCheckedChange = { dataSharing = it }
@@ -53,7 +55,7 @@ fun PrivacyScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Seguimiento de ubicación")
+                Text(stringResource(R.string.location))
                 Switch(
                     checked = locationTracking,
                     onCheckedChange = { locationTracking = it }
@@ -63,19 +65,19 @@ fun PrivacyScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* View data usage */ }) {
-                Text("Ver uso de datos")
+                Text(stringResource(R.string.data_usage))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(onClick = { /* Request data deletion */ }) {
-                Text("Solicitar eliminación de datos")
+                Text(stringResource(R.string.remove_data))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = { /* View privacy policy */ }) {
-                Text("Ver política de privacidad")
+                Text(stringResource(R.string.privacy_policy))
             }
         }
     }

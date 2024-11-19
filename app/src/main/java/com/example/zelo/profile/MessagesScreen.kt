@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,10 +21,10 @@ fun MessagesScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mensajes") },
+                title = { Text(stringResource(R.string.messages)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -34,14 +36,14 @@ fun MessagesScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Configura las notificaciones y mensajes que deseas recibir.")
+            Text(stringResource(R.string.message_settings))
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Promociones y ofertas")
+                Text(stringResource(R.string.offers))
                 Switch(
                     checked = promotions,
                     onCheckedChange = { promotions = it }
@@ -54,7 +56,7 @@ fun MessagesScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Alertas de transacciones")
+                Text(stringResource(R.string.transaction_notification))
                 Switch(
                     checked = transactionAlerts,
                     onCheckedChange = { transactionAlerts = it }
@@ -67,7 +69,7 @@ fun MessagesScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Alertas de seguridad")
+                Text(stringResource(R.string.security_alerts))
                 Switch(
                     checked = securityAlerts,
                     onCheckedChange = { securityAlerts = it }
@@ -77,14 +79,9 @@ fun MessagesScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Save message preferences */ }) {
-                Text("Guardar preferencias")
+                Text(stringResource(R.string.save_changes))
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            OutlinedButton(onClick = { /* View message history */ }) {
-                Text("Ver historial de mensajes")
-            }
         }
     }
 }

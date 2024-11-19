@@ -6,8 +6,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -18,10 +20,10 @@ fun SecurityScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Seguridad") },
+                title = { Text(stringResource(R.string.security)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -33,14 +35,14 @@ fun SecurityScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Configura las opciones de seguridad de tu cuenta.")
+            Text(stringResource(R.string.security_config))
             Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Autenticación de dos factores")
+                Text(stringResource(R.string.two_factor_auth))
                 Switch(
                     checked = twoFactorAuth,
                     onCheckedChange = { twoFactorAuth = it }
@@ -53,7 +55,7 @@ fun SecurityScreen(navController: NavController) {
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text("Inicio de sesión biométrico")
+                Text(stringResource(R.string.bio_auth))
                 Switch(
                     checked = biometricLogin,
                     onCheckedChange = { biometricLogin = it }
@@ -63,13 +65,7 @@ fun SecurityScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Change password */ }) {
-                Text("Cambiar contraseña")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(onClick = { /* View login history */ }) {
-                Text("Ver historial de inicio de sesión")
+                Text(stringResource(R.string.chnge_pass))
             }
         }
     }

@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -19,10 +21,10 @@ fun PersonalInfoScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Información personal") },
+                title = { Text(stringResource(R.string.your_info)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -34,13 +36,13 @@ fun PersonalInfoScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("Información de tu documento de identidad y actividad fiscal.")
+            Text(stringResource(R.string.id_info))
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedTextField(
                 value = idNumber,
                 onValueChange = { idNumber = it },
-                label = { Text("Número de documento de identidad") },
+                label = { Text(stringResource(R.string.id_number)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -49,7 +51,7 @@ fun PersonalInfoScreen(navController: NavController) {
             OutlinedTextField(
                 value = taxId,
                 onValueChange = { taxId = it },
-                label = { Text("Número de identificación fiscal") },
+                label = { Text(stringResource(R.string.fiscal_number)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
@@ -58,20 +60,20 @@ fun PersonalInfoScreen(navController: NavController) {
             OutlinedTextField(
                 value = address,
                 onValueChange = { address = it },
-                label = { Text("Dirección") },
+                label = { Text(stringResource(R.string.address)) },
                 modifier = Modifier.fillMaxWidth()
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Update personal information */ }) {
-                Text("Actualizar información")
+                Text(stringResource(R.string.update_info))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(onClick = { /* View fiscal activity */ }) {
-                Text("Ver actividad fiscal")
+                Text(stringResource(R.string.see_fiscal))
             }
         }
     }

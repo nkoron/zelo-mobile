@@ -8,6 +8,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.res.stringResource
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -15,10 +17,10 @@ fun HelpScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Ayuda") },
+                title = { Text(stringResource(R.string.help)) },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Volver")
+                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
             )
@@ -30,35 +32,35 @@ fun HelpScreen(navController: NavController) {
                 .padding(innerPadding)
                 .padding(16.dp)
         ) {
-            Text("¿Cómo podemos ayudarte?")
+            Text(stringResource(R.string.how_can_we_help))
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Open FAQ */ }) {
-                Text("Preguntas frecuentes")
+                Text(stringResource(R.string.faq))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Open chat support */ }) {
-                Text("Chat de soporte")
+                Text(stringResource(R.string.chat))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Make a call */ }) {
-                Text("Llamar a atención al cliente")
+                Text(stringResource(R.string.call_att))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             OutlinedButton(onClick = { /* Report a problem */ }) {
-                Text("Reportar un problema")
+                Text(stringResource(R.string.report_issue))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             TextButton(onClick = { /* View terms and conditions */ }) {
-                Text("Términos y condiciones")
+                Text(stringResource(R.string.terms_and_conditions))
             }
         }
     }
