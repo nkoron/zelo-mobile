@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MessagesScreen(navController: NavController) {
+fun MessagesScreen(onBack: () -> Unit) {
     var promotions by remember { mutableStateOf(false) }
     var transactionAlerts by remember { mutableStateOf(true) }
     var securityAlerts by remember { mutableStateOf(true) }
@@ -23,7 +23,7 @@ fun MessagesScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.messages)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

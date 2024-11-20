@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PersonalInfoScreen(navController: NavController) {
+fun PersonalInfoScreen(onBack: () -> Unit) {
     var idNumber by remember { mutableStateOf("") }
     var taxId by remember { mutableStateOf("") }
     var address by remember { mutableStateOf("") }
@@ -23,7 +23,7 @@ fun PersonalInfoScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.your_info)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

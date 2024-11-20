@@ -19,12 +19,15 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateTo: (String) -> Unit,
+    onLogout: () -> Unit
+) {
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val menuItems = listOf(
         MenuItemData(Icons.Outlined.Accessibility, stringResource(R.string.accessibility), stringResource(R.string.adjust_access_options), "profile/accessibility"),
@@ -41,7 +44,7 @@ fun ProfileScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.profile), fontWeight = FontWeight.Bold) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
@@ -62,9 +65,9 @@ fun ProfileScreen(navController: NavController) {
                 .padding(bottom = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
         ) {
-            item { ProfileCard() }
+            item { ProfileCard(onLogout) }
             items(menuItems) { item ->
-                MenuItem(item, navController)
+                MenuItem(item, onNavigateTo)
             }
             item {
                 Spacer(modifier = Modifier.height(80.dp))
@@ -74,7 +77,7 @@ fun ProfileScreen(navController: NavController) {
 }
 
 @Composable
-fun ProfileCard() {
+fun ProfileCard(onLogout: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -116,7 +119,7 @@ fun ProfileCard() {
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
-                onClick = { /* Handle logout */ },
+                onClick = onLogout,
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
             ) {
                 Text(stringResource(R.string.close_session), color = MaterialTheme.colorScheme.onError)
@@ -132,11 +135,9 @@ data class MenuItemData(
     val path: String
 )
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MenuItem(item: MenuItemData, navController: NavController) {
+fun MenuItem(item: MenuItemData, onNavigateTo: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,7 +146,7 @@ fun MenuItem(item: MenuItemData, navController: NavController) {
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
         shape = RoundedCornerShape(12.dp),
-        onClick = { navController.navigate(item.path) }
+        onClick = { onNavigateTo(item.path) }
     ) {
         Column(
             modifier = Modifier
@@ -169,13 +170,12 @@ fun MenuItem(item: MenuItemData, navController: NavController) {
                         fontWeight = FontWeight.Medium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                        Text(
-                            text = item.description,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
-                            fontSize = 14.sp,
-                            maxLines = 1
-                        )
-
+                    Text(
+                        text = item.description,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.7f),
+                        fontSize = 14.sp,
+                        maxLines = 1
+                    )
                 }
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,

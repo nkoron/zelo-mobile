@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccessibilityScreen(navController: NavController) {
+fun AccessibilityScreen(onBack: () -> Unit) {
     var textSizeMultiplier by remember { mutableFloatStateOf(1f) }
     var highContrastMode by remember { mutableStateOf(false) }
 
@@ -22,7 +22,7 @@ fun AccessibilityScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.accessibility)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

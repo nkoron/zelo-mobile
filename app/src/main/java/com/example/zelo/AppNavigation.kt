@@ -42,6 +42,7 @@ import com.example.zelo.profile.PersonalInfoScreen
 import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
 import com.example.zelo.qr.QRScannerScreen
+import com.example.zelo.transference.TransactionConfirmedScreen
 import com.example.zelo.ui.ZeloNavigationRail
 
 @Composable
@@ -116,24 +117,48 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
 
         // Screens for logged-in users
         composable("home") { DashboardScreen(navController) }
-        composable("movements") { MovementsScreen(navController) }
+        composable("movements") {
+            MovementsScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToIncomes = { navController.navigate("movements/incomes") },
+                onNavigateToExpenses = { navController.navigate("movements/expenses") }
+            )
+        }
         composable("movements/incomes") { IncomeScreen(navController) }
         composable("movements/expenses") { ExpensesScreen(navController) }
-        composable("transference") { TransferScreen(navController) }
-        composable("transference/form") { TransferDetailScreen(navController) }
-        composable("transference/confirm") { TransferConfirmationScreen() }
+        composable("transference") {
+            TransferScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToForm = { navController.navigate("transference/form") },
+                onNavigateToContacts = { navController.navigate("transference/contacts") }
+            )
+        }
+        composable("transference/form") { TransferDetailScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmation")}) }
+        composable("transference/confirmed") { TransactionConfirmedScreen( onReturnHome = {navController.navigate("home")}) }
         composable("transference/contacts") { ContactsScreen(navController) }
+        composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}) }
         // You can uncomment these screens as needed
         composable("cards") { CardsScreen(navController) }
-        composable("profile") { ProfileScreen(navController) }
-        composable("profile/accessibility") { AccessibilityScreen(navController) }
-        composable("profile/security") { SecurityScreen(navController) }
-        composable("profile/account_data") { AccountDataScreen(navController) }
-        composable("profile/personal_info") { PersonalInfoScreen(navController) }
-        composable("profile/reset_password") { ResetPassScreen(navController) }
-        composable("profile/privacy") { PrivacyScreen(navController) }
-        composable("profile/messages") { MessagesScreen(navController) }
-        composable("profile/help") { HelpScreen(navController) }
+        composable("profile") {
+            ProfileScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateTo = { route -> navController.navigate(route) },
+                onLogout = {
+                    // Handle logout logic here
+                    navController.navigate("login") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
+            )
+        }
+        composable("profile/accessibility") { AccessibilityScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/security") { SecurityScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/account_data") { AccountDataScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/personal_info") { PersonalInfoScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/reset_password") { ResetPassScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/privacy") { PrivacyScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/messages") { MessagesScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/help") { HelpScreen(onBack = {navController.popBackStack()}) }
         composable("home/deposit") { DepositScreen(onBack = { navController.navigate("home") },) }
         composable("qr") { QRScannerScreen() }
     }

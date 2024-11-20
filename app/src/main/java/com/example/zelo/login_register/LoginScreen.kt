@@ -6,6 +6,8 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
@@ -14,14 +16,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.example.zelo.R
 import com.example.zelo.ui.AuthViewModel
@@ -33,76 +37,130 @@ fun SignInScreen(
     modifier: Modifier = Modifier,
     onSignIn: (email: String, password: String) -> Unit = { _, _ -> }
 ) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val isTablet = screenWidth > 600.dp
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var useBiometric by remember { mutableStateOf(false) }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(color = Color(0xFF1A1B25))
-            .padding(24.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
+        if (isTablet) {
+            Row(
+                modifier = Modifier.fillMaxSize()
+            ) {
+                // Left side - Image
+                Box(
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .fillMaxHeight()
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.card),
+                        contentDescription = null,
+                        modifier = Modifier.fillMaxSize(),
+                        contentScale = ContentScale.Fit
+                    )
+                }
 
-        // Card Icon
-        Image(
-            painter = painterResource(id = R.drawable.card),
-            contentDescription = null,
-            modifier = Modifier.size(256.dp),
-            alignment = Alignment.Center)
+                // Right side - Form
+                Column(
+                    modifier = Modifier
+                        .weight(0.6f)
+                        .fillMaxHeight()
+                        .verticalScroll(rememberScrollState())
+                        .padding(horizontal = 32.dp, vertical = 24.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    SignInContent(
+                        email = email,
+                        password = password,
+                        passwordVisible = passwordVisible,
+                        useBiometric = useBiometric,
+                        onEmailChange = { email = it },
+                        onPasswordChange = { password = it },
+                        onPasswordVisibilityChange = { passwordVisible = it },
+                        onBiometricChange = { useBiometric = it },
+                        onSignIn = { onSignIn(email, password) },
+                        navController = navController,
+                        authViewModel = authViewModel
+                    )
+                }
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.card),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp),
+                    contentScale = ContentScale.Fit
+                )
+                SignInContent(
+                    email = email,
+                    password = password,
+                    passwordVisible = passwordVisible,
+                    useBiometric = useBiometric,
+                    onEmailChange = { email = it },
+                    onPasswordChange = { password = it },
+                    onPasswordVisibilityChange = { passwordVisible = it },
+                    onBiometricChange = { useBiometric = it },
+                    onSignIn = { onSignIn(email, password) },
+                    navController = navController,
+                    authViewModel = authViewModel
+                )
+            }
+        }
+    }
+}
 
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-
+@Composable
+fun SignInContent(
+    email: String,
+    password: String,
+    passwordVisible: Boolean,
+    useBiometric: Boolean,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onPasswordVisibilityChange: (Boolean) -> Unit,
+    onBiometricChange: (Boolean) -> Unit,
+    onSignIn: () -> Unit,
+    navController: NavController,
+    authViewModel: AuthViewModel,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start
+    ) {
         Text(
             text = stringResource(R.string.login),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
             ),
-            color = Color.White,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start)
+            color = Color.White
         )
 
         Spacer(modifier = Modifier.height(48.dp))
 
-        // Email Field
         OutlinedTextField(
             value = email,
-            onValueChange = { email = it },
+            onValueChange = onEmailChange,
             label = { Text(stringResource(R.string.email), color = Color.Gray) },
             singleLine = true,
-            textStyle = TextStyle(color = Color.White), // Usa textStyle en lugar de textColor
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White // Define también el color del cursor si es necesario
-            ),
-            modifier = Modifier.fillMaxWidth()
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Password Field
-        OutlinedTextField(
-            value = password,
-            onValueChange = { password = it },
-            label = { Text(stringResource(R.string.password), color = Color.Gray) },
-            singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
-                        tint = Color.Gray
-                    )
-                }
-            },
-            textStyle = TextStyle(color = Color.White), // Usa textStyle en lugar de textColor
+            textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color(0xFF6C63FF),
                 unfocusedBorderColor = Color.Gray,
@@ -113,14 +171,39 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Biometric Checkbox
+        OutlinedTextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = { Text(stringResource(R.string.password), color = Color.Gray) },
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                IconButton(onClick = { onPasswordVisibilityChange(!passwordVisible) }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
+                        tint = Color.Gray
+                    )
+                }
+            },
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Checkbox(
                 checked = useBiometric,
-                onCheckedChange = { useBiometric = it },
+                onCheckedChange = onBiometricChange,
                 colors = CheckboxDefaults.colors(
                     checkedColor = Color(0xFF6C63FF),
                     uncheckedColor = Color.Gray
@@ -134,13 +217,14 @@ fun SignInScreen(
             )
         }
 
-        Spacer(modifier = Modifier.height(24.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
-        // Login Button
         Button(
-            onClick = { onSignIn(email, password)
+            onClick = {
+                onSignIn()
                 authViewModel.logIn()
-                navController.navigate("home") },
+                navController.navigate("home")
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
@@ -152,7 +236,6 @@ fun SignInScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Register Link
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -166,14 +249,13 @@ fun SignInScreen(
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    navController.navigate("register") // Navegar a la pantalla de registro
+                    navController.navigate("register")
                 }
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Forgot Password
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.Center
@@ -187,7 +269,7 @@ fun SignInScreen(
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    navController.navigate("reset_password") // Navegar a la pantalla de restablecer contraseña
+                    navController.navigate("reset_password")
                 }
             )
         }

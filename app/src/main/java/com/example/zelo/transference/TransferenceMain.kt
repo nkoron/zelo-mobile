@@ -25,17 +25,21 @@ import androidx.navigation.compose.rememberNavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferScreen(
-    navController: NavController,
+    onNavigateBack: () -> Unit,
+    onNavigateToForm: () -> Unit,
+    onNavigateToContacts: () -> Unit,
     modifier: Modifier = Modifier,
-    ) {
+) {
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
 
     Scaffold(
         topBar = {
-            TopAppBar(modifier= Modifier.padding(5.dp) , title = { Text("Transferencias") },
+            TopAppBar(
+                modifier = Modifier.padding(5.dp),
+                title = { Text("Transferencias") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home")}) {
+                    IconButton(onClick = onNavigateBack) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -54,7 +58,7 @@ fun TransferScreen(
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 Button(
-                    onClick = { navController.navigate("transference/form") },
+                    onClick = onNavigateToForm,
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),
@@ -65,7 +69,7 @@ fun TransferScreen(
                     Text("CBU, CVU O ALIAS")
                 }
                 Button(
-                    onClick = { navController.navigate("transference/contacts") },
+                    onClick = onNavigateToContacts,
                     modifier = Modifier
                         .weight(1f)
                         .height(48.dp),
@@ -76,8 +80,6 @@ fun TransferScreen(
                     Text("CONTACTOS")
                 }
             }
-
-
 
             // Search Bar
             val containerColor = Color(0xFFF3F0F7)
@@ -137,15 +139,5 @@ fun TransferScreen(
                 }
             }
         }
-    }
-}
-
-// Preview
-@Preview(showBackground = true)
-@Composable
-fun TransferScreenPreview() {
-    val navController = rememberNavController()
-    MaterialTheme {
-        TransferScreen(navController)
     }
 }

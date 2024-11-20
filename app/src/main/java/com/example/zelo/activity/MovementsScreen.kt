@@ -25,7 +25,93 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.zelo.R
 import com.example.zelo.components.ZeloSearchBar
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun MovementsScreen(
+    onNavigateBack: () -> Unit,
+    onNavigateToIncomes: () -> Unit,
+    onNavigateToExpenses: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    var searchQuery by remember { mutableStateOf("") }
 
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                modifier = Modifier.padding(5.dp),
+                title = { Text(stringResource(R.string.transactions)) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateBack) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
+                    }
+                }
+            )
+        },
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
+        ) {
+            // Action Buttons
+            MonthSummaryCard(
+                month = "Agosto",
+                income = 21500.00,
+                expenses = 50000.00,
+                onIncomeClick = onNavigateToIncomes,
+                onExpensesClick = onNavigateToExpenses
+            )
+
+            Text(
+                stringResource(R.string.recent_activity),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(vertical = 16.dp)
+            )
+
+            ZeloSearchBar(searchQuery = searchQuery, valueChange = { searchQuery = it })
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            LazyColumn {
+                items(5) { index ->
+                    when (index) {
+                        0 -> TransactionItem(
+                            name = "Jose",
+                            description = stringResource(R.string.sent) + " $10,000",
+                            time = stringResource(R.string.now),
+                            showAvatar = true
+                        )
+                        1 -> TransactionItem(
+                            name = "Open 25",
+                            description = stringResource(R.string.sent) + " $1000",
+                            time = "15m",
+                            showLogo = true
+                        )
+                        2 -> TransactionItem(
+                            name = "Fer Galan",
+                            description = stringResource(R.string.sent) + " $3,000",
+                            time = "6h",
+                            showAvatar = true
+                        )
+                        3 -> TransactionItem(
+                            name = "Carlos",
+                            description = stringResource(R.string.sent) + " $3,000",
+                            time = "2h",
+                            showAvatar = true
+                        )
+                        4 -> TransactionItem(
+                            name = "Miguel Cero",
+                            description = stringResource(R.string.transferred) + " $3,000",
+                            time = "Ahora",
+                            showAvatar = true
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
 @SuppressLint("DefaultLocale")
 @Composable
 fun SummaryCard(
@@ -123,92 +209,4 @@ fun MonthSummaryCard(
             )
         }
     }
-
 }
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MovementsScreen(
-    navController: NavController,
-    modifier: Modifier = Modifier,
-) {
-    var searchQuery by remember { mutableStateOf("") }
-    val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
-
-    Scaffold(
-        topBar = {
-            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text(stringResource(R.string.transactions)) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.navigate("home")}) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        },
-    ) { paddingValues ->
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp)
-        ) {
-
-            // Action Buttons
-            MonthSummaryCard(
-                month = "Agosto",
-                income = 21500.00,
-                expenses = 50000.00,
-                onIncomeClick = { navController.navigate("movements/incomes") },
-                onExpensesClick = { navController.navigate("movements/expenses") }
-            )
-
-            Text(
-                stringResource(R.string.recent_activity),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
-
-            ZeloSearchBar(searchQuery= searchQuery, valueChange = { searchQuery = it })
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            LazyColumn {
-                items(5) { index ->
-                    when (index) {
-                        0 -> TransactionItem(
-                            name = "Jose",
-                            description = stringResource(R.string.sent) +" $10,000",
-                            time = stringResource(R.string.now),
-                            showAvatar = true
-                        )
-                        1 -> TransactionItem(
-                            name = "Open 25",
-                            description =stringResource(R.string.sent) + " $1000",
-                            time = "15m",
-                            showLogo = true
-                        )
-                        2 -> TransactionItem(
-                            name = "Fer Galan",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = "6h",
-                            showAvatar = true
-                        )
-                        3 -> TransactionItem(
-                            name = "Carlos",
-                            description =  stringResource(R.string.sent) + " $3,000",
-                            time = "2h",
-                            showAvatar = true
-                        )
-                        4 -> TransactionItem(
-                            name = "Miguel Cero",
-                            description = stringResource(R.string.transferred) +" $3,000",
-                            time = "Ahora",
-                            showAvatar = true
-                        )
-                    }
-                }
-            }
-        }
-    }
-
-    }

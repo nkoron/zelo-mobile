@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SecurityScreen(navController: NavController) {
+fun SecurityScreen(onBack: () -> Unit) {
     var twoFactorAuth by remember { mutableStateOf(false) }
     var biometricLogin by remember { mutableStateOf(false) }
 
@@ -22,7 +22,7 @@ fun SecurityScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.security)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

@@ -25,7 +25,7 @@ fun BottomNavBar(
 ) {
     Box(modifier = modifier.fillMaxWidth()) {
         FloatingActionButton(
-            onClick = { navController.navigate("qr-scanner") },
+            onClick = { navController.navigate("qr") },
             modifier = Modifier
                 .align(Alignment.Center)
                 .offset(y = (-16).dp, x = (5).dp)

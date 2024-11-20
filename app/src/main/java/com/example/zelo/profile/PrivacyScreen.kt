@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun PrivacyScreen(navController: NavController) {
+fun PrivacyScreen(onBack: () -> Unit) {
     var dataSharing by remember { mutableStateOf(false) }
     var locationTracking by remember { mutableStateOf(false) }
 
@@ -22,7 +22,7 @@ fun PrivacyScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.privacy)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

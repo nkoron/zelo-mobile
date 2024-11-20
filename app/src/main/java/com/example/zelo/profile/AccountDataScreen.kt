@@ -13,7 +13,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AccountDataScreen(navController: NavController) {
+fun AccountDataScreen(onBack: () -> Unit) {
     var name by remember { mutableStateOf("Juan Rodriguez") }
     var email by remember { mutableStateOf("juanrodriguez@gmail.com") }
     var phone by remember { mutableStateOf("+1234567890") }
@@ -23,7 +23,7 @@ fun AccountDataScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.account_data)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }
