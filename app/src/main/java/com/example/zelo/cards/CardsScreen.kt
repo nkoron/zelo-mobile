@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -60,33 +60,40 @@ fun CardsScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(paddingValues)
-                .padding(16.dp)
         ) {
-            when {
-                uiState.isLoading -> {
-                    CircularProgressIndicator(modifier = Modifier.align(Alignment.CenterHorizontally))
-                }
-                uiState.error != null -> {
-                    Text(
-                        text = uiState.error?.message ?: stringResource(R.string.unknown_error),
-                        color = MaterialTheme.colorScheme.error,
-                        modifier = Modifier.padding(bottom = 16.dp)
-                    )
-                }
-                else -> {
-                    CardsList(
-                        cards = uiState.cards,
-                        onDeleteCard = { viewModel.deleteCard(it.id ?: 0) }
-                    )
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                when {
+                    uiState.isLoading -> {
+                        CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                    }
+                    uiState.error != null -> {
+                        Text(
+                            text = uiState.error?.message ?: stringResource(R.string.unknown_error),
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.align(Alignment.Center)
+                        )
+                    }
+                    else -> {
+                        CardsList(
+                            cards = uiState.cards,
+                            onDeleteCard = { viewModel.deleteCard(it.id ?: 0) }
+                        )
+                    }
                 }
             }
-
-            Spacer(modifier = Modifier.height(16.dp))
 
             AddCardButton(
                 onAddCard = { card ->
                     viewModel.addCard(card)
-                }
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
             )
         }
     }
@@ -97,10 +104,20 @@ fun CardsList(
     cards: List<Card>,
     onDeleteCard: (Card) -> Unit
 ) {
-    if (LocalConfiguration.current.screenWidthDp <= 600) {
+    if (cards.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.no_cards_message),
+                style = MaterialTheme.typography.bodyLarge,
+                textAlign = TextAlign.Center
+            )
+        }
+    } else if (LocalConfiguration.current.screenWidthDp <= 600) {
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxHeight(0.8f)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items = cards, key = { it.id ?: 0 }) { card ->
                 CreditCard(card = card, onDelete = onDeleteCard)
@@ -110,8 +127,7 @@ fun CardsList(
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             verticalArrangement = Arrangement.spacedBy(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = Modifier.fillMaxHeight(0.8f)
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             items(items = cards, key = { it.id ?: 0 }) { card ->
                 CreditCard(card = card, onDelete = onDeleteCard)
@@ -170,6 +186,7 @@ fun CreditCard(card: Card, onDelete: (Card) -> Unit) {
 @Composable
 fun CardItem(card: Card) {
     var showDetails by remember { mutableStateOf(false) }
+    val bankName = remember(card.number) { inferBankName(card.number) }
 
     Card(
         modifier = Modifier
@@ -184,7 +201,7 @@ fun CardItem(card: Card) {
         ) {
             Column {
                 Text(
-                    text = card.type,
+                    text = bankName,
                     color = Color.White,
                     fontSize = 24.sp
                 )
@@ -210,7 +227,7 @@ fun CardItem(card: Card) {
                 modifier = Modifier.align(Alignment.TopEnd)
             ) {
                 Icon(
-                    imageVector = if (showDetails) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                    imageVector = if (!showDetails) Icons.Default.VisibilityOff else Icons.Default.Visibility,
                     contentDescription = if (showDetails) stringResource(R.string.hide_details) else stringResource(R.string.show_details),
                     tint = Color.White
                 )
@@ -220,15 +237,13 @@ fun CardItem(card: Card) {
 }
 
 @Composable
-fun AddCardButton(onAddCard: (Card) -> Unit) {
+fun AddCardButton(onAddCard: (Card) -> Unit, modifier: Modifier = Modifier) {
     var showAddCardDialog by remember { mutableStateOf(false) }
 
     Button(
         onClick = { showAddCardDialog = true },
         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 16.dp)
+        modifier = modifier
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = stringResource(R.string.add_card))
         Spacer(modifier = Modifier.width(8.dp))
@@ -278,7 +293,6 @@ fun AddCardDialog(
                     value = number,
                     onValueChange = { if (it.length <= 16) number = it },
                     label = { Text(stringResource(R.string.card_number)) },
-//                    keyboardType = KeyboardType.Number,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -288,7 +302,6 @@ fun AddCardDialog(
                     onValueChange = { if (it.length <= 5) expirationDate = it },
                     label = { Text(stringResource(R.string.expiration_date)) },
                     placeholder = { Text("MM/YY") },
-//                    keyboardType = KeyboardType.Number,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -313,7 +326,6 @@ fun AddCardDialog(
                     value = cvv,
                     onValueChange = { if (it.length <= 3) cvv = it },
                     label = { Text(stringResource(R.string.cvv)) },
-//                    keyboardType = KeyboardType.Number,
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
@@ -336,4 +348,14 @@ fun AddCardDialog(
             }
         }
     )
+}
+
+fun inferBankName(cardNumber: String): String {
+    return when {
+        cardNumber.startsWith("4") -> "Visa"
+        cardNumber.startsWith("5") -> "MasterCard"
+        cardNumber.startsWith("34") || cardNumber.startsWith("37") -> "American Express"
+        cardNumber.startsWith("6") -> "Discover"
+        else -> "Unknown Bank"
+    }
 }

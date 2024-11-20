@@ -152,6 +152,7 @@
     <string name="cvv">CVV</string>
     <string name="card_type">Card Type</string>
     <string name="unknown_error">An unknown error occurred</string>
+    <string name="no_cards_message">You don\'t have any cards yet</string>
     <string name="transaction_details">Transaction details</string>
     <string name="transfer_to">Transfer to</string>
     <string name="see_receipt">See receipt</string>
