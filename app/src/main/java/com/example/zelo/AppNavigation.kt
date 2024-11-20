@@ -117,10 +117,22 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
 
         // Screens for logged-in users
         composable("home") { DashboardScreen(navController) }
-        composable("movements") { MovementsScreen(navController) }
+        composable("movements") {
+            MovementsScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToIncomes = { navController.navigate("movements/incomes") },
+                onNavigateToExpenses = { navController.navigate("movements/expenses") }
+            )
+        }
         composable("movements/incomes") { IncomeScreen(navController) }
         composable("movements/expenses") { ExpensesScreen(navController) }
-        composable("transference") { TransferScreen(navController) }
+        composable("transference") {
+            TransferScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateToForm = { navController.navigate("transference/form") },
+                onNavigateToContacts = { navController.navigate("transference/contacts") }
+            )
+        }
         composable("transference/form") { TransferDetailScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmation")}) }
         composable("transference/confirmed") { TransactionConfirmedScreen( onReturnHome = {navController.navigate("home")}) }
         composable("transference/contacts") { ContactsScreen(navController) }
