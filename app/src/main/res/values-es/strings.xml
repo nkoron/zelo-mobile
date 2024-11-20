@@ -144,9 +144,8 @@
     <string name="two_factor_auth">Autenticación de dos factores</string>
     <string name="bio_auth">Inicio de sesión biométrico</string>
     <string name="verify">Verificar</string>
-    <string name="verify_account">Verificar Tu Cuenta</string>
+    <string name="verify_account">Verificar tu cuenta</string>
     <string name = "verify_account_email"> Introducir el código de verificación enviado a tu correo electrónico</string>
     <string name = "verification_code">Código de Verificación</string>
     <string name = "resend_code">Reenviar código</string>
-
 </resources>

@@ -59,7 +59,7 @@ fun ContactsScreen(
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White,
                     titleContentColor = Color.Black,
                     navigationIconContentColor = Color.Black
@@ -89,10 +89,11 @@ fun ContactsScreen(
                         Icon(Icons.Default.FilterList, contentDescription = stringResource(R.string.filter))
                     }
                 },
-                colors = TextFieldDefaults.textFieldColors(
-                    containerColor = Color(0xFFF5F5F5),
-                    unfocusedIndicatorColor = Color.Transparent,
-                    focusedIndicatorColor = Color.Transparent
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color(0xFFF5F5F5), // Background color when focused
+                    unfocusedContainerColor = Color(0xFFF5F5F5), // Background color when unfocused
+                    focusedIndicatorColor = Color.Transparent, // Remove focused underline
+                    unfocusedIndicatorColor = Color.Transparent // Remove unfocused underline
                 ),
                 shape = RoundedCornerShape(24.dp)
             )

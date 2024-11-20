@@ -52,7 +52,7 @@ fun DepositScreen(
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color.White,
                     titleContentColor = Color.Black,
                     navigationIconContentColor = Color.Black
@@ -88,9 +88,11 @@ fun DepositScreen(
                     trailingIcon = {
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        containerColor = Color(0xFFF5F5F5),
-                        unfocusedBorderColor = Color.Transparent
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = Color(0xFFF5F5F5), // Background color when focused
+                        unfocusedContainerColor = Color(0xFFF5F5F5), // Background color when unfocused
+                        focusedIndicatorColor = Color.Transparent, // Remove focused underline
+                        unfocusedIndicatorColor = Color.Transparent // Remove unfocused underline
                     ),
                     shape = RoundedCornerShape(8.dp)
                 )

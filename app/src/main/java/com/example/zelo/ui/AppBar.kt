@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
@@ -36,7 +37,7 @@ fun AppBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
+        horizontalArrangement = Arrangement.SpaceAround,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -50,6 +51,7 @@ fun AppBar(
                 }
                 Spacer(modifier = Modifier.width(8.dp))
             }
+            if(LocalConfiguration.current.screenWidthDp >= 600) Spacer(modifier = Modifier.width(50.dp))
             Surface(
                 shape = CircleShape,
                 color = Color(0xFF6C63FF),
