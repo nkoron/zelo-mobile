@@ -1,7 +1,8 @@
-package com.example.zelo.model
+package com.example.zelo.network.model
 
-import java.util.UUID
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Payment(
     val id: Int,
     val amount: Double,
@@ -9,7 +10,7 @@ data class Payment(
     val balanceBefore: Double,
     val balanceAfter: Double,
     val pending: Boolean,
-    val linkUUID: UUID,
+    val linkUUID: String,
     val createdAt: String,
     val updatedAt: String,
     val card: Card,

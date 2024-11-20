@@ -1,5 +1,8 @@
-package com.example.zelo.model
+package com.example.zelo.network.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class User(
     val id: Int,
     val firstName: String,

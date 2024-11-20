@@ -2,7 +2,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -18,6 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,23 +26,30 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.dashboard.PaymentLinkDialog
+import com.example.zelo.dashboard.WalletViewModel
 import com.example.zelo.transference.TransferDetailsDialog
+import kotlinx.coroutines.Job
 
 @Composable
 fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     userName: String = "Fer Galan",
-    balance: Double = 81910.00
+    balance: Double = 81910.00,
+    viewModel: WalletViewModel = viewModel(factory = WalletViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     if(LocalConfiguration.current.screenWidthDp <= 600) {
         Column(
             modifier = modifier
@@ -53,10 +60,10 @@ fun DashboardScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             // Balance Card
-            BalanceCard(balance, navController)
+            BalanceCard(uiState.walletDetail?.balance, navController)
 
             Spacer(modifier = Modifier.height(24.dp))
-            QuickActions()
+            QuickActions({viewModel.login("johndoe@email.com", "1234567890")})
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -77,9 +84,9 @@ fun DashboardScreen(
                     .fillMaxHeight()
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
-                BalanceCard(balance, navController)
+                BalanceCard(uiState.walletDetail?.balance, navController)
                 Spacer(modifier = Modifier.height(24.dp))
-                QuickActions()
+                QuickActions( {viewModel.login("johndoe@email.com", "1234567890")})
             }
             Column(
                 modifier = Modifier
@@ -135,7 +142,9 @@ private fun RecentMovements() {
 }
 
 @Composable
-private fun QuickActions() {
+private fun QuickActions(
+    login: ()->Unit,
+) {
     var showDialog by remember { mutableStateOf(false) }
     var showPaymentLink by remember { mutableStateOf(false) }
     if (showDialog) {
@@ -176,6 +185,7 @@ private fun QuickActions() {
                 text = stringResource(R.string.your_info)
             )
             QuickActionButton(
+                onClick = login,
                 icon = Icons.Default.PersonAdd,
                 text = stringResource(R.string.contacts)
             )
@@ -184,7 +194,7 @@ private fun QuickActions() {
 }
 
 @Composable
-private fun BalanceCard(balance: Double, navController: NavController) {
+private fun BalanceCard(balance: Double?, navController: NavController) {
     Card(
         modifier =  Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)

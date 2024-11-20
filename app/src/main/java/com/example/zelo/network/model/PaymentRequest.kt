@@ -1,4 +1,4 @@
-package com.example.zelo.model
+package com.example.zelo.network.model
 
 import kotlinx.serialization.Serializable
 
@@ -26,6 +26,7 @@ data class LinkPaymentRequest(
     val description: String,
 ) : PaymentRequest()
 
+@Serializable
 data class PaymentIdRequest(
     val id: Int
 )
