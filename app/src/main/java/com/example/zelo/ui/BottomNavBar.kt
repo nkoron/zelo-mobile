@@ -11,10 +11,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
+import com.example.zelo.R
 
 
 @Composable
@@ -36,7 +38,7 @@ fun BottomNavBar(
             Box(modifier = Modifier.size(76.dp).padding(16.dp)) {
                 Icon(
                     imageVector = Icons.Filled.QrCode2,
-                    contentDescription = "QR Code",
+                    contentDescription = stringResource(R.string.qr_code),
                     tint = Color.White,
                     modifier = Modifier.fillMaxSize()
                 )
@@ -55,26 +57,26 @@ fun BottomNavBar(
             ) {
                 NavBarItem(
                     icon = Icons.Outlined.Home,
-                    label = "Home",
+                    label = stringResource(R.string.home),
                     isSelected = currentRoute == "home" || currentRoute.startsWith("transference"),
                     onClick = { navController.navigate("home") }
                 )
                 NavBarItem(
                     icon = Icons.Outlined.ShowChart,
-                    label = "Actividad",
+                    label = stringResource(R.string.activity) ,
                     isSelected = currentRoute == "movements",
                     onClick = { navController.navigate("movements") }
                 )
                 Spacer(modifier = Modifier.width(56.dp))
                 NavBarItem(
                     icon = Icons.Outlined.CreditCard,
-                    label = "Tarjetas",
+                    label = stringResource(R.string.cards),
                     isSelected = currentRoute == "cards",
                     onClick = { navController.navigate("cards") }
                 )
                 NavBarItem(
                     icon = Icons.Outlined.Person,
-                    label = "Perfil",
+                    label = stringResource(R.string.profile),
                     isSelected = currentRoute == "profile",
                     onClick = { navController.navigate("profile") }
                 )

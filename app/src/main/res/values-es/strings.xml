@@ -153,5 +153,17 @@
     <string name="cvv">CVV</string>
     <string name="card_type">Tipo de Tarjeta</string>
     <string name="unknown_error">Ha ocurrido un error inesperado</string>
+    <string name="transaction_details">Detalles de la transacción</string>
+    <string name="transfer_to">Transferencia a</string>
+    <string name="see_receipt">Ver comprobante</string>
+    <string name="money_transfer">Transferencia de dinero</string>
+    <string name="payment_method">Medio de pago</string>
+    <string name="transaction_id">Número de operación</string>
+    <string name="hello">Hola</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="qr_code">Código QR</string>
+    <string name="home">Principal</string>
+    <string name="activity">Actividad</string>
+    <string name="cards">Tarjetas</string>
 
 </resources>
