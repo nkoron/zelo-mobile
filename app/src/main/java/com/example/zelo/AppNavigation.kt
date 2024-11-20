@@ -127,7 +127,18 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}) }
         // You can uncomment these screens as needed
         composable("cards") { CardsScreen(navController) }
-        composable("profile") { ProfileScreen(navController) }
+        composable("profile") {
+            ProfileScreen(
+                onNavigateBack = { navController.popBackStack() },
+                onNavigateTo = { route -> navController.navigate(route) },
+                onLogout = {
+                    // Handle logout logic here
+                    navController.navigate("login") {
+                        popUpTo("home") { inclusive = true }
+                    }
+                }
+            )
+        }
         composable("profile/accessibility") { AccessibilityScreen(onBack = {navController.popBackStack()}) }
         composable("profile/security") { SecurityScreen(onBack = {navController.popBackStack()}) }
         composable("profile/account_data") { AccountDataScreen(onBack = {navController.popBackStack()}) }
