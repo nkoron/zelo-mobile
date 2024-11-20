@@ -138,7 +138,9 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         composable("transference/contacts") { ContactsScreen(navController) }
         composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}) }
         // You can uncomment these screens as needed
-        composable("cards") { CardsScreen(navController) }
+        composable("cards") { CardsScreen(
+            onBack = { navController.popBackStack() }
+        ) }
         composable("profile") {
             ProfileScreen(
                 onNavigateBack = { navController.popBackStack() },
