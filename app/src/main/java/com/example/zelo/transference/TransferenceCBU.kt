@@ -33,7 +33,8 @@ data class PaymentMethod(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferDetailScreen(
-    navController: NavController,
+    onConfirm: () -> Unit = {},
+    onBack: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     var cbuAlias by remember { mutableStateOf("") }
@@ -77,7 +78,7 @@ fun TransferDetailScreen(
             TopAppBar(
                 title = { Text("Transferencias") },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
@@ -231,7 +232,7 @@ fun TransferDetailScreen(
                 ) {
                     // Transfer Button
                     Button(
-                        onClick = { navController.navigate("transference/confirm") },
+                        onClick = { onConfirm() },
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
@@ -259,7 +260,7 @@ fun TransferDetailScreen(
 
                     // Cancel Button
                     Button(
-                        onClick = { navController.popBackStack() },
+                        onClick = { onBack() },
                         modifier = Modifier
                             .weight(1f)
                             .height(48.dp),
@@ -355,14 +356,5 @@ fun PaymentMethodCard(
                 )
             }
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun TransferDetailScreenPreview() {
-    val navController = rememberNavController()
-    MaterialTheme {
-        TransferDetailScreen(navController)
     }
 }

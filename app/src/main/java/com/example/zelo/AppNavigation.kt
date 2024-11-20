@@ -42,6 +42,7 @@ import com.example.zelo.profile.PersonalInfoScreen
 import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
 import com.example.zelo.qr.QRScannerScreen
+import com.example.zelo.transference.TransactionConfirmedScreen
 import com.example.zelo.ui.ZeloNavigationRail
 
 @Composable
@@ -120,9 +121,10 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         composable("movements/incomes") { IncomeScreen(navController) }
         composable("movements/expenses") { ExpensesScreen(navController) }
         composable("transference") { TransferScreen(navController) }
-        composable("transference/form") { TransferDetailScreen(navController) }
-        composable("transference/confirm") { TransferConfirmationScreen() }
+        composable("transference/form") { TransferDetailScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmation")}) }
+        composable("transference/confirmed") { TransactionConfirmedScreen( onReturnHome = {navController.navigate("home")}) }
         composable("transference/contacts") { ContactsScreen(navController) }
+        composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}) }
         // You can uncomment these screens as needed
         composable("cards") { CardsScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
