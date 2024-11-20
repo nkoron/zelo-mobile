@@ -14,7 +14,7 @@ import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ResetPassScreen(navController: NavController) {
+fun ResetPassScreen(onBack: () -> Unit) {
     var currentPassword by remember { mutableStateOf("") }
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -24,7 +24,7 @@ fun ResetPassScreen(navController: NavController) {
             TopAppBar(
                 title = { Text(stringResource(R.string.reset_password)) },
                 navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack() }) {
+                    IconButton(onClick = { onBack() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
                     }
                 }

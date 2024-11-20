@@ -128,14 +128,14 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         // You can uncomment these screens as needed
         composable("cards") { CardsScreen(navController) }
         composable("profile") { ProfileScreen(navController) }
-        composable("profile/accessibility") { AccessibilityScreen(navController) }
-        composable("profile/security") { SecurityScreen(navController) }
-        composable("profile/account_data") { AccountDataScreen(navController) }
-        composable("profile/personal_info") { PersonalInfoScreen(navController) }
-        composable("profile/reset_password") { ResetPassScreen(navController) }
-        composable("profile/privacy") { PrivacyScreen(navController) }
-        composable("profile/messages") { MessagesScreen(navController) }
-        composable("profile/help") { HelpScreen(navController) }
+        composable("profile/accessibility") { AccessibilityScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/security") { SecurityScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/account_data") { AccountDataScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/personal_info") { PersonalInfoScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/reset_password") { ResetPassScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/privacy") { PrivacyScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/messages") { MessagesScreen(onBack = {navController.popBackStack()}) }
+        composable("profile/help") { HelpScreen(onBack = {navController.popBackStack()}) }
         composable("home/deposit") { DepositScreen(onBack = { navController.navigate("home") },) }
         composable("qr") { QRScannerScreen() }
     }
