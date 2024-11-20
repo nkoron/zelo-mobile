@@ -4,15 +4,16 @@ import BottomNavBar
 import DashboardScreen
 import MovementsScreen
 import ProfileScreen
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -21,7 +22,6 @@ import com.example.zelo.login_register.RegisterScreen
 import com.example.zelo.login_register.ResetPasswordScreen
 import com.example.zelo.profile.ResetPassScreen
 import com.example.zelo.login_register.SignInScreen
-import com.example.zelo.ui.AuthViewModel
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -34,6 +34,7 @@ import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
 import com.example.zelo.activity.*
+import com.example.zelo.login_register.AuthViewModel
 import com.example.zelo.profile.AccessibilityScreen
 import com.example.zelo.profile.AccountDataScreen
 import com.example.zelo.profile.HelpScreen
@@ -45,13 +46,14 @@ import com.example.zelo.qr.QRScannerScreen
 import com.example.zelo.transference.TransactionConfirmedScreen
 import com.example.zelo.ui.ZeloNavigationRail
 
+@SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AppNavigation() {
     // Access the ViewModel to track login state
-    val authViewModel: AuthViewModel = viewModel() // Use viewModel() here
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)) // Use viewModel() here
 
     // Observing the login state from the ViewModel
-    val isLoggedIn = authViewModel.isLoggedIn.collectAsState(initial = false).value // Use collectAsState to observe LiveData or StateFlow
+    val isLoggedIn = authViewModel.uiState.value.isAuthenticated // Use collectAsState to observe LiveData or StateFlow
 
     // Create a NavHostController to manage the navigation
     val navController = rememberNavController()
@@ -60,43 +62,43 @@ fun AppNavigation() {
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
-        // Wrap the navigation with Scaffold to add the bottom bar
+    // Wrap the navigation with Scaffold to add the bottom bar
     Scaffold(
-            topBar = {
-                if (isLoggedIn) {
-                    AppBar(
-                        onNotificationsClick = {},
-                    )
-                }
-            },
-
-            bottomBar = {
-                if (isLoggedIn && !isTablet) {
-                    BottomNavBar(
-                        navController = navController,
-                        currentRoute = currentRoute // Pass the current route here
-                    )
-                }
+        topBar = {
+            if (isLoggedIn) {
+                AppBar(
+                    onNotificationsClick = {},
+                )
             }
+        },
 
-        ) { paddingValues ->
-            Row(modifier = Modifier.fillMaxSize()) {
-                if (isTablet && isLoggedIn) {
-                    ZeloNavigationRail(
-                        navController = navController,
-                        currentRoute = currentRoute,
-                        modifier = Modifier.padding(paddingValues)
-                    )
-                }
-                MyNavHost(
+        bottomBar = {
+            if (isLoggedIn && !isTablet) {
+                BottomNavBar(
                     navController = navController,
-                    isLoggedIn = isLoggedIn,
-                    paddingValues = paddingValues,
-                    authViewModel = authViewModel
+                    currentRoute = currentRoute // Pass the current route here
                 )
             }
         }
+
+    ) { paddingValues ->
+        Row(modifier = Modifier.fillMaxSize()) {
+            if (isTablet && isLoggedIn) {
+                ZeloNavigationRail(
+                    navController = navController,
+                    currentRoute = currentRoute,
+                    modifier = Modifier.padding(paddingValues)
+                )
+            }
+            MyNavHost(
+                navController = navController,
+                isLoggedIn = isLoggedIn,
+                paddingValues = paddingValues,
+                authViewModel = authViewModel
+            )
+        }
     }
+}
 
 
 @Composable
@@ -146,6 +148,7 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
                 onNavigateTo = { route -> navController.navigate(route) },
                 onLogout = {
                     // Handle logout logic here
+                    authViewModel.logout()
                     navController.navigate("login") {
                         popUpTo("home") { inclusive = true }
                     }
