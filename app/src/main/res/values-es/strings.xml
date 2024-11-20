@@ -166,5 +166,6 @@
     <string name="home">Principal</string>
     <string name="activity">Actividad</string>
     <string name="cards">Tarjetas</string>
+    <string name="see_details">Detalles</string>
 
 </resources>

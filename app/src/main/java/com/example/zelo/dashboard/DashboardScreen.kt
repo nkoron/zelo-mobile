@@ -351,7 +351,7 @@ fun TransactionItem(
                     color = Color.Gray
                 )
                 Text(
-                    text = "Detalles",
+                    text = stringResource(R.string.see_details),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color(0xFF6C63FF),
                     modifier = Modifier.clickable { showDetailsDialog =! showDetailsDialog }

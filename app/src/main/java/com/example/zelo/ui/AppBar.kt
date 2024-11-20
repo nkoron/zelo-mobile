@@ -75,13 +75,19 @@ fun AppBar(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize() // Ensure the Box fills the entire Surface
                 ) {
+                    val initials = buildString {
+                        uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                        uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                    }
+
                     Text(
-                        text = "${uiState.user?.firstName?: ""} ${uiState.user?.lastName?: ""} ",
+                        text = initials,
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
             }
 
             Spacer(modifier = Modifier.width(12.dp))
