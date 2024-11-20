@@ -148,4 +148,10 @@
     <string name = "verify_account_email"> Introducir el código de verificación enviado a tu correo electrónico</string>
     <string name = "verification_code">Código de Verificación</string>
     <string name = "resend_code">Reenviar código</string>
+    <string name="card_number">Numero de Tarjeta</string>
+    <string name="expiration_date">Fecha de Expiracion</string>
+    <string name="cvv">CVV</string>
+    <string name="card_type">Tipo de Tarjeta</string>
+    <string name="unknown_error">Ha ocurrido un error inesperado</string>
+
 </resources>

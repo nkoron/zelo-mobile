@@ -147,4 +147,9 @@
     <string name="verify_account_email">Enter the verification code sent to your email</string>
     <string name="verification_code">Verification Code</string>
     <string name="resend_code">Resend code</string>
+    <string name="card_number">Card Number</string>
+    <string name="expiration_date">Expiration Date</string>
+    <string name="cvv">CVV</string>
+    <string name="card_type">Card Type</string>
+    <string name="unknown_error">An unknown error occurred</string>
 </resources>
