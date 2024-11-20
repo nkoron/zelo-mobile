@@ -25,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -42,128 +43,66 @@ fun DashboardScreen(
     userName: String = "Fer Galan",
     balance: Double = 81910.00
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
-            .padding(16.dp)
-    ) {
-        Spacer(modifier = Modifier.height(24.dp))
+    if(LocalConfiguration.current.screenWidthDp <= 600) {
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+                .padding(16.dp)
+        ) {
+            Spacer(modifier = Modifier.height(24.dp))
 
-        // Balance Card
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+            // Balance Card
+            BalanceCard(balance, navController)
+
+            Spacer(modifier = Modifier.height(24.dp))
+            QuickActions()
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Recent Movements
+            RecentMovements()
+        }
+    } else {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .background(Color(0xFFF5F5F5))
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Column(
-                modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Balance",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.Gray
-                )
-                Text(
-                    text = "$${String.format("%,.2f", balance)}",
-                    style = MaterialTheme.typography.headlineLarge,
-                    fontWeight = FontWeight.Bold
-                )
-                IconButton(onClick = { /* Toggle balance visibility */ }) {
-                    Icon(
-                        imageVector = Icons.Default.Visibility,
-                        contentDescription = stringResource(R.string.balance_visibility)
-                    )
-                }
-                Spacer(modifier = Modifier.height(16.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Button(
-                        onClick = { navController.navigate("transference")},
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1A1B25)
-                        )
-                    ) {
-                        Text(stringResource(R.string.transfer))
-                        Icon(
-                            imageVector = Icons.AutoMirrored.Filled.ArrowForward,
-                            contentDescription = null,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                    Button(
-                        onClick = { navController.navigate("home/deposit") },
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF1A1B25)
-                        )
-                    ) {
-                        Text(stringResource(R.string.deposit))
-                        Icon(
-                            imageVector = Icons.Default.ArrowDownward,
-                            contentDescription = null,
-                            modifier = Modifier.padding(start = 8.dp)
-                        )
-                    }
-                }
-            }
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-        var showDialog by remember { mutableStateOf(false) }
-        var showPaymentLink by remember { mutableStateOf(false) }
-        if (showDialog) {
-            UserDataDialog(
-                onDismiss = { showDialog = false },
-                userData = UserData(
-                    fullName = "Juan Rodriguez",
-                    alias = "perro.overo.bien.cl",
-                    cbu = "0000120043456552634343",
-                    cuit = "20-20979631-9"
-                )
-            )
-        }
-        if(showPaymentLink){
-            PaymentLinkDialog(
-                onDismiss = {showPaymentLink = false},
-                )
-        }
-        // Quick Actions
-        Card(
-            modifier = Modifier.fillMaxWidth(),
-            elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
-        ) {
-            Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                horizontalArrangement = Arrangement.SpaceAround
+                    .weight(1f)
+                    .fillMaxHeight()
             ) {
-                QuickActionButton(
-                    onClick = {showPaymentLink= ! showPaymentLink},
-                    icon = Icons.Default.Link,
-                    text = stringResource(R.string.payment_link)
-                )
-                QuickActionButton(
-                    onClick = {showDialog = ! showDialog},
-                    icon = Icons.Default.Person,
-                    text = stringResource(R.string.your_info)
-                )
-                QuickActionButton(
-                    icon = Icons.Default.PersonAdd,
-                    text = stringResource(R.string.contacts)
-                )
+                Spacer(modifier = Modifier.height(24.dp))
+                BalanceCard(balance, navController)
+                Spacer(modifier = Modifier.height(24.dp))
+                QuickActions()
+            }
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            ) {
+                Spacer(modifier = Modifier.height(24.dp))
+                RecentMovements()
             }
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Recent Movements
+@Composable
+private fun RecentMovements() {
+    Card(
+        modifier =  Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
         Text(
             text = stringResource(R.string.transactions),
             style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(vertical = 8.dp)
+            modifier = Modifier.padding(8.dp)
         )
 
         LazyColumn {
@@ -175,17 +114,130 @@ fun DashboardScreen(
                         time = "Ahora",
                         showAvatar = true
                     )
+
                     1 -> TransactionItem(
                         name = "Open 25",
                         description = stringResource(R.string.sent) + "$1000",
                         time = "15m",
                         showLogo = true
                     )
+
                     2 -> TransactionItem(
                         name = "Fer Galan",
                         description = stringResource(R.string.sent) + "$1000",
                         time = "6h",
                         showAvatar = true
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickActions() {
+    var showDialog by remember { mutableStateOf(false) }
+    var showPaymentLink by remember { mutableStateOf(false) }
+    if (showDialog) {
+        UserDataDialog(
+            onDismiss = { showDialog = false },
+            userData = UserData(
+                fullName = "Juan Rodriguez",
+                alias = "perro.overo.bien.cl",
+                cbu = "0000120043456552634343",
+                cuit = "20-20979631-9"
+            )
+        )
+    }
+    if (showPaymentLink) {
+        PaymentLinkDialog(
+            onDismiss = { showPaymentLink = false },
+        )
+    }
+    // Quick Actions
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceAround
+        ) {
+            QuickActionButton(
+                onClick = { showPaymentLink = !showPaymentLink },
+                icon = Icons.Default.Link,
+                text = stringResource(R.string.payment_link)
+            )
+            QuickActionButton(
+                onClick = { showDialog = !showDialog },
+                icon = Icons.Default.Person,
+                text = stringResource(R.string.your_info)
+            )
+            QuickActionButton(
+                icon = Icons.Default.PersonAdd,
+                text = stringResource(R.string.contacts)
+            )
+        }
+    }
+}
+
+@Composable
+private fun BalanceCard(balance: Double, navController: NavController) {
+    Card(
+        modifier =  Modifier.fillMaxWidth(),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(
+            modifier = Modifier.padding(24.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = "Balance",
+                style = MaterialTheme.typography.titleMedium,
+                color = Color.Gray
+            )
+            Text(
+                text = "$${String.format("%,.2f", balance)}",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold
+            )
+            IconButton(onClick = { /* Toggle balance visibility */ }) {
+                Icon(
+                    imageVector = Icons.Default.Visibility,
+                    contentDescription = stringResource(R.string.balance_visibility)
+                )
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(
+                    onClick = { navController.navigate("transference") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1A1B25)
+                    )
+                ) {
+                    Text(stringResource(R.string.transfer))
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 8.dp)
+                    )
+                }
+                Button(
+                    onClick = { navController.navigate("home/deposit") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFF1A1B25)
+                    )
+                ) {
+                    Text(stringResource(R.string.deposit))
+                    Icon(
+                        imageVector = Icons.Default.ArrowDownward,
+                        contentDescription = null,
+                        modifier = Modifier.padding(start = 8.dp)
                     )
                 }
             }
@@ -246,7 +298,7 @@ fun TransactionItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
