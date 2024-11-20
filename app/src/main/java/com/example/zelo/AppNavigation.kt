@@ -65,7 +65,6 @@ fun AppNavigation() {
             topBar = {
                 if (isLoggedIn) {
                     AppBar(
-                        userName = "Fer Galan",
                         onNotificationsClick = {},
                     )
                 }

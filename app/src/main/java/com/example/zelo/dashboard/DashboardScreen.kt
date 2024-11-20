@@ -35,18 +35,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.dashboard.DashboardViewModel
 import com.example.zelo.dashboard.PaymentLinkDialog
-import com.example.zelo.dashboard.WalletViewModel
 import com.example.zelo.transference.TransferDetailsDialog
-import kotlinx.coroutines.Job
 
 @Composable
 fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     userName: String = "Fer Galan",
-    balance: Double = 81910.00,
-    viewModel: WalletViewModel = viewModel(factory = WalletViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+    viewModel: DashboardViewModel = viewModel(factory = DashboardViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     val uiState by viewModel.uiState.collectAsState()
 

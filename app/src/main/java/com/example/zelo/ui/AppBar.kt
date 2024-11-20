@@ -21,20 +21,30 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
+import com.example.zelo.dashboard.DashboardViewModel
 
 @Composable
 fun AppBar(
-    userName: String,
+    viewModel: TopBarViewModel = viewModel(factory = TopBarViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    )),
     onBackClick: (() -> Unit)? = null, // Nullable for optional back navigation
     subtitle: String? = null,         // Nullable for optional subtitle
     onNotificationsClick: () -> Unit
 ) {
+    val uiState = viewModel.uiState
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -64,7 +74,7 @@ fun AppBar(
                     modifier = Modifier.fillMaxSize() // Ensure the Box fills the entire Surface
                 ) {
                     Text(
-                        text = userName.firstOrNull()?.toString() ?: "",
+                        text = "${uiState.user?.firstName?: ""} ${uiState.user?.lastName?: ""} ",
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
@@ -75,7 +85,7 @@ fun AppBar(
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Hola, $userName!",
+                    text = "Hola,${uiState.user?.firstName ?: ""} ${uiState.user?.lastName ?: ""} !",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )

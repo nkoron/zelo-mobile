@@ -27,13 +27,13 @@ import retrofit2.http.Path
 
 interface WalletApiService {
     @GET("api/payment")
-    suspend fun getPayments(): List<Payment>
+    suspend fun getPayments(): Response<List<Payment>>
 
     @GET("api/payment/{paymentId}")
-    suspend fun getPaymentById(paymentIdRequest: PaymentIdRequest): Payment
+    suspend fun getPaymentById(paymentIdRequest: PaymentIdRequest): Response<Payment>
 
     @GET("api/payment/link/{linkUUID}")
-    suspend fun getPaymentsByLinkUUID(linkUUID: String): Payment
+    suspend fun getPaymentsByLinkUUID(linkUUID: String): Response<Payment>
 
     @POST("api/payment")
     suspend fun createPayment(@Body paymentRequest: PaymentRequest): Response<Payment>

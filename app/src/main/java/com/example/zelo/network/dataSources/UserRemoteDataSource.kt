@@ -4,7 +4,6 @@ import android.util.Log
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.WalletApiService
 import com.example.zelo.network.model.LoginRequest
-import com.example.zelo.network.model.LoginResponse
 import com.example.zelo.network.model.User
 
 class UserRemoteDataSource(
@@ -18,17 +17,18 @@ class UserRemoteDataSource(
         }
         sessionManager.saveAuthToken(loginResponse.token)
     }
-    suspend fun logout(){
+
+    suspend fun logout() {
         handleApiResponse {
             userService.logoutUser()
         }
         sessionManager.removeAuthToken()
 
     }
+
     suspend fun getCurrentUser(): User {
         return handleApiResponse {
             userService.getUser()
         }
-
     }
 }
