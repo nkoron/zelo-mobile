@@ -1,18 +1,17 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.zelo.login_register
 
 import android.app.DatePickerDialog
-import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.CreditCard
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -20,6 +19,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -27,16 +28,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.zelo.R
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterScreen(
     navController: NavController,
@@ -51,6 +48,12 @@ fun RegisterScreen(
         birthDate: String
     ) -> Unit = { _, _, _, _, _, _, _ -> }
 ) {
+    val configuration = LocalConfiguration.current
+    val screenWidth = configuration.screenWidthDp.dp
+    val screenHeight = configuration.screenHeightDp.dp
+    val isLandscape = screenWidth > screenHeight
+    val isTablet = screenWidth > 600.dp
+
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
@@ -65,7 +68,6 @@ fun RegisterScreen(
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
 
-    // Abrir el selector de fecha
     fun openDatePicker() {
         val datePickerDialog = DatePickerDialog(
             navController.context,
@@ -80,218 +82,301 @@ fun RegisterScreen(
         datePickerDialog.show()
     }
 
-    Column(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF1A1B25))
-            .padding(24.dp),
+    ) {
+        if (isLandscape || isTablet) {
+            Row(
+                modifier = Modifier.fillMaxSize(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.card),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight(),
+                    contentScale = ContentScale.Fit
+                )
+                RegisterContent(
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    phone = phone,
+                    dni = dni,
+                    name = name,
+                    surname = surname,
+                    birthDate = birthDate,
+                    passwordVisible = passwordVisible,
+                    confirmPasswordVisible = confirmPasswordVisible,
+                    onEmailChange = { email = it },
+                    onPasswordChange = { password = it },
+                    onConfirmPasswordChange = { confirmPassword = it },
+                    onPhoneChange = { phone = it },
+                    onDniChange = { dni = it },
+                    onNameChange = { name = it },
+                    onSurnameChange = { surname = it },
+                    onBirthDateChange = { birthDate = it },
+                    onPasswordVisibilityChange = { passwordVisible = it },
+                    onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
+                    onDatePickerClick = { openDatePicker() },
+                    onSignUp = { onSignUp(email, password, phone, dni, name, surname, birthDate) },
+                    navController = navController,
+                    modifier = Modifier
+                        .weight(1f)
+                        .verticalScroll(rememberScrollState())
+                        .padding(24.dp)
+                )
+            }
+        } else {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.card),
+                    contentDescription = null,
+                    modifier = Modifier.size(200.dp),
+                    contentScale = ContentScale.Fit
+                )
+                RegisterContent(
+                    email = email,
+                    password = password,
+                    confirmPassword = confirmPassword,
+                    phone = phone,
+                    dni = dni,
+                    name = name,
+                    surname = surname,
+                    birthDate = birthDate,
+                    passwordVisible = passwordVisible,
+                    confirmPasswordVisible = confirmPasswordVisible,
+                    onEmailChange = { email = it },
+                    onPasswordChange = { password = it },
+                    onConfirmPasswordChange = { confirmPassword = it },
+                    onPhoneChange = { phone = it },
+                    onDniChange = { dni = it },
+                    onNameChange = { name = it },
+                    onSurnameChange = { surname = it },
+                    onBirthDateChange = { birthDate = it },
+                    onPasswordVisibilityChange = { passwordVisible = it },
+                    onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
+                    onDatePickerClick = { openDatePicker() },
+                    onSignUp = { onSignUp(email, password, phone, dni, name, surname, birthDate) },
+                    navController = navController
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RegisterContent(
+    email: String,
+    password: String,
+    confirmPassword: String,
+    phone: String,
+    dni: String,
+    name: String,
+    surname: String,
+    birthDate: String,
+    passwordVisible: Boolean,
+    confirmPasswordVisible: Boolean,
+    onEmailChange: (String) -> Unit,
+    onPasswordChange: (String) -> Unit,
+    onConfirmPasswordChange: (String) -> Unit,
+    onPhoneChange: (String) -> Unit,
+    onDniChange: (String) -> Unit,
+    onNameChange: (String) -> Unit,
+    onSurnameChange: (String) -> Unit,
+    onBirthDateChange: (String) -> Unit,
+    onPasswordVisibilityChange: (Boolean) -> Unit,
+    onConfirmPasswordVisibilityChange: (Boolean) -> Unit,
+    onDatePickerClick: () -> Unit,
+    onSignUp: () -> Unit,
+    navController: NavController,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-
-        // Icono de la tarjeta
-        Image(
-            painter = painterResource(id = R.drawable.card),
-            contentDescription = null,
-            modifier = Modifier.size(256.dp),
-            alignment = Alignment.Center)
-        Spacer(modifier = Modifier.height(24.dp))
-
         Text(
             text = stringResource(R.string.register),
             style = MaterialTheme.typography.headlineLarge.copy(
                 fontWeight = FontWeight.Bold,
             ),
             color = Color.White,
-            modifier = Modifier.fillMaxWidth().align(Alignment.Start),
+            modifier = Modifier.fillMaxWidth().align(Alignment.Start)
         )
-
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        // Contenedor con scroll solo para los campos de texto
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f) // Hace que el Box ocupe todo el espacio disponible
-                .verticalScroll(rememberScrollState()) // Hace que solo este Box sea desplazable
-        ) {
-            Column(
-                modifier = Modifier.padding(16.dp)
-            ) {
-                // Correo Electrónico
-                OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    label = { Text(stringResource(R.string.email), color = Color.Gray) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
+        OutlinedTextField(
+            value = email,
+            onValueChange = onEmailChange,
+            label = { Text(stringResource(R.string.email), color = Color.Gray) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
 
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Contraseña
-                OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = { Text(stringResource(R.string.password), color = Color.Gray) },
-                    singleLine = true,
-                    visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    trailingIcon = {
-                        IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                            Icon(
-                                imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
-                                tint = Color.Gray
-                            )
-                        }
-                    },
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Confirmar Contraseña
-                OutlinedTextField(
-                    value = confirmPassword,
-                    onValueChange = { confirmPassword = it },
-                    label = { Text(stringResource(R.string.repeat_password), color = Color.Gray) },
-                    singleLine = true,
-                    visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                    trailingIcon = {
-                        IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                            Icon(
-                                imageVector = if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
-                                contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
-                                tint = Color.Gray
-                            )
-                        }
-                    },
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Nombre
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = { name = it },
-                    label = { Text(stringResource(R.string.name), color = Color.Gray) },
-                    singleLine = true,
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Apellido
-                OutlinedTextField(
-                    value = surname,
-                    onValueChange = { surname = it },
-                    label = { Text(stringResource(R.string.surname), color = Color.Gray) },
-                    singleLine = true,
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // DNI
-                OutlinedTextField(
-                    value = dni,
-                    onValueChange = { dni = it },
-                    label = { Text(stringResource(R.string.id), color = Color.Gray) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Teléfono
-                OutlinedTextField(
-                    value = phone,
-                    onValueChange = { phone = it },
-                    label = { Text(stringResource(R.string.phone), color = Color.Gray) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Fecha de Nacimiento
-                OutlinedTextField(
-                    value = birthDate,
-                    onValueChange = {},
-                    label = { Text(stringResource(R.string.birth_date), color = Color.Gray) },
-                    singleLine = true,
-                    trailingIcon = {
-                        IconButton(onClick = { openDatePicker() }) {
-                            Icon(
-                                imageVector = Icons.Filled.DateRange,
-                                contentDescription = stringResource(R.string.select_date),
-                                tint = Color.Gray
-                            )
-                        }
-                    },
-                    textStyle = TextStyle(color = Color.White),
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = Color(0xFF6C63FF),
-                        unfocusedBorderColor = Color.Gray,
-                        cursorColor = Color.White
-                    ),
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-            }
-        }
         Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = password,
+            onValueChange = onPasswordChange,
+            label = { Text(stringResource(R.string.password), color = Color.Gray) },
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                IconButton(onClick = { onPasswordVisibilityChange(!passwordVisible) }) {
+                    Icon(
+                        imageVector = if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
+                        tint = Color.Gray
+                    )
+                }
+            },
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = confirmPassword,
+            onValueChange = onConfirmPasswordChange,
+            label = { Text(stringResource(R.string.repeat_password), color = Color.Gray) },
+            singleLine = true,
+            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+            trailingIcon = {
+                IconButton(onClick = { onConfirmPasswordVisibilityChange(!confirmPasswordVisible) }) {
+                    Icon(
+                        imageVector = if (confirmPasswordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff,
+                        contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
+                        tint = Color.Gray
+                    )
+                }
+            },
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = name,
+            onValueChange = onNameChange,
+            label = { Text(stringResource(R.string.name), color = Color.Gray) },
+            singleLine = true,
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = surname,
+            onValueChange = onSurnameChange,
+            label = { Text(stringResource(R.string.surname), color = Color.Gray) },
+            singleLine = true,
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = dni,
+            onValueChange = onDniChange,
+            label = { Text(stringResource(R.string.id), color = Color.Gray) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = phone,
+            onValueChange = onPhoneChange,
+            label = { Text(stringResource(R.string.phone), color = Color.Gray) },
+            singleLine = true,
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = birthDate,
+            onValueChange = onBirthDateChange,
+            label = { Text(stringResource(R.string.birth_date), color = Color.Gray) },
+            singleLine = true,
+            trailingIcon = {
+                IconButton(onClick = onDatePickerClick) {
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = stringResource(R.string.select_date),
+                        tint = Color.Gray
+                    )
+                }
+            },
+            textStyle = TextStyle(color = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color(0xFF6C63FF),
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
+            ),
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(24.dp))
 
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -306,16 +391,15 @@ fun RegisterScreen(
                 color = Color(0xFF6C63FF),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
-                    navController.navigate("login") // Navegar a la pantalla de registro
+                    navController.navigate("login")
                 }
             )
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Botón de registro
         Button(
-            onClick = { onSignUp(email, password, phone, dni, name, surname, birthDate) },
+            onClick = onSignUp,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
@@ -324,10 +408,4 @@ fun RegisterScreen(
             Text(text = stringResource(R.string.register), color = Color.White)
         }
     }
-}
-
-@Preview
-@Composable
-fun PreviewRegisterScreen() {
-    RegisterScreen(navController = rememberNavController())
 }
