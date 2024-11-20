@@ -1,9 +1,11 @@
 package com.example.zelo.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +39,7 @@ fun AppBar(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceAround,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -55,16 +57,21 @@ fun AppBar(
             Surface(
                 shape = CircleShape,
                 color = Color(0xFF6C63FF),
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(48.dp),
             ) {
-                Text(
-                    text = userName.firstOrNull()?.toString() ?: "",
-                    color = Color.White,
-                    modifier = Modifier.padding(16.dp),
-                    style = MaterialTheme.typography.bodyMedium,
-                    fontWeight = FontWeight.Bold
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize() // Ensure the Box fills the entire Surface
+                ) {
+                    Text(
+                        text = userName.firstOrNull()?.toString() ?: "",
+                        color = Color.White,
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
