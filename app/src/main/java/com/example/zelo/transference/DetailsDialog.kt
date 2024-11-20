@@ -8,11 +8,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-
+import com.example.zelo.R
 
 
 @Composable
@@ -36,14 +37,14 @@ fun TransferDetailsDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Detalle del movimiento",
+                    text = stringResource(R.string.transaction_details),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(bottom = 24.dp)
                 )
 
                 Text(
-                    text = "Transferencia a",
+                    text = stringResource(R.string.transfer_to),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
                     modifier = Modifier.align(Alignment.Start)
@@ -81,11 +82,11 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Transferencia de dinero: $3.000",
+                            text = stringResource(R.string.money_transfer)+": $3.000",
                             style = MaterialTheme.typography.bodyLarge
                         )
                         Text(
-                            text = "Medio de pago: Dinero disponible en cuenta",
+                            text = stringResource(R.string.payment_method) + ": Dinero disponible en cuenta",
                             style = MaterialTheme.typography.bodyMedium
                         )
                     }
@@ -99,7 +100,7 @@ fun TransferDetailsDialog(
                 )
 
                 Text(
-                    text = "Numero de operacion: 12345678",
+                    text = stringResource(R.string.transaction_id) + ": 12345678",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
@@ -114,7 +115,7 @@ fun TransferDetailsDialog(
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Repetir transferencia")
+                    Text(stringResource(R.string.repeat_transfer))
                 }
 
                 Button(
@@ -127,7 +128,7 @@ fun TransferDetailsDialog(
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text("Ver comprobante")
+                    Text(stringResource(R.string.see_receipt))
                 }
 
                 TextButton(
@@ -135,7 +136,7 @@ fun TransferDetailsDialog(
                     modifier = Modifier.padding(top = 8.dp)
                 ) {
                     Text(
-                        "Cerrar",
+                        stringResource(R.string.close),
                         color = Color.Gray,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.clickable { onDismiss() }
@@ -148,7 +149,7 @@ fun TransferDetailsDialog(
 
 
 // Preview
-@Preview(showBackground = true)
+@Preview(showBackground = true, locale = "en")
 @Composable
 fun TransferDetailsDialogPreview() {
     MaterialTheme {
