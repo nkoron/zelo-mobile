@@ -28,10 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.zelo.MyApplication
+import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardViewModel
 
 @Composable
@@ -57,7 +59,7 @@ fun AppBar(
                 IconButton(onClick = onBackClick) {
                     Icon(
                         imageVector = Icons.AutoMirrored.Filled.ArrowBack, // Add a back arrow icon
-                        contentDescription = "Volver",
+                        contentDescription = stringResource(R.string.back),
                         tint = MaterialTheme.colorScheme.primary
                     )
                 }
@@ -73,19 +75,25 @@ fun AppBar(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier.fillMaxSize() // Ensure the Box fills the entire Surface
                 ) {
+                    val initials = buildString {
+                        uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                        uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                    }
+
                     Text(
-                        text = "${uiState.user?.firstName?: ""} ${uiState.user?.lastName?: ""} ",
+                        text = initials,
                         color = Color.White,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.Bold
                     )
                 }
+
             }
 
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
-                    text = "Hola,${uiState.user?.firstName ?: ""} ${uiState.user?.lastName ?: ""} !",
+                    text = stringResource(R.string.hello) +",${uiState.user?.firstName ?: ""} ${uiState.user?.lastName ?: ""} !",
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Bold
                 )
@@ -101,7 +109,7 @@ fun AppBar(
         IconButton(onClick = onNotificationsClick) {
             Icon(
                 imageVector = Icons.Default.Notifications,
-                contentDescription = "Notificaciones",
+                contentDescription = stringResource(R.string.notifications),
                 tint = MaterialTheme.colorScheme.primary
             )
         }
