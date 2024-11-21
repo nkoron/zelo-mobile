@@ -53,73 +53,56 @@ fun CardsScreen(
     LaunchedEffect(Unit) {
         viewModel.loadCards()
     }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.my_cards)) },
-                navigationIcon = {
-                    IconButton(
-                        onClick = onBack,
-                        modifier = Modifier.semantics { contentDescription = "Navigate back" }
-                    ) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = null)
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Column(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .padding()
+    ) {
+        Box(
             modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .padding(paddingValues)
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(16.dp)
         ) {
-            Box(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                when {
-                    uiState.isLoading -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .semantics { contentDescription = "Loading cards" }
-                        )
-                    }
-                    uiState.error != null -> {
-                        Text(
-                            text = uiState.error?.message ?: stringResource(R.string.unknown_error),
-                            color = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.align(Alignment.Center)
-                        )
-                    }
-                    else -> {
-                        CardsList(
-                            cards = uiState.cards,
-                            onDeleteCard = { card ->
-                                viewModel.showDeleteConfirmation(card)
-                            },
-                            isTablet = isTablet,
-                            isLandscape = isLandscape,
-                            resetKey = resetKey
-                        )
-                    }
+            when {
+                uiState.isLoading -> {
+                    CircularProgressIndicator(
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .semantics { contentDescription = "Loading cards" }
+                    )
+                }
+                uiState.error != null -> {
+                    Text(
+                        text = uiState.error?.message ?: stringResource(R.string.unknown_error),
+                        color = MaterialTheme.colorScheme.error,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
+                else -> {
+                    CardsList(
+                        cards = uiState.cards,
+                        onDeleteCard = { card ->
+                            viewModel.showDeleteConfirmation(card)
+                        },
+                        isTablet = isTablet,
+                        isLandscape = isLandscape,
+                        resetKey = resetKey
+                    )
                 }
             }
-
-            AddCardButton(
-                onAddCard = { card ->
-                    viewModel.addCard(card)
-                },
-                isTablet = isTablet,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            )
         }
+
+        AddCardButton(
+            onAddCard = { card ->
+                viewModel.addCard(card)
+            },
+            isTablet = isTablet,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        )
     }
 
     // Delete confirmation dialog

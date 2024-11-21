@@ -55,7 +55,6 @@ fun DashboardScreen(
                 .background(Color(0xFFF5F5F5))
                 .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Balance Card
             BalanceCard(uiState.walletDetail?.balance, navController)

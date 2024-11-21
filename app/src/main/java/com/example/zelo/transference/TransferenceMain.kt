@@ -33,23 +33,9 @@ fun TransferScreen(
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                modifier = Modifier.padding(5.dp),
-                title = { Text("Transferencias") },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
-    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(16.dp)
         ) {
             // Action Buttons
@@ -140,4 +126,3 @@ fun TransferScreen(
             }
         }
     }
-}

@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -46,43 +47,55 @@ import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
 import com.example.zelo.qr.QRScannerScreen
 import com.example.zelo.transference.TransactionConfirmedScreen
+import com.example.zelo.ui.TopBarViewModel
 import com.example.zelo.ui.ZeloNavigationRail
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AppNavigation() {
-    // Access the ViewModel to track login state
-    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)) // Use viewModel() here
+    val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+    val uiState by authViewModel.uiState.collectAsState()
 
-    // Observing the login state from the ViewModel
-    val uiState by authViewModel.uiState.collectAsState()// Use collectAsState to observe LiveData or StateFlow
-
-    // Create a NavHostController to manage the navigation
     val navController = rememberNavController()
-
-    // Get the current route from the navController
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
-    // Wrap the navigation with Scaffold to add the bottom bar
+
+    // Create a TopBarViewModel instance
+    val topBarViewModel: TopBarViewModel = viewModel(
+        factory = TopBarViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)
+    )
+
+    // Update the current section based on the route
+    LaunchedEffect(currentRoute) {
+        val section = when {
+            currentRoute.startsWith("home") -> "Dashboard"
+            currentRoute.startsWith("movements") -> "Activity"
+            currentRoute.startsWith("transference") -> "Transfer"
+            currentRoute.startsWith("cards") -> "Cards"
+            currentRoute.startsWith("profile") -> "Profile"
+            else -> ""
+        }
+        topBarViewModel.updateCurrentSection(section)
+    }
+
     Scaffold(
         topBar = {
             if (uiState.isAuthenticated) {
                 AppBar(
+                    viewModel = topBarViewModel,
                     onNotificationsClick = {},
                 )
             }
         },
-
         bottomBar = {
             if (uiState.isAuthenticated && !isTablet) {
                 BottomNavBar(
                     navController = navController,
-                    currentRoute = currentRoute // Pass the current route here
+                    currentRoute = currentRoute
                 )
             }
         }
-
     ) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize()) {
             if (isTablet && uiState.isAuthenticated) {
@@ -101,6 +114,8 @@ fun AppNavigation() {
         }
     }
 }
+
+// Keep the rest of the file unchanged
 
 
 @Composable

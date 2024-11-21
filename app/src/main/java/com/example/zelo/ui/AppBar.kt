@@ -29,7 +29,6 @@ fun AppBar(
         )
     ),
     onBackClick: (() -> Unit)? = null,
-    subtitle: String? = null,
     onNotificationsClick: () -> Unit
 ) {
     val uiState = viewModel.uiState
@@ -38,6 +37,7 @@ fun AppBar(
     val horizontalPadding = if (isTablet) 32.dp else 16.dp
     val avatarSize = if (isTablet) 56.dp else 48.dp
     val startPadding: Dp = if (isTablet) 0.dp else horizontalPadding
+
     Surface(
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp
@@ -128,13 +128,14 @@ fun AppBar(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    if (subtitle != null) {
+                    if (uiState.currentSection.isNotEmpty()) {
+                        Spacer(modifier = Modifier.width(16.dp))
                         Text(
-                            text = subtitle,
+                            text = uiState.currentSection,
                             style = if (isTablet) {
-                                MaterialTheme.typography.bodyMedium
+                                MaterialTheme.typography.titleMedium
                             } else {
-                                MaterialTheme.typography.bodySmall
+                                MaterialTheme.typography.titleSmall
                             },
                             color = MaterialTheme.colorScheme.onSurfaceVariant,
                             maxLines = 1,
