@@ -87,4 +87,5 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.barcode.scanning)
     implementation (libs.kotlinx.serialization.json.v132)
+
 }

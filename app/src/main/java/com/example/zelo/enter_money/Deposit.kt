@@ -43,16 +43,6 @@ fun DepositScreen(
 
     val banks = listOf("Banco Nación", "Banco Galicia", "Banco Santander", "BBVA", "Banco Macro")
 
-    val recentDeposits = remember {
-        listOf(
-            Deposit("Miguel", 1000.0, LocalDate.now()),
-            Deposit("McDonalds", 11400.0, LocalDate.now()),
-            Deposit("KFC", 100000.0, LocalDate.now()),
-            Deposit("Miguel", 1900.0, LocalDate.now()),
-            Deposit("Jose", 10000.0, LocalDate.now())
-        )
-    }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -202,24 +192,6 @@ fun DepositScreen(
                     )
                 }
             }
-        }
-
-        // List of Recent Deposits
-        item {
-            Text(
-                stringResource(R.string.last_deposits),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
-        }
-        items(recentDeposits) { deposit ->
-            DepositItem(
-                deposit = deposit,
-                onRepeat = {
-                    selectedBank = it.name
-                    amount = it.amount.toString()
-                }
-            )
         }
     }
 }
