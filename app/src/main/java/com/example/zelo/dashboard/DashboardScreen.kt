@@ -61,7 +61,7 @@ fun DashboardScreen(
             BalanceCard(uiState.walletDetail?.balance, navController)
 
             Spacer(modifier = Modifier.height(24.dp))
-            QuickActions({viewModel.login("ocie.collins86@ethereal.email", "1234567890")})
+            QuickActions({viewModel.login("johndoe@email.com", "1234567890")})
 
             Spacer(modifier = Modifier.height(24.dp))
 

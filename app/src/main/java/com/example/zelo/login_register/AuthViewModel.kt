@@ -63,7 +63,8 @@ class AuthViewModel(
         { state, _ ->
             state.copy(
                 isAuthenticated = false,
-                walletDetail = null
+                walletDetail = null,
+                user = null
             )
         }
     )

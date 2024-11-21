@@ -11,6 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -53,7 +55,7 @@ fun AppNavigation() {
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)) // Use viewModel() here
 
     // Observing the login state from the ViewModel
-    val isLoggedIn = authViewModel.uiState.value.isAuthenticated // Use collectAsState to observe LiveData or StateFlow
+    val uiState by authViewModel.uiState.collectAsState()// Use collectAsState to observe LiveData or StateFlow
 
     // Create a NavHostController to manage the navigation
     val navController = rememberNavController()
@@ -65,7 +67,7 @@ fun AppNavigation() {
     // Wrap the navigation with Scaffold to add the bottom bar
     Scaffold(
         topBar = {
-            if (isLoggedIn) {
+            if (uiState.isAuthenticated) {
                 AppBar(
                     onNotificationsClick = {},
                 )
@@ -73,7 +75,7 @@ fun AppNavigation() {
         },
 
         bottomBar = {
-            if (isLoggedIn && !isTablet) {
+            if (uiState.isAuthenticated && !isTablet) {
                 BottomNavBar(
                     navController = navController,
                     currentRoute = currentRoute // Pass the current route here
@@ -83,7 +85,7 @@ fun AppNavigation() {
 
     ) { paddingValues ->
         Row(modifier = Modifier.fillMaxSize()) {
-            if (isTablet && isLoggedIn) {
+            if (isTablet && uiState.isAuthenticated) {
                 ZeloNavigationRail(
                     navController = navController,
                     currentRoute = currentRoute,
@@ -92,7 +94,7 @@ fun AppNavigation() {
             }
             MyNavHost(
                 navController = navController,
-                isLoggedIn = isLoggedIn,
+                isLoggedIn = uiState.isAuthenticated,
                 paddingValues = paddingValues,
                 authViewModel = authViewModel
             )
