@@ -165,6 +165,11 @@ fun DepositScreen(
             ) {
                 Text(stringResource(R.string.start_deposit))
             }
+            LaunchedEffect(uiState.balance) {
+                if ( !uiState.isFetching && uiState.error == null && uiState.balance > 0) {
+                    showSuccessMessage = true
+                }
+            }
 
             if (uiState.error != null) {
                 Text(

@@ -1,15 +1,11 @@
-import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -20,6 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,9 +38,9 @@ import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
 import com.example.zelo.dashboard.PaymentLinkDialog
+import com.example.zelo.network.model.User
 import com.example.zelo.transference.TransferDetailsDialog
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
@@ -116,7 +113,7 @@ private fun LandscapeDashboardContent(
                 .padding(top = 16.dp)
 
         ){
-            QuickActions { onLogin("landscape@example.com", "1234567890") }
+            QuickActions()
             RecentMovementsFullScreen()
         }
     }
@@ -180,7 +177,7 @@ private fun TabletDashboardContent(
                 navController = navController,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            QuickActions { onLogin("ocie.collins86@ethereal.email", "1234567890") }
+            QuickActions()
         }
         RecentMovementsFullScreen()
     }
@@ -203,14 +200,15 @@ private fun PhoneDashboardContent(
             navController = navController,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuickActions { onLogin("johndoe@email.com", "1234567890") }
+        QuickActions()
         Spacer(modifier = Modifier.height(24.dp))
-        RecentMovements()
+        RecentMovements(uiState, viewModel())
     }
 }
 
 @Composable
-private fun RecentMovements() {
+private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewModel) {
+    var flag = false;
     Card(
         modifier =  Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
@@ -220,35 +218,38 @@ private fun RecentMovements() {
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(8.dp)
         )
-        LazyColumn {
-            items(3) { index ->
-                when (index) {
-                    0 -> TransactionItem(
-                        name = "Jose",
-                        description = stringResource(R.string.transferred) + " $10000",
-                        time = "2022-05-12",
-                        showAvatar = true
-                    )
-                    1 -> TransactionItem(
-                        name = "Open 25",
-                        description = stringResource(R.string.sent) + "$1000",
-                        time = "2022-05-12",
-                        showLogo = true
-                    )
-                    2 -> TransactionItem(
-                        name = "Fer Galan",
-                        description = stringResource(R.string.sent) + "$1000",
-                        time = "2022-05-12",
+            LazyColumn {
+                items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
+                    val payment = uiState.movements[it]
+                    val me: User;
+                    val you: User;
+                    val receive: Boolean
+                    if (payment.receiver.id == uiState.user?.id) {
+                        receive = true
+                        me = payment.receiver
+                        you = payment.payer
+                    } else {
+                        receive = false
+                        me = payment.payer
+                        you = payment.receiver
+                    }
+                    TransactionItem(
+                        name = "${you.firstName} ${you.lastName}",
+                        description = "${
+                            if (receive) stringResource(R.string.transferred) else stringResource(
+                                R.string.sent
+                            )
+                        }: ${payment.amount}",
+                        time = payment.createdAt,
                         showAvatar = true
                     )
                 }
             }
-        }
+
     }
 }
 @Composable
 private fun QuickActions(
-    login: ()->Unit,
 ) {
     var showDialog by remember { mutableStateOf(false) }
     var showPaymentLink by remember { mutableStateOf(false) }
@@ -290,7 +291,7 @@ private fun QuickActions(
                 text = stringResource(R.string.your_info)
             )
             QuickActionButton(
-                onClick = login,
+                onClick = {  },
                 icon = Icons.Default.PersonAdd,
                 text = stringResource(R.string.contacts)
             )
@@ -301,8 +302,9 @@ private fun QuickActions(
 @Composable
 private fun BalanceCard(balance: Double?, navController: NavController) {
     Card(
-        modifier =  Modifier.fillMaxWidth()
-        .padding(vertical = 16.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
 

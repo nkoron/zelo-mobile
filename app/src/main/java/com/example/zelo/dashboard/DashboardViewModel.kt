@@ -1,5 +1,6 @@
 package com.example.zelo.dashboard
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -7,6 +8,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
+import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.WalletDetails
 import com.example.zelo.network.repository.PaymentRepository
@@ -28,7 +30,8 @@ data class DashboardUiState (
     val user: User? = null,
     val isFetching: Boolean = false,
     val walletDetail: WalletDetails? = null,
-    val error: Error? = null
+    val error: Error? = null,
+    val movements: List<Payment> = emptyList()
 )
 
 class DashboardViewModel(
@@ -38,23 +41,36 @@ class DashboardViewModel(
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
-
+    private var paymentStreamJob: Job? = null
     private var walletDetailStreamJob: Job? = null
     private val _uiState = MutableStateFlow(DashboardUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
     val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
 
     init {
         if (uiState.value.isAuthenticated) {
+            getUser()
             observeWalletDetailStream()
+            observePaymentStream()
         }
+    }
+    private fun observePaymentStream() {
+        paymentStreamJob = collectOnViewModelScope(
+            paymentRepository.paymentStream
+        ) { state, response -> state.copy(movements = response) }
     }
 
     fun login(username: String, password: String) = runOnViewModelScope(
         {
             userRepository.login(username, password)
-            observeWalletDetailStream()
+            userRepository.getCurrentUser(true)
         },
-        { state, _ -> state.copy(isAuthenticated = true) }
+        { state, response -> state.copy(isAuthenticated = true, user = response) }
+    )
+    fun getUser() = runOnViewModelScope(
+        {
+            userRepository.getCurrentUser(true)
+        },
+        { state, _ -> state.copy(user = state.user) }
     )
 
     fun logout() = runOnViewModelScope(
@@ -115,7 +131,8 @@ class DashboardViewModel(
                 return DashboardViewModel(
                     application.walletRepository,
                     application.sessionManager,
-                    application.userRepository
+                    application.userRepository,
+                    application.paymentRepository
                 ) as T
             }
         }

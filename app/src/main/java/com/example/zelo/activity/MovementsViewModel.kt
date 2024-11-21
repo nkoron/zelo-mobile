@@ -36,7 +36,6 @@ class MovementsViewModel(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
-
     private var paymentStreamJob: Job? = null
     private val _uiState = MutableStateFlow(MovementsUiState())
     val uiState: StateFlow<MovementsUiState> = _uiState.asStateFlow()

@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.activity.MovementsUiState
 import com.example.zelo.activity.MovementsViewModel
 import com.example.zelo.components.ZeloSearchBar
 import com.example.zelo.dashboard.DashboardViewModel
@@ -65,30 +66,34 @@ fun MovementsScreen(
 
             LazyColumn {
                 items(uiState.movements.size) {
-                    Log.d("movements", uiState.movements.toString())
-                    val payment = uiState.movements[it]
-                    val me: User;
-                    val you: User;
-                    val receive:Boolean
-                    if(payment.receiver.id == uiState.user?.id){
-                        receive = true
-                         me = payment.receiver
-                         you = payment.payer
-                    } else {
-                        receive = false
-                         me = payment.payer
-                         you = payment.receiver
-                    }
-                    TransactionItem(
-                        name = "${you.firstName} ${you.lastName}",
-                        description = "${ if(receive) stringResource(R.string.transferred) else stringResource(R.string.sent)}: ${payment.amount}",
-                        time = payment.createdAt,
-                        showAvatar = true
-                    )
+                    FormatItems(uiState, it)
                 }
             }
         }
     }
+
+@Composable
+fun FormatItems(uiState: MovementsUiState, it: Int) {
+    val payment = uiState.movements[it]
+    val me: User;
+    val you: User;
+    val receive: Boolean
+    if (payment.receiver.id == uiState.user?.id) {
+        receive = true
+        me = payment.receiver
+        you = payment.payer
+    } else {
+        receive = false
+        me = payment.payer
+        you = payment.receiver
+    }
+    TransactionItem(
+        name = "${you.firstName} ${you.lastName}",
+        description = "${if (receive) stringResource(R.string.transferred) else stringResource(R.string.sent)}: ${payment.amount}",
+        time = payment.createdAt,
+        showAvatar = true
+    )
+}
 
 
 @SuppressLint("DefaultLocale")
