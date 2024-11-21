@@ -71,7 +71,9 @@ fun VerificationScreen(
 
         Button(
             onClick = {
-                onVerify(verificationCode)
+                if(verificationCode.isNotEmpty()) {
+                    onVerify(verificationCode)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
