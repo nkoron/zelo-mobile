@@ -1,5 +1,6 @@
 package com.example.zelo.profile
 
+import android.content.Context
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -8,15 +9,20 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PersonalInfoScreen(onBack: () -> Unit) {
-    var idNumber by remember { mutableStateOf("") }
-    var taxId by remember { mutableStateOf("") }
-    var address by remember { mutableStateOf("") }
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+
+    // Cargar el valor inicial desde SharedPreferences
+    var idNumber by remember { mutableStateOf(sharedPreferences.getString("idNumber", "") ?: "")}
+    var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "")}
+    var address by remember { mutableStateOf(sharedPreferences.getString("address", "") ?: "")}
 
     Scaffold(
         topBar = {
@@ -72,7 +78,8 @@ fun PersonalInfoScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(onClick = { /* View fiscal activity */ }) {
+            OutlinedButton(onClick = { sharedPreferences.edit().putString("idNumber", idNumber).putString("taxId", taxId).putString("address", address).apply()
+                onBack()}) {
                 Text(stringResource(R.string.see_fiscal))
             }
         }
