@@ -114,13 +114,13 @@ private fun LandscapeDashboardContent(
 
         ){
             QuickActions()
-            RecentMovementsFullScreen()
+            RecentMovementsFullScreen(uiState, viewModel())
         }
     }
 }
 
 @Composable
-private fun RecentMovementsFullScreen() {
+private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: DashboardViewModel) {
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -133,26 +133,55 @@ private fun RecentMovementsFullScreen() {
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(8.dp)
             )
-            LazyColumn(
-                modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                items(20) { index ->
-                    TransactionItem(
-                        name = "Transaction ${index + 1}",
-                        description = "Description for transaction ${index + 1}",
-                        time = "${index + 1}h ago",
-                        showAvatar = index % 2 == 0,
-                        showLogo = index % 2 != 0
-                    )
-                    if (index < 19) {
-                        Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+            // Check if there are no movements
+            if (uiState.movements.isEmpty()) {
+                // Display "No recent transactions" if no movements
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                )
+            } else {
+                // Display the list of transactions if there are movements
+                LazyColumn(
+                    modifier = Modifier.fillMaxSize(),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
+                        val payment = uiState.movements[it]
+                        val me: User
+                        val you: User
+                        val receive: Boolean
+                        if (payment.receiver.id == uiState.user?.id) {
+                            receive = true
+                            me = payment.receiver
+                            you = payment.payer
+                        } else {
+                            receive = false
+                            me = payment.payer
+                            you = payment.receiver
+                        }
+                        TransactionItem(
+                            name = "${you.firstName} ${you.lastName}",
+                            description = "${
+                                if (receive) stringResource(R.string.transferred) else stringResource(
+                                    R.string.sent
+                                )
+                            }: ${payment.amount}",
+                            time = payment.createdAt,
+                            showAvatar = true
+                        )
                     }
                 }
             }
         }
     }
 }
+
 
 @Composable
 private fun TabletDashboardContent(
@@ -179,7 +208,7 @@ private fun TabletDashboardContent(
             Spacer(modifier = Modifier.height(24.dp))
             QuickActions()
         }
-        RecentMovementsFullScreen()
+        RecentMovementsFullScreen(uiState, viewModel() )
     }
 }
 
@@ -208,9 +237,9 @@ private fun PhoneDashboardContent(
 
 @Composable
 private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewModel) {
-    var flag = false;
+    var flag = false
     Card(
-        modifier =  Modifier.fillMaxWidth(),
+        modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Text(
@@ -218,11 +247,23 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(8.dp)
         )
+        if (uiState.movements.isEmpty()) {
+            // Display "No recent transactions" if no movements
+            Text(
+                text = stringResource(R.string.no_recent_transactions),
+                style = MaterialTheme.typography.bodyLarge,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+            )
+        } else {
+            // Display the list of transactions if there are movements
             LazyColumn {
                 items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
                     val payment = uiState.movements[it]
-                    val me: User;
-                    val you: User;
+                    val me: User
+                    val you: User
                     val receive: Boolean
                     if (payment.receiver.id == uiState.user?.id) {
                         receive = true
@@ -245,9 +286,10 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                     )
                 }
             }
-
+        }
     }
 }
+
 @Composable
 private fun QuickActions(
 ) {
