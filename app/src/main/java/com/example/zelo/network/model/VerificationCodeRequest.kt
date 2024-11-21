@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class VerificationCodeRequest(
-    val token: String
+    val code: String
 )
