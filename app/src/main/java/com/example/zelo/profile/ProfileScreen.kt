@@ -94,7 +94,10 @@ fun ProfileCard(onLogout: () -> Unit, uiState: ProfileUiState) {
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "JR",
+                    text = buildString {
+                        uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                        uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                    },
                     color = MaterialTheme.colorScheme.onPrimary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp

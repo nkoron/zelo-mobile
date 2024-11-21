@@ -72,16 +72,20 @@ fun PersonalInfoScreen(onBack: () -> Unit) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            Button(onClick = { /* Update personal information */ }) {
+            Button(onClick = {  sharedPreferences.edit()
+                .putString("idNumber", idNumber)
+                .putString("taxId", taxId)
+                .putString("address", address)
+                .apply() // Usa commit() si necesitas asegurarte de que los datos estén guardados inmediatamente
+                onBack()  }) {
                 Text(stringResource(R.string.update_info))
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            OutlinedButton(onClick = { sharedPreferences.edit().putString("idNumber", idNumber).putString("taxId", taxId).putString("address", address).apply()
-                onBack()}) {
-                Text(stringResource(R.string.see_fiscal))
-            }
+//            OutlinedButton(onClick = {}) {
+//                Text(stringResource(R.string.see_fiscal))
+//            }
         }
     }
 }
