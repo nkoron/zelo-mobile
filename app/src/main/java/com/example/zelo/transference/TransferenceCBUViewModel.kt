@@ -1,6 +1,5 @@
 package com.example.zelo.transference
 
-import android.app.AlertDialog
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -16,9 +15,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import android.content.Context
 import android.util.Log
-import android.widget.Toast
 
 data class TransferenceCBUUiState(
     val isLoading: Boolean = false,
@@ -97,7 +94,7 @@ class TransferenceCBUViewModel(
         _uiState.update { it.copy(concept = concept) }
     }
 
-    fun selectPaymentMethod(paymentMethod: PaymentMethod) {
+    fun selectPaymentMethod(paymentMethod: PaymentMethod?) {
         _uiState.update { it.copy(selectedPaymentMethod = paymentMethod) }
     }
 
@@ -130,6 +127,10 @@ class TransferenceCBUViewModel(
                 val result = paymentRepository.makePayment(paymentRequest)
                 _uiState.update { it.copy(transferSuccess = true, isLoading = false) }
                 Log.d("TransferenceCBUViewModel", "Transfer successful: $result")
+                updateCbuAlias("")
+                updateAmount("")
+                updateConcept("")
+                selectPaymentMethod(null)
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = handleError(e), isLoading = false) }
             }
