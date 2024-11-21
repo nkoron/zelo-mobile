@@ -40,9 +40,15 @@ data class PaymentMethod(
 fun TransferDetailScreen(
     viewModel: TransferenceCBUViewModel,
     onConfirm: () -> Unit,
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    email: String? = null // Accept email as a parameter
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    // If email is passed, update the view model
+    LaunchedEffect(email) {
+        email?.let { viewModel.updateEmail(it) }
+    }
 
     Scaffold(
         topBar = {
@@ -64,7 +70,6 @@ fun TransferDetailScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
-
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -72,12 +77,12 @@ fun TransferDetailScreen(
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // CBU/ALIAS Field
+                // Email Field
                 OutlinedTextField(
-                    value = uiState.cbuAlias,
-                    onValueChange = { viewModel.updateCbuAlias(it) },
-                    label = { Text("CBU / ALIAS") },
-                    placeholder = { Text("0000 0000 0000 2222 2222") },
+                    value = uiState.email ?: email.orEmpty(), // Use passed email if available
+                    onValueChange = { viewModel.updateEmail(it) },
+                    label = { Text("Email") },
+                    placeholder = { Text("example@mail.com") },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -92,7 +97,7 @@ fun TransferDetailScreen(
                 OutlinedTextField(
                     value = uiState.amount,
                     onValueChange = { viewModel.updateAmount(it) },
-                    label = { Text("Monto") },
+                    label = { Text(stringResource(R.string.amount_to_deposit),) },
                     placeholder = { Text("30000") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
@@ -110,8 +115,8 @@ fun TransferDetailScreen(
                 OutlinedTextField(
                     value = uiState.concept,
                     onValueChange = { viewModel.updateConcept(it) },
-                    label = { Text("Concepto") },
-                    placeholder = { Text("Ingresar...") },
+                    label = { Text(stringResource(R.string.concept),) },
+                    placeholder = { Text(stringResource(R.string.enter_placeholder),) },
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(8.dp),
                     colors = OutlinedTextFieldDefaults.colors(
@@ -128,7 +133,7 @@ fun TransferDetailScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Text(
-                    "Seleccionar método de pago",
+                    stringResource(R.string.payment_method),
                     style = MaterialTheme.typography.titleMedium,
                     fontWeight = FontWeight.Medium
                 )
@@ -207,6 +212,7 @@ fun TransferDetailScreen(
     }
 }
 
+
 @Composable
 fun PaymentMethodCard(
     paymentMethod: PaymentMethod,
@@ -283,3 +289,4 @@ fun PaymentMethodCard(
         }
     }
 }
+

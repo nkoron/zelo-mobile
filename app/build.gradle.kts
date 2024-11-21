@@ -87,5 +87,7 @@ dependencies {
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.barcode.scanning)
     implementation (libs.kotlinx.serialization.json.v132)
+    implementation(libs.accompanist.permissions) // Check for missing semicolons or extra commas.
+
 
 }

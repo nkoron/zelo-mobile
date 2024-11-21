@@ -184,5 +184,10 @@
     <string name="date">Fecha</string>
     <string name="no_recent_transactions">No hay transacciones recientes</string>
     <string name="today">HOY</string>
+    <string name="no_recent_transactions">No hay transacciones recientes</string>
+    <string name="enter_placeholder">Ingresar…</string>"
+
+
+
 
 </resources>
