@@ -27,6 +27,8 @@ import kotlinx.coroutines.launch
 data class MovementsUiState (
     val isFetching: Boolean = false,
     val movements: List<Payment> = emptyList(),
+    val totalIncome: Double? = 0.0,
+    val totalExpense: Double? = 0.0,
     val user: User? = null,
     val error: Error? = null
 )
@@ -52,7 +54,9 @@ class MovementsViewModel(
     private fun observePaymentStream() {
         paymentStreamJob = collectOnViewModelScope(
             paymentRepository.paymentStream
-        ) { state, response -> state.copy(movements = response) }
+        ) { state, response -> state.copy(movements = response)
+                                state.copy(totalIncome = response.filter { it.receiver.id == uiState.value.user?.id }.sumOf { it.amount })
+                                state.copy(totalExpense = response.filter { it.payer.id == uiState.value.user?.id }.sumOf { it.amount })}
     }
 
     private fun <T> collectOnViewModelScope(
