@@ -272,7 +272,11 @@ fun CardItem(card: Card, onDelete: (Card) -> Unit, isTablet: Boolean) {
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
-                    text = if (showDetails) card.number else "**** **** **** ${card.number.takeLast(4)}",
+                    text = if (showDetails) {
+                        card.number.chunked(4).joinToString(" ")
+                    } else {
+                        "**** **** **** ${card.number.takeLast(4)}"
+                    },
                     color = Color.White,
                     fontSize = 18.sp
                 )
