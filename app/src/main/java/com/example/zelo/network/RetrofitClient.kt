@@ -29,7 +29,11 @@ object RetrofitClient {
             .addInterceptor(httpLoggingInterceptor)
             .build()
 
-        val json = Json { ignoreUnknownKeys = true }
+        val json = Json {
+            ignoreUnknownKeys = true
+            encodeDefaults = true
+            classDiscriminator = "paymentType"
+        }
 
         return Retrofit.Builder()
             .baseUrl(BASE_URL)

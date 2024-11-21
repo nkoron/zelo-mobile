@@ -3,8 +3,10 @@ package com.example.zelo
 import android.app.Application
 import com.example.zelo.network.RetrofitClient
 import com.example.zelo.network.SessionManager
+import com.example.zelo.network.dataSources.PaymentRemoteDataSource
 import com.example.zelo.network.dataSources.UserRemoteDataSource
 import com.example.zelo.network.dataSources.WalletRemoteDataSource
+import com.example.zelo.network.repository.PaymentRepository
 import com.example.zelo.network.repository.UserRepository
 import com.example.zelo.network.repository.WalletRepository
 
@@ -16,6 +18,9 @@ class MyApplication: Application() {
     private val walletRemoteDataSource: WalletRemoteDataSource
         get() = WalletRemoteDataSource(RetrofitClient.getApiService(this))
 
+    private val paymentRemoteDataSource: PaymentRemoteDataSource
+        get() = PaymentRemoteDataSource(RetrofitClient.getApiService(this))
+
     val walletRepository: WalletRepository
         get() = WalletRepository(walletRemoteDataSource)
 
@@ -24,5 +29,8 @@ class MyApplication: Application() {
 
     val userRepository: UserRepository
         get() = UserRepository(userRemoteDataSource)
+
+    val paymentRepository: PaymentRepository
+        get() = PaymentRepository(paymentRemoteDataSource)
 
 }

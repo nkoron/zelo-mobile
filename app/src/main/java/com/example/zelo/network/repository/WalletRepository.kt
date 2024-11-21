@@ -1,6 +1,8 @@
 package com.example.zelo.network.repository
 
+import android.util.Log
 import com.example.zelo.network.dataSources.WalletRemoteDataSource
+import com.example.zelo.network.model.Balance
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.WalletDetails
 import kotlinx.coroutines.flow.Flow
@@ -19,6 +21,7 @@ class WalletRepository(
         val result =  walletRemoteDataSource.getCards()
 
         cardsMutex.withLock {
+            Log.d("WalletRepository", "Cards: $result")
          this.cards = result
         }
      }
@@ -37,6 +40,10 @@ class WalletRepository(
             this.cards = emptyList()
         }
     }
+    suspend fun getBalance(): Balance {
+        return walletRemoteDataSource.getBalance()
+    }
+
     val walletDetailStream: Flow<WalletDetails> =
         walletRemoteDataSource.walletDetailStream
 }

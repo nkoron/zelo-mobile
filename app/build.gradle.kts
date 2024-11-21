@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.serialization)
     alias(libs.plugins.compose.compiler)
+    id ("kotlin-android")
+    id ("kotlinx-serialization")
 }
 
 android {
@@ -84,4 +86,5 @@ dependencies {
     implementation(libs.androidx.camera.lifecycle)
     implementation(libs.androidx.camera.view)
     implementation(libs.mlkit.barcode.scanning)
+    implementation (libs.kotlinx.serialization.json.v132)
 }

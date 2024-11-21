@@ -1,5 +1,6 @@
 package com.example.zelo.network.repository
 
+import android.util.Log
 import com.example.zelo.network.dataSources.PaymentRemoteDataSource
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.LinkPaymentRequest
@@ -28,6 +29,7 @@ class PaymentRepository(
         return payMutex.withLock { this.payments }
     }
     suspend fun makePayment(payment: PaymentRequest): Payment {
+        Log.d("PaymentRepository", "Making payment: $payment")
         val newCard =  dataSource.makePayment(payment)
         payMutex.withLock {
             this.payments = emptyList()

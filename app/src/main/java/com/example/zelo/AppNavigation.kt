@@ -4,6 +4,7 @@ import BottomNavBar
 import DashboardScreen
 import MovementsScreen
 import ProfileScreen
+import com.example.zelo.transference.TransferDetailScreen
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,7 +31,6 @@ import com.example.zelo.cards.CardsScreen
 import com.example.zelo.contacts.ContactsScreen
 import com.example.zelo.enter_money.DepositScreen
 import com.example.zelo.transference.TransferConfirmationScreen
-import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
 import com.example.zelo.activity.*
