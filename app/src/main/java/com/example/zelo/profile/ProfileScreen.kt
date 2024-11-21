@@ -15,19 +15,31 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.profile.ProfileUiState
+import com.example.zelo.profile.ProfileViewModel
+import com.example.zelo.ui.TopBarViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProfileScreen(
+    viewModel: ProfileViewModel = viewModel(
+        factory = ProfileViewModel.provideFactory(
+            LocalContext.current.applicationContext as MyApplication
+        )
+    ),
     onNavigateBack: () -> Unit,
     onNavigateTo: (String) -> Unit,
     onLogout: () -> Unit
 ) {
+    val uiState = viewModel.uiState
     val scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     val menuItems = listOf(
         MenuItemData(Icons.Outlined.Accessibility, stringResource(R.string.accessibility), stringResource(R.string.adjust_access_options), "profile/accessibility"),
@@ -39,6 +51,9 @@ fun ProfileScreen(
         MenuItemData(Icons.Outlined.Message, stringResource(R.string.messages), stringResource(R.string.message_settings), "profile/messages"),
         MenuItemData(Icons.Outlined.Help, stringResource(R.string.help), stringResource(R.string.assistance), "profile/help")
     )
+    LaunchedEffect(Unit) {
+        viewModel.checkAuthenticationStatus()
+    }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -46,7 +61,7 @@ fun ProfileScreen(
                 .padding(bottom = 16.dp),
             contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
-            item { ProfileCard(onLogout) }
+            item { ProfileCard(onLogout, uiState) }
             items(menuItems) { item ->
                 MenuItem(item, onNavigateTo)
             }
@@ -56,7 +71,7 @@ fun ProfileScreen(
         }
     }
 @Composable
-fun ProfileCard(onLogout: () -> Unit) {
+fun ProfileCard(onLogout: () -> Unit, uiState: ProfileUiState) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -87,13 +102,16 @@ fun ProfileCard(onLogout: () -> Unit) {
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = "Juan Rodriguez",
+                text = buildString {
+                    uiState.user?.firstName.let { append(it) }
+                    uiState.user?.lastName.let { append(" $it") }
+                },
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "juanrodriguez@gmail.com",
+                text = uiState.user?.email ?: "",
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Spacer(modifier = Modifier.height(16.dp))
