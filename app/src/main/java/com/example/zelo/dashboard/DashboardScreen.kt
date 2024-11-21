@@ -98,16 +98,23 @@ private fun LandscapeDashboardContent(
             modifier = Modifier
                 .width(300.dp)
                 .fillMaxHeight()
-                .verticalScroll(rememberScrollState())
+
         ) {
             BalanceCard(
                 balance = uiState.walletDetail?.balance,
                 navController = navController,
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            QuickActions { onLogin("landscape@example.com", "1234567890") }
+
         }
-        RecentMovementsFullScreen()
+        Column(
+            modifier = Modifier
+                .fillMaxHeight()
+                .padding(top = 16.dp)
+
+        ){
+            QuickActions { onLogin("landscape@example.com", "1234567890") }
+            RecentMovementsFullScreen()
+        }
     }
 }
 
@@ -122,8 +129,8 @@ private fun RecentMovementsFullScreen() {
         Column(modifier = Modifier.fillMaxSize()) {
             Text(
                 text = stringResource(R.string.transactions),
-                style = MaterialTheme.typography.titleLarge,
-                modifier = Modifier.padding(16.dp)
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(8.dp)
             )
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
