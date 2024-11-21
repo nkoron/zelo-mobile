@@ -90,8 +90,8 @@ fun ContactsScreen(
                     }
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = Color(0xFFF5F5F5), // Background color when focused
-                    unfocusedContainerColor = Color(0xFFF5F5F5), // Background color when unfocused
+                    focusedContainerColor = MaterialTheme.colorScheme.onSurface, // Background color when focused
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onSurface, // Background color when unfocused
                     focusedIndicatorColor = Color.Transparent, // Remove focused underline
                     unfocusedIndicatorColor = Color.Transparent // Remove unfocused underline
                 ),
@@ -163,7 +163,7 @@ private fun ContactItem(
                     modifier = Modifier
                         .size(40.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF6C63FF)),
+                        .background(MaterialTheme.colorScheme.primary),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
@@ -197,7 +197,7 @@ private fun ContactItem(
         Button(
             onClick = onTransfer,
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF6C63FF)
+                containerColor = MaterialTheme.colorScheme.primary
             ),
             contentPadding = PaddingValues(horizontal = 16.dp),
             modifier = Modifier.height(36.dp)

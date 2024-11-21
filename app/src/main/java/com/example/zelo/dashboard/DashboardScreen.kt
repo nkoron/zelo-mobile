@@ -92,7 +92,7 @@ private fun LandscapeDashboardContent(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -193,7 +193,7 @@ private fun TabletDashboardContent(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -222,7 +222,7 @@ private fun PhoneDashboardContent(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF5F5F5))
+            .background(MaterialTheme.colorScheme.background)
             .padding(16.dp)
     ) {
         BalanceCard(
@@ -382,7 +382,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 Button(
                     onClick = { navController.navigate("transference") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A1B25)
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Text(stringResource(R.string.transfer))

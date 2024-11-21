@@ -6,6 +6,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FilterList
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -19,7 +20,7 @@ import com.example.zelo.R
 
 @Composable
 fun ZeloSearchBar(searchQuery:String, valueChange: (String)->Unit){
-    val containerColor = Color(0xFFF3F0F7)
+    val containerColor = MaterialTheme.colorScheme.onSurface
     TextField(
         value = searchQuery,
         onValueChange =  valueChange ,

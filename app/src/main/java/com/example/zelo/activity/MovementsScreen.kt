@@ -141,7 +141,7 @@ fun SummaryCard(
                 Icon(
                     imageVector = Icons.Outlined.ChevronRight,
                     contentDescription = stringResource(R.string.details),
-                    tint = Color(0xFF6C63FF),
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
         }

@@ -171,7 +171,7 @@ fun SignInContent(
                 disabledContainerColor = Color.Transparent,
                 errorContainerColor = Color.Transparent,
                 cursorColor = Color.White,
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
             ),
             modifier = Modifier.fillMaxWidth()

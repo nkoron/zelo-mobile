@@ -257,7 +257,7 @@ fun CardItem(card: Card, onDelete: (Card) -> Unit, isTablet: Boolean) {
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFF6C63FF))
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
     ) {
         Box(
             modifier = Modifier
@@ -332,7 +332,7 @@ fun AddCardButton(onAddCard: (Card) -> Unit, isTablet: Boolean, modifier: Modifi
 
     Button(
         onClick = { showAddCardDialog = true },
-        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier
     ) {
         Icon(imageVector = Icons.Default.Add, contentDescription = null)
