@@ -36,9 +36,7 @@ data class PaymentMethod(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransferDetailScreen(
-    viewModel: TransferenceCBUViewModel = viewModel(factory = TransferenceCBUViewModel.provideFactory(
-        LocalContext.current.applicationContext as MyApplication
-    )),
+    viewModel: TransferenceCBUViewModel,
     onConfirm: () -> Unit,
     onBack: () -> Unit
 ) {
@@ -136,7 +134,7 @@ fun TransferDetailScreen(
                 Button(
                     onClick = {
                         Log.d("TransferenceCBU", "Transfer Button Clicked")
-                        viewModel.makeTransfer()
+//                        viewModel.makeTransfer()
                         onConfirm()
                     },
                     modifier = Modifier

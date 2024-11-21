@@ -28,7 +28,7 @@ data class TransferenceCBUUiState(
     val selectedPaymentMethod: PaymentMethod? = null,
     val availablePaymentMethods: List<PaymentMethod> = emptyList(),
     val error: Error? = null,
-    val transferSuccess: Boolean = false
+    val transferSuccess: Boolean = false,
 )
 
 
@@ -99,6 +99,10 @@ class TransferenceCBUViewModel(
 
     fun selectPaymentMethod(paymentMethod: PaymentMethod) {
         _uiState.update { it.copy(selectedPaymentMethod = paymentMethod) }
+    }
+
+    fun clearError() {
+        _uiState.update { it.copy(error = null) }
     }
 
     fun makeTransfer() {
