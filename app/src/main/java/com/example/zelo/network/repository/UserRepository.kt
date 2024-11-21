@@ -43,7 +43,7 @@ class UserRepository(
         return userRemoteDataSource.registerUser(user).user
     }
     suspend fun verifyUser(token: String): User? {
-        return userRemoteDataSource.verifyUser(VerificationCodeRequest( token)).user
+        return userRemoteDataSource.verifyUser(VerificationCodeRequest( token))
     }
 
 

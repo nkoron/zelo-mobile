@@ -12,11 +12,15 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.dashboard.DashboardViewModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -24,8 +28,13 @@ import java.time.format.DateTimeFormatter
 @Composable
 fun DepositScreen(
     onBack: () -> Unit = {},
-    onDeposit: (Double) -> Unit = {}
+    onDeposit: (Double) -> Unit = {},
+    viewModel: DepositViewModel = viewModel(factory = DepositViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    ))
+
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     var selectedBank by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
@@ -61,7 +70,7 @@ fun DepositScreen(
             ) {
                 OutlinedTextField(
                     value = selectedBank,
-                    onValueChange = {},
+                    onValueChange = {showSuccessMessage = false },
                     readOnly = true,
                     placeholder = { Text(stringResource(R.string.select_your_bank)) },
                     modifier = Modifier
@@ -87,6 +96,7 @@ fun DepositScreen(
                         DropdownMenuItem(
                             text = { Text(bank) },
                             onClick = {
+                                showSuccessMessage = false
                                 selectedBank = bank
                                 expanded = false
                             }
@@ -98,7 +108,9 @@ fun DepositScreen(
             // Amount Input
             OutlinedTextField(
                 value = amount,
-                onValueChange = { amount = it },
+                onValueChange = { amount = it
+                    showSuccessMessage = false
+                },
                 placeholder = { Text(stringResource(R.string.amount_to_deposit)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -139,8 +151,8 @@ fun DepositScreen(
                             modifier = Modifier.padding(start = 8.dp)
                         )
                     }
-                    Text("CBU: 10", style = MaterialTheme.typography.bodyMedium)
-                    Text("Alias: n3pz7g90", style = MaterialTheme.typography.bodyMedium)
+                    Text("CBU: ${uiState.walletDetail?.cbu}", style = MaterialTheme.typography.bodyMedium)
+                    Text("Alias: ${uiState.walletDetail?.alias}", style = MaterialTheme.typography.bodyMedium)
                 }
             }
 
@@ -148,8 +160,7 @@ fun DepositScreen(
             Button(
                 onClick = {
                     amount.toDoubleOrNull()?.let {
-                        onDeposit(it)
-                        showSuccessMessage = true
+                        viewModel.rechargeWallet(it)
                     }
                 },
                 modifier = Modifier
@@ -161,6 +172,18 @@ fun DepositScreen(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(stringResource(R.string.start_deposit))
+            }
+            LaunchedEffect(uiState.balance) {
+                if ( !uiState.isFetching && uiState.error == null && uiState.balance > 0) {
+                    showSuccessMessage = true
+                }
+            }
+            if (uiState.error != null) {
+                Text(
+                    text = uiState.error?.message ?: "An error occurred",
+                    color = Color.Red,
+                    modifier = Modifier.padding(top = 8.dp)
+                )
             }
 
             if (showSuccessMessage) {

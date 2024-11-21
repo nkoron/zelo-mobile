@@ -47,7 +47,7 @@ interface WalletApiService {
     suspend fun getUser(): Response<User>
 
     @POST("api/user/verify")
-    suspend fun verifyUser(@Body verificationCodeRequest: VerificationCodeRequest): Response<RegisterResponse>
+    suspend fun verifyUser(@Body verificationCodeRequest: VerificationCodeRequest): Response<User>
 
     @POST("api/user/recover-password")
     suspend fun recoverPassword(@Body emailRequest: EmailRequest): Response<Int>

@@ -40,7 +40,7 @@ class UserRemoteDataSource(
             userService.registerUser(user)
         }
     }
-    suspend fun verifyUser(token: VerificationCodeRequest): RegisterResponse {
+    suspend fun verifyUser(token: VerificationCodeRequest): User {
         return handleApiResponse {
             userService.verifyUser(token)
         }
