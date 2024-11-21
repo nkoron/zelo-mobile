@@ -226,24 +226,42 @@ fun SignInContent(
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-
+        val uiState by authViewModel.uiState.collectAsState()
         Button(
             onClick = {
                 if(email.isNotEmpty() && password.isNotEmpty()) {
                     onSignIn()
                     authViewModel.login(email, password)
-                    navController.navigate("home")
                 }
-                
+
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
             shape = MaterialTheme.shapes.large
-        ) {
-            Text("Login", fontSize = 18.sp)
+
+        ){
+            if (uiState.isFetching) {
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+            } else {
+                Text(text = stringResource(R.string.login), color = Color.White)
+            }
         }
+
+        if (uiState.error != null) {
+            Text(
+                text = uiState.error?.message ?: "An error occurred",
+                color = Color.Red,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+        LaunchedEffect(uiState.user) {
+            if (uiState.user != null && !uiState.isFetching && uiState.error == null) {
+                navController.navigate("verify_account")
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(24.dp))
 
