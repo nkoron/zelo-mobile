@@ -13,6 +13,7 @@ import com.example.zelo.network.repository.WalletRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
+import com.example.zelo.cards.inferBankName
 import kotlinx.coroutines.Job
 
 data class TransferenceCBUUiState(
@@ -65,7 +66,7 @@ class TransferenceCBUViewModel(
             PaymentMethod(
                 type = "BALANCE",
                 name = "Saldo en Cuenta",
-                lastDigits = "",
+                digits = "",
                 balance = walletDetails.balance.toString(),
                 backgroundColor = Color(0xFFF5F5F5)
             )
@@ -77,8 +78,8 @@ class TransferenceCBUViewModel(
                 PaymentMethod(
                     id = card.id,
                     type = "CREDIT",
-                    name = card.type,
-                    lastDigits = card.number.takeLast(4),
+                    name = inferBankName( card.number),
+                    digits = card.number,
                     cardType = "Tarjeta de Crédito",
                     backgroundColor = Color(0xFF6C63FF)
                 )

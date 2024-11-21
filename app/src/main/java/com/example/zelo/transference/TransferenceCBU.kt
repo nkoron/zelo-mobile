@@ -19,12 +19,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.zelo.cards.inferBankName
 
 data class PaymentMethod(
     val id : Int? = null,
     val type: String,
     val name: String,
-    val lastDigits: String,
+    val digits: String,
     val balance: String? = null,
     val cardType: String? = null,
     val backgroundColor: Color = Color(0xFFF5F5F5)
@@ -240,12 +241,12 @@ fun PaymentMethodCard(
                 )
             } else {
                 Text(
-                    "•••• ${paymentMethod.lastDigits}",
+                    "•••• ${paymentMethod.digits.takeLast(4)}",
                     style = MaterialTheme.typography.titleMedium,
                     color = Color.White
                 )
                 Text(
-                    paymentMethod.cardType ?: "",
+                    paymentMethod.type ?: "",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
