@@ -34,7 +34,6 @@ fun DepositScreen(
     viewModel: DepositViewModel = viewModel(factory = DepositViewModel.provideFactory(
         LocalContext.current.applicationContext as MyApplication
     ))
-
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var selectedBank by remember { mutableStateOf("") }
@@ -54,25 +53,27 @@ fun DepositScreen(
         )
     }
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
-        ) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(horizontal = 16.dp),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        // Header: Bank Selection and Amount Input
+        item {
             Text(
                 stringResource(R.string.deposit_by_bank),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
 
-            // Bank Selection
             ExposedDropdownMenuBox(
                 expanded = expanded,
                 onExpandedChange = { expanded = !expanded }
             ) {
                 OutlinedTextField(
                     value = selectedBank,
-                    onValueChange = {showSuccessMessage = false },
+                    onValueChange = { showSuccessMessage = false },
                     readOnly = true,
                     placeholder = { Text(stringResource(R.string.select_your_bank)) },
                     modifier = Modifier
@@ -82,10 +83,10 @@ fun DepositScreen(
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF5F5F5), // Background color when focused
-                        unfocusedContainerColor = Color(0xFFF5F5F5), // Background color when unfocused
-                        focusedIndicatorColor = Color.Transparent, // Remove focused underline
-                        unfocusedIndicatorColor = Color.Transparent // Remove unfocused underline
+                        focusedContainerColor = Color(0xFFF5F5F5),
+                        unfocusedContainerColor = Color(0xFFF5F5F5),
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent
                     ),
                     shape = RoundedCornerShape(8.dp)
                 )
@@ -107,12 +108,9 @@ fun DepositScreen(
                 }
             }
 
-            // Amount Input
             OutlinedTextField(
                 value = amount,
-                onValueChange = { amount = it
-                    showSuccessMessage = false
-                },
+                onValueChange = { amount = it; showSuccessMessage = false },
                 placeholder = { Text(stringResource(R.string.amount_to_deposit)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,19 +122,14 @@ fun DepositScreen(
                 shape = RoundedCornerShape(8.dp)
             )
 
-            // Account Information
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color(0xFFF5F5F5)
-                ),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Column(
-                    modifier = Modifier.padding(16.dp)
-                ) {
+                Column(modifier = Modifier.padding(16.dp)) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.padding(bottom = 8.dp)
@@ -148,7 +141,7 @@ fun DepositScreen(
                             modifier = Modifier.size(20.dp)
                         )
                         Text(
-                            stringResource(R.string.target_account)+ ":",
+                            stringResource(R.string.target_account) + ":",
                             style = MaterialTheme.typography.bodyMedium,
                             modifier = Modifier.padding(start = 8.dp)
                         )
@@ -158,7 +151,6 @@ fun DepositScreen(
                 }
             }
 
-            // Deposit Button
             Button(
                 onClick = {
                     amount.toDoubleOrNull()?.let {
@@ -168,18 +160,12 @@ fun DepositScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF6C63FF)
-                ),
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(stringResource(R.string.start_deposit))
             }
-            LaunchedEffect(uiState.balance) {
-                if ( !uiState.isFetching && uiState.error == null && uiState.balance > 0) {
-                    showSuccessMessage = true
-                }
-            }
+
             if (uiState.error != null) {
                 Text(
                     text = uiState.error?.message ?: "An error occurred",
@@ -193,10 +179,7 @@ fun DepositScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp)
-                        .background(
-                            color = Color(0xFF4CAF50),
-                            shape = RoundedCornerShape(8.dp)
-                        )
+                        .background(color = Color(0xFF4CAF50), shape = RoundedCornerShape(8.dp))
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.Start,
                     verticalAlignment = Alignment.CenterVertically
@@ -214,28 +197,28 @@ fun DepositScreen(
                     )
                 }
             }
+        }
 
-            // Recent Deposits
+        // List of Recent Deposits
+        item {
             Text(
                 stringResource(R.string.last_deposits),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                items(recentDeposits) { deposit ->
-                    DepositItem(
-                        deposit = deposit,
-                        onRepeat = {
-                            selectedBank = it.name
-                            amount = it.amount.toString()
-                        })
+        }
+        items(recentDeposits) { deposit ->
+            DepositItem(
+                deposit = deposit,
+                onRepeat = {
+                    selectedBank = it.name
+                    amount = it.amount.toString()
                 }
-            }
+            )
         }
     }
+}
+
 
 @Composable
 private fun DepositItem(deposit: Deposit, onRepeat: (deposit:Deposit)-> Unit) {
