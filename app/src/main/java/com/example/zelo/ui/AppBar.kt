@@ -155,19 +155,6 @@ fun AppBar(
                     }
                 }
             }
-
-            IconButton(
-                onClick = onNotificationsClick,
-                modifier = Modifier
-                    .padding(start = 8.dp)
-                    .size(48.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = stringResource(R.string.notifications),
-                    tint = MaterialTheme.colorScheme.primary
-                )
-            }
         }
     }
 }
