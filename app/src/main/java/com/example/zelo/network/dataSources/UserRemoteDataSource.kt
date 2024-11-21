@@ -4,7 +4,10 @@ import android.util.Log
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.WalletApiService
 import com.example.zelo.network.model.LoginRequest
+import com.example.zelo.network.model.RegisterResponse
+import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.User
+import com.example.zelo.network.model.VerificationCodeRequest
 
 class UserRemoteDataSource(
     private val userService: WalletApiService,
@@ -32,4 +35,14 @@ class UserRemoteDataSource(
         }
     }
 
+    suspend fun registerUser(user: RegisterUser): RegisterResponse {
+        return handleApiResponse {
+            userService.registerUser(user)
+        }
+    }
+    suspend fun verifyUser(token: VerificationCodeRequest): RegisterResponse {
+        return handleApiResponse {
+            userService.verifyUser(token)
+        }
+    }
 }

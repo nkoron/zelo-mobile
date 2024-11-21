@@ -7,6 +7,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
+import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.WalletDetails
 import com.example.zelo.network.repository.UserRepository
@@ -44,6 +45,7 @@ class AuthViewModel(
     init {
         if (uiState.value.isAuthenticated) {
             observeWalletDetailStream()
+            getCurrentUser()
         }
     }
 
@@ -67,6 +69,25 @@ class AuthViewModel(
                 user = null
             )
         }
+    )
+
+    fun getCurrentUser() = runOnViewModelScope(
+        {
+            userRepository.getCurrentUser()
+        },
+        { state, response -> state.copy(user = response) }
+    )
+    fun registerUser(user: RegisterUser) = runOnViewModelScope(
+        {
+            userRepository.registerUser(user)
+        },
+        { state, response -> state.copy(user = response) }
+    )
+    fun verifyUser(token: String) = runOnViewModelScope(
+        {
+            userRepository.verifyUser(token)
+        },
+        { state, response -> state.copy(user = response) }
     )
 
     private fun observeWalletDetailStream() {

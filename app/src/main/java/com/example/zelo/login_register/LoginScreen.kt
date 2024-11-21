@@ -129,6 +129,7 @@ fun SignInScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignInContent(
     email: String,
@@ -164,10 +165,14 @@ fun SignInContent(
             label = { Text(stringResource(R.string.email), color = Color.Gray) },
             singleLine = true,
             textStyle = TextStyle(color = Color.White),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                cursorColor = Color.White,
                 focusedBorderColor = Color(0xFF6C63FF),
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth()
         )
