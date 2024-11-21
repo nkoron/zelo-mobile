@@ -48,8 +48,8 @@ fun MovementsScreen(
             // Action Buttons
             MonthSummaryCard(
                 month = "Agosto",
-                income = 21500.00,
-                expenses = 50000.00,
+                income = uiState.totalIncome,
+                expenses = uiState.totalExpense,
                 onIncomeClick = onNavigateToIncomes,
                 onExpensesClick = onNavigateToExpenses
             )
@@ -100,7 +100,7 @@ fun FormatItems(uiState: MovementsUiState, it: Int) {
 @Composable
 fun SummaryCard(
     title: String,
-    amount: Double,
+    amount: Double?,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -151,8 +151,8 @@ fun SummaryCard(
 @Composable
 fun MonthSummaryCard(
     month: String,
-    income: Double,
-    expenses: Double,
+    income: Double?,
+    expenses: Double?,
     onIncomeClick: () -> Unit,
     onExpensesClick: () -> Unit,
     modifier: Modifier = Modifier

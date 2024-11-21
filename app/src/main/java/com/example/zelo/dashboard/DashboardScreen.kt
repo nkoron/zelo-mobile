@@ -151,8 +151,8 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
                 ) {
                     items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
                         val payment = uiState.movements[it]
-                        val me: User
-                        val you: User
+                        val me: User;
+                        val you: User;
                         val receive: Boolean
                         if (payment.receiver.id == uiState.user?.id) {
                             receive = true
