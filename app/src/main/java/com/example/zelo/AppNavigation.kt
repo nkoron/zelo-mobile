@@ -48,6 +48,7 @@ import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
 import com.example.zelo.qr.QRScannerScreen
 import com.example.zelo.transference.TransactionConfirmedScreen
+import com.example.zelo.transference.TransferenceCBUViewModel
 import com.example.zelo.ui.TopBarViewModel
 import com.example.zelo.ui.ZeloNavigationRail
 
@@ -121,6 +122,9 @@ fun AppNavigation() {
 
 @Composable
 fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValues: PaddingValues, authViewModel: AuthViewModel) {
+    val transferenceCBUViewModel: TransferenceCBUViewModel = viewModel(factory = TransferenceCBUViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    ))
     NavHost(
         navController = navController,
         startDestination = if (isLoggedIn) "home" else "login",
@@ -152,10 +156,10 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
                 onNavigateToContacts = { navController.navigate("transference/contacts") }
             )
         }
-        composable("transference/form") { TransferDetailScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmation")}) }
-        composable("transference/confirmed") { TransactionConfirmedScreen( onReturnHome = {navController.navigate("home")}) }
+        composable("transference/form") { TransferDetailScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmation")}, viewModel = transferenceCBUViewModel) }
+        composable("transference/confirmed") { TransactionConfirmedScreen( onReturnHome = {navController.navigate("home")}, viewModel = transferenceCBUViewModel) }
         composable("transference/contacts") { ContactsScreen(navController) }
-        composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}) }
+        composable("transference/confirmation") { TransferConfirmationScreen(onBack = {navController.popBackStack()}, onConfirm = {navController.navigate("transference/confirmed")}, viewModel = transferenceCBUViewModel) }
         // You can uncomment these screens as needed
         composable("cards") { CardsScreen(
             onBack = { navController.popBackStack() }

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -17,16 +18,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TransactionConfirmedScreen(
-    amount: String = "12.000",
-    recipient: String = "Jose Benegas",
-    concept: String = "Asado del viernes",
+    viewModel: TransferenceCBUViewModel,
     onReturnHome: () -> Unit = {}
 ) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -59,17 +60,17 @@ fun TransactionConfirmedScreen(
 
                 // Transfer amount
                 Text(
-                    "$$amount",
+                    "$${uiState.amount}",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = Color(0xFF6C63FF)
                 )
 
                 // Recipient info
-                RecipientCardConfirm(recipient)
+                RecipientCardConfirm(uiState.cbuAlias)
 
                 // Transfer details
-                TransferDetailsCardConfirm(concept)
+                TransferDetailsCardConfirm(uiState.concept)
             }
 
             // Return to Home Button
