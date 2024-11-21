@@ -49,25 +49,6 @@ fun ZeloNavigationRail(
             )
         )
         NavigationRailItem(
-            selected = false,
-            onClick = { navController.navigate("qr-scanner") },
-            icon = {
-                Icon(
-                    Icons.Filled.QrCode2,
-                    contentDescription = stringResource(R.string.qr_code),
-                    modifier = Modifier.size(32.dp)
-                )
-            },
-            label = { Text("QR") },
-            modifier = Modifier.padding(vertical = 8.dp),
-            colors = NavigationRailItemDefaults.colors(
-                selectedIconColor = Color(0xFFE91E63),
-                selectedTextColor = Color(0xFFE91E63),
-                unselectedIconColor = Color.Gray,
-                unselectedTextColor = Color.Gray
-            )
-        )
-        NavigationRailItem(
             selected = currentRoute == "cards",
             onClick = { navController.navigate("cards") },
             icon = { Icon(
