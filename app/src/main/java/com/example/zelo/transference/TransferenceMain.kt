@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -21,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.zelo.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -32,7 +34,6 @@ fun TransferScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -63,7 +64,7 @@ fun TransferScreen(
                         containerColor = Color(0xFF6B6B7B)
                     )
                 ) {
-                    Text("CONTACTOS")
+                    Text(stringResource(R.string.contacts))
                 }
             }
 
@@ -75,7 +76,7 @@ fun TransferScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .clip(RoundedCornerShape(24.dp)),
-                placeholder = { Text("Buscar") },
+                placeholder = { Text(stringResource(R.string.search)) },
                 leadingIcon = { Icon(Icons.Default.Search, "Search") },
                 trailingIcon = { Icon(Icons.Default.FilterList, "Filter") },
                 colors = TextFieldDefaults.colors(
@@ -88,7 +89,7 @@ fun TransferScreen(
 
             // Frequent Contacts
             Text(
-                "Frecuentes",
+                stringResource(R.string.frequent_contacts),
                 style = MaterialTheme.typography.titleMedium,
                 modifier = Modifier.padding(vertical = 16.dp)
             )
@@ -119,7 +120,7 @@ fun TransferScreen(
                                 containerColor = Color(0xFF854EF9)
                             )
                         ) {
-                            Text("Transferir")
+                            Text(stringResource(R.string.transfer))
                         }
                     }
                 }

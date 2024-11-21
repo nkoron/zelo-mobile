@@ -166,4 +166,20 @@
     <string name="activity">Activity</string>
     <string name="cards">Cards</string>
     <string name="see_details">Details</string>
+    <string name="frequent_contacts">Frequent contacts</string>
+    <string name="suceessfully_transferred">Successfully transferred</string>
+    <string name="go_back_home">Return to Home</string>
+    <string name="recipient">Recipient</string>
+    <string name="credit_card">Pay with credit card</string>
+    <string name="debit_card">Pay with debit card</string>
+    <string name="balance_method">Pay with account balance</string>
+    <string name="unknown_method">Unkown method</string>
+    <string name="balance">BALANCE</string>
+    <string name="credit">CREDIT</string>
+    <string name="debit">DEBIT</string>
+    <string name="concept">Concept</string>
+    <string name="transfer_confirmation">Confirm Transfer</string>
+    <string name="will_transfer">You are going to transfer</string>
+    <string name="date">Date</string>
+
 </resources>

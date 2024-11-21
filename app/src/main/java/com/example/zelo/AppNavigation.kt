@@ -18,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -56,6 +57,12 @@ import com.example.zelo.ui.ZeloNavigationRail
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
 fun AppNavigation() {
+    val profile = stringResource(R.string.profile)
+    val cards = stringResource(R.string.cards)
+    val transference = stringResource(R.string.transfer)
+    val movements = stringResource(R.string.activity)
+    val home = stringResource(R.string.home)
+
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
     val uiState by authViewModel.uiState.collectAsState()
 
@@ -72,11 +79,11 @@ fun AppNavigation() {
     // Update the current section based on the route
     LaunchedEffect(currentRoute) {
         val section = when {
-            currentRoute.startsWith("home") -> "Dashboard"
-            currentRoute.startsWith("movements") -> "Activity"
-            currentRoute.startsWith("transference") -> "Transfer"
-            currentRoute.startsWith("cards") -> "Cards"
-            currentRoute.startsWith("profile") -> "Profile"
+            currentRoute.startsWith("home") -> home
+            currentRoute.startsWith("movements") -> movements
+            currentRoute.startsWith("transference") -> transference
+            currentRoute.startsWith("cards") -> cards
+            currentRoute.startsWith("profile") -> profile
             else -> ""
         }
         topBarViewModel.updateCurrentSection(section)

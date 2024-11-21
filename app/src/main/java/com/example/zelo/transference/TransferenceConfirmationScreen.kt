@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.zelo.MyApplication
+import com.example.zelo.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,7 +42,9 @@ fun TransferConfirmationScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Confirmar Transferencia") },
+                title = {
+                    Text(stringResource(R.string.transfer_confirmation))
+                        },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
@@ -69,7 +73,8 @@ fun TransferConfirmationScreen(
                 Text(
                     buildAnnotatedString {
                         withStyle(SpanStyle(fontSize = 16.sp, color = Color.Gray)) {
-                            append("Vas a transferir\n\n")
+                            append(stringResource(R.string.will_transfer))
+                            append("\n\n")
                         }
                         withStyle(SpanStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)) {
                             append("$")
@@ -100,7 +105,7 @@ fun TransferConfirmationScreen(
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
-                    "Confirmar transferencia",
+                    stringResource(R.string.transfer_confirmation),
                     style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
                 )
             }
@@ -168,7 +173,7 @@ fun RecipientCard(recipient: String) {
                     color = Color.Black
                 )
                 Text(
-                    "Destinatario",
+                    stringResource(R.string.recipient),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -194,7 +199,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Concepto",
+                    stringResource(R.string.concept),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -209,7 +214,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Fecha",
+                    stringResource(R.string.date),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -224,7 +229,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Método de pago",
+                    stringResource(R.string.payment_method),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -239,4 +244,3 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
 }
 
 
-// Preview function can be added here if needed

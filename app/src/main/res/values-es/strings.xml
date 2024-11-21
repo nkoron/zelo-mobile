@@ -167,5 +167,24 @@
     <string name="activity">Actividad</string>
     <string name="cards">Tarjetas</string>
     <string name="see_details">Detalles</string>
+    <string name="frequent_contacts">Contactos frecuentes</string>
+    <string name="suceessfully_transferred">Transferencia realizada con éxito</string>
+    <string name="go_back_home">Volver al inicio</string>
+    <string name="recipient">Destinatario</string>
+    <string name="credit_card">Pagar con tarjeta de crédito</string>
+    <string name="debit_card">Pagar con tarjeta de débito</string>
+    <string name="balance_method">Pagar con saldo en cuenta</string>
+    <string name="unknown_method">Método desconocido</string>
+    <string name="balance">SALOD</string>
+    <string name="credit">CRÉDITO </string>
+    <string name="debit">DÉBITO </string>
+    <string name="concept">Concepto</string>
+    <string name="transfer_confirmation">Confirmar Transferencia</string>
+    <string name="will_transfer">Vas a transferir</string>
+    <string name="date">Fecha</string>
+
+
+
+
 
 </resources>

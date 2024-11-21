@@ -16,11 +16,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.zelo.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -55,7 +57,7 @@ fun TransactionConfirmedScreen(
 
                 // Confirmation Message
                 Text(
-                    "¡Transferencia realizada con éxito!",
+                    stringResource(R.string.suceessfully_transferred),
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
@@ -98,7 +100,7 @@ fun TransactionConfirmedScreen(
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     Text(
-                        "Volver al inicio",
+                        stringResource(R.string.go_back_home),
                         style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
                     )
                 }
@@ -142,7 +144,7 @@ fun RecipientCardConfirm(recipient: String) {
                     color = Color.Black
                 )
                 Text(
-                    "Destinatario",
+                    stringResource(R.string.recipient),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -154,10 +156,10 @@ fun RecipientCardConfirm(recipient: String) {
 @Composable
 fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
     val paymentMethodText = when (paymentType) {
-        "CREDIT" -> "Tarjeta de Crédito"
-        "DEBIT" -> "Tarjeta de Débito"
-        "BALANCE" -> "Saldo en cuenta"
-        else -> "Método desconocido"
+        stringResource(R.string.credit) -> stringResource(R.string.credit_card)
+        stringResource(R.string.debit) -> stringResource(R.string.debit_card)
+        stringResource(R.string.balance) -> stringResource(R.string.balance_method)
+        else -> stringResource(R.string.unknown_method)
     }
     Card(
         modifier = Modifier.fillMaxWidth(),
@@ -175,7 +177,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Concepto",
+                    stringResource(R.string.concept),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -205,7 +207,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    "Método de pago",
+                    stringResource(R.string.payment_method),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
