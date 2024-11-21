@@ -10,12 +10,10 @@ import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.*
 import com.example.zelo.network.repository.PaymentRepository
 import com.example.zelo.network.repository.WalletRepository
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import android.util.Log
+import kotlinx.coroutines.Job
 
 data class TransferenceCBUUiState(
     val isLoading: Boolean = false,
@@ -28,7 +26,6 @@ data class TransferenceCBUUiState(
     val transferSuccess: Boolean = false,
 )
 
-
 class TransferenceCBUViewModel(
     private val walletRepository: WalletRepository,
     private val paymentRepository: PaymentRepository,
@@ -38,48 +35,57 @@ class TransferenceCBUViewModel(
     private val _uiState = MutableStateFlow(TransferenceCBUUiState())
     val uiState: StateFlow<TransferenceCBUUiState> = _uiState.asStateFlow()
 
+    private var paymentMethodsStreamJob: Job? = null
+
     init {
-        loadPaymentMethods()
+        observePaymentMethodsStream()
     }
 
-    private fun loadPaymentMethods() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(isLoading = true) }
-            try {
-                val cards = walletRepository.getCards()
-                val walletDetails = walletRepository
-                val paymentMethods = mutableListOf<PaymentMethod>()
-
-                // Add wallet balance as a payment method
-                paymentMethods.add(
-                    PaymentMethod(
-                        type = "BALANCE",
-                        name = "Saldo en Cuenta",
-                        lastDigits = "",
-                        balance = walletDetails.getBalance().balance.toString(),
-                        backgroundColor = Color(0xFFF5F5F5)
-                    )
-                )
-
-                // Add cards as payment methods
-                cards.forEach { card ->
-                    paymentMethods.add(
-                        PaymentMethod(
-                            id = card.id,
-                            type = "CREDIT",
-                            name = card.type,
-                            lastDigits = card.number.takeLast(4),
-                            cardType = "Tarjeta de Crédito",
-                            backgroundColor = Color(0xFF6C63FF)
-                        )
-                    )
-                }
-
-                _uiState.update { it.copy(availablePaymentMethods = paymentMethods, isLoading = false) }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(error = handleError(e), isLoading = false) }
+    private fun observePaymentMethodsStream() {
+        paymentMethodsStreamJob = viewModelScope.launch {
+            combine(
+                walletRepository.walletDetailStream,
+                walletRepository.cardsStream
+            ) { walletDetails, cards ->
+                createPaymentMethods(walletDetails, cards)
             }
+                .distinctUntilChanged()
+                .catch { e -> _uiState.update { it.copy(error = handleError(e)) } }
+                .collect { paymentMethods ->
+                    _uiState.update { it.copy(availablePaymentMethods = paymentMethods, isLoading = false) }
+                }
         }
+    }
+
+    private fun createPaymentMethods(walletDetails: WalletDetails, cards: List<Card>): List<PaymentMethod> {
+        val paymentMethods = mutableListOf<PaymentMethod>()
+
+        // Add wallet balance as a payment method
+        paymentMethods.add(
+            PaymentMethod(
+                type = "BALANCE",
+                name = "Saldo en Cuenta",
+                lastDigits = "",
+                balance = walletDetails.balance.toString(),
+                backgroundColor = Color(0xFFF5F5F5)
+            )
+        )
+
+        // Add cards as payment methods
+        cards.forEach { card ->
+            paymentMethods.add(
+                PaymentMethod(
+                    id = card.id,
+                    type = "CREDIT",
+                    name = card.type,
+                    lastDigits = card.number.takeLast(4),
+                    cardType = "Tarjeta de Crédito",
+                    backgroundColor = Color(0xFF6C63FF)
+                )
+            )
+        }
+
+        return paymentMethods
     }
 
     fun updateCbuAlias(cbuAlias: String) {
@@ -127,14 +133,20 @@ class TransferenceCBUViewModel(
                 val result = paymentRepository.makePayment(paymentRequest)
                 _uiState.update { it.copy(transferSuccess = true, isLoading = false) }
                 Log.d("TransferenceCBUViewModel", "Transfer successful: $result")
-                updateCbuAlias("")
-                updateAmount("")
-                updateConcept("")
-                selectPaymentMethod(null)
+                resetTransferForm()
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = handleError(e), isLoading = false) }
             }
         }
+    }
+
+    private fun resetTransferForm() {
+        _uiState.update { it.copy(
+            cbuAlias = "",
+            amount = "",
+            concept = "",
+            selectedPaymentMethod = null
+        ) }
     }
 
     private fun handleError(e: Throwable): Error {
@@ -143,6 +155,11 @@ class TransferenceCBUViewModel(
         } else {
             Error(null, e.message ?: "")
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        paymentMethodsStreamJob?.cancel()
     }
 
     companion object {
@@ -160,3 +177,4 @@ class TransferenceCBUViewModel(
         }
     }
 }
+

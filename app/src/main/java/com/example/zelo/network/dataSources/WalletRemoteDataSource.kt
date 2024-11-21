@@ -50,6 +50,16 @@ class WalletRemoteDataSource(
         }
     }
 
+    val cardsStream: Flow<List<Card>> = flow {
+        while (true) {
+            val cards = handleApiResponse {
+                walletApiService.getCards()
+            }
+            emit(cards)
+            delay(DELAY)
+        }
+    }
+
     companion object {
         const val DELAY: Long = 3000
     }
