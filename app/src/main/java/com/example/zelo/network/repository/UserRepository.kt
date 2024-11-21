@@ -2,7 +2,9 @@ package com.example.zelo.network.repository
 
 import android.util.Log
 import com.example.zelo.network.dataSources.UserRemoteDataSource
+import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -16,9 +18,15 @@ class UserRepository(
     suspend fun login(username: String, password: String) {
         Log.d("UserRepository", "Login with username: $username and password: $password")
         userRemoteDataSource.login(username, password)
+        currentUserMutex.withLock {
+            this.currentUser = null
+        }
     }
     suspend fun logout(){
         userRemoteDataSource.logout()
+        currentUserMutex.withLock {
+            this.currentUser = null
+        }
     }
     suspend fun getCurrentUser(refresh: Boolean = false): User? {
         if (refresh || currentUser == null) {
@@ -28,5 +36,8 @@ class UserRepository(
             }
         }
         return currentUserMutex.withLock { this.currentUser }
+    }
+    fun isAuthenticated(): Boolean {
+        return this.currentUser != null
     }
 }
