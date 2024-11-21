@@ -19,7 +19,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.navigation.NavController
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -27,7 +28,7 @@ fun TransactionConfirmedScreen(
     viewModel: TransferenceCBUViewModel,
     onReturnHome: () -> Unit = {}
 ) {
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -70,7 +71,7 @@ fun TransactionConfirmedScreen(
                 RecipientCardConfirm(uiState.cbuAlias)
 
                 // Transfer details
-                TransferDetailsCardConfirm(uiState.concept)
+                TransferDetailsCardConfirm(uiState.concept, uiState.selectedPaymentMethod?.type ?: "")
             }
 
             // Return to Home Button
@@ -148,7 +149,13 @@ fun RecipientCardConfirm(recipient: String) {
 }
 
 @Composable
-fun TransferDetailsCardConfirm(concept: String) {
+fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
+    val paymentMethodText = when (paymentType) {
+        "CREDIT" -> "Tarjeta de Crédito"
+        "DEBIT" -> "Tarjeta de Débito"
+        "BALANCE" -> "Saldo en cuenta"
+        else -> "Método desconocido"
+    }
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
@@ -185,7 +192,7 @@ fun TransferDetailsCardConfirm(concept: String) {
                     color = Color.Gray
                 )
                 Text(
-                    "Hoy",
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )
@@ -200,7 +207,7 @@ fun TransferDetailsCardConfirm(concept: String) {
                     color = Color.Gray
                 )
                 Text(
-                    "Saldo en cuenta",
+                    paymentMethodText,
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Black
                 )

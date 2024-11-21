@@ -6,6 +6,7 @@ import com.example.zelo.network.model.Balance
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.WalletDetails
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -49,4 +50,11 @@ class WalletRepository(
 
     val walletDetailStream: Flow<WalletDetails> =
         walletRemoteDataSource.walletDetailStream
+
+    val cardsStream: Flow<List<Card>> = walletRemoteDataSource.cardsStream.map { newCards ->
+        cardsMutex.withLock {
+            cards = newCards
+            cards
+        }
+    }
 }

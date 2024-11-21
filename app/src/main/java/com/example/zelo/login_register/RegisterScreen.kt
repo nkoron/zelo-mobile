@@ -401,8 +401,10 @@ fun RegisterContent(
 
         Button(
             onClick = {
-                val user = RegisterUser(name, surname, email, birthDate, password)
-                authViewModel.registerUser(user)
+                if(email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty() && name.isNotEmpty() && surname.isNotEmpty() && birthDate.isNotEmpty()) {
+                    val user = RegisterUser(name, surname, email, birthDate, password)
+                    authViewModel.registerUser(user)
+                }
             },
             modifier = Modifier
                 .fillMaxWidth()
