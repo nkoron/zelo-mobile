@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -26,14 +27,16 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.zelo.MyApplication
 import com.example.zelo.R
-import com.example.zelo.ui.AuthViewModel
+import com.example.zelo.login_register.AuthViewModel
 
 @Composable
 fun SignInScreen(
     navController: NavController,
-    authViewModel: AuthViewModel,
+    authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
     modifier: Modifier = Modifier,
     onSignIn: (email: String, password: String) -> Unit = { _, _ -> }
 ) {
@@ -222,7 +225,7 @@ fun SignInContent(
         Button(
             onClick = {
                 onSignIn()
-                authViewModel.logIn()
+                authViewModel.login(email, password)
                 navController.navigate("home")
             },
             modifier = Modifier

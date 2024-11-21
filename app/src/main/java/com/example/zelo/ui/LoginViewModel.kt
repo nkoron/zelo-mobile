@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class AuthViewModel : ViewModel() {
+class LoginViewModel : ViewModel() {
     // Example using StateFlow to track login status
     private val _isLoggedIn = MutableStateFlow(false)
     val isLoggedIn: StateFlow<Boolean> = _isLoggedIn
@@ -18,4 +18,3 @@ class AuthViewModel : ViewModel() {
         _isLoggedIn.value = false
     }
 }
-

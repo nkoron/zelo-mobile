@@ -18,7 +18,8 @@ import kotlinx.coroutines.launch
 data class CardsUiState(
     val isLoading: Boolean = false,
     val cards: List<Card> = emptyList(),
-    val error: Error? = null
+    val error: Error? = null,
+    val cardToDelete: Card? = null
 )
 
 class CardsViewModel(
@@ -33,6 +34,14 @@ class CardsViewModel(
         loadCards()
     }
 
+    fun showDeleteConfirmation(card: Card) {
+        _uiState.update { it.copy(cardToDelete = card) }
+    }
+
+    fun dismissDeleteConfirmation() {
+        _uiState.update { it.copy(cardToDelete = null) }
+    }
+
     fun loadCards() = runOnViewModelScope(
         { walletRepository.getCards(refresh = true) },
         { state, cards -> state.copy(cards = cards) }
@@ -45,7 +54,7 @@ class CardsViewModel(
 
     fun deleteCard(cardId: Int) = runOnViewModelScope(
         { walletRepository.deleteCard(cardId) },
-        { state, _ -> state.copy(cards = state.cards.filter { it.id != cardId }) }
+        { state, _ -> state.copy(cards = state.cards.filter { it.id != cardId }, cardToDelete = null) }
     )
 
     private fun <R> runOnViewModelScope(

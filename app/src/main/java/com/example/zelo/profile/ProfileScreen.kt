@@ -39,31 +39,12 @@ fun ProfileScreen(
         MenuItemData(Icons.Outlined.Message, stringResource(R.string.messages), stringResource(R.string.message_settings), "profile/messages"),
         MenuItemData(Icons.Outlined.Help, stringResource(R.string.help), stringResource(R.string.assistance), "profile/help")
     )
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.profile), fontWeight = FontWeight.Bold) },
-                navigationIcon = {
-                    IconButton(onClick = onNavigateBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface,
-                    navigationIconContentColor = MaterialTheme.colorScheme.onSurface
-                ),
-                scrollBehavior = scrollBehavior
-            )
-        }
-    ) { innerPadding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .padding(innerPadding)
                 .padding(bottom = 16.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            contentPadding = PaddingValues(horizontal = 16.dp)
         ) {
             item { ProfileCard(onLogout) }
             items(menuItems) { item ->
@@ -74,8 +55,6 @@ fun ProfileScreen(
             }
         }
     }
-}
-
 @Composable
 fun ProfileCard(onLogout: () -> Unit) {
     Card(

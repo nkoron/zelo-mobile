@@ -27,21 +27,9 @@ fun TransactionConfirmedScreen(
     concept: String = "Asado del viernes",
     onReturnHome: () -> Unit = {}
 ) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("Transferencia Exitosa") },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black
-                )
-            )
-        }
-    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
                 .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
@@ -112,7 +100,7 @@ fun TransactionConfirmedScreen(
             }
         }
     }
-}
+
 
 @Composable
 fun RecipientCardConfirm(recipient: String) {

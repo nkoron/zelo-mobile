@@ -16,33 +16,39 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 
-
-data class TopBarUiState (
+data class TopBarUiState(
     val isAuthenticated: Boolean = false,
     val user: User? = null,
     val isFetching: Boolean = false,
-    val error: Error? = null
+    val error: Error? = null,
+    val currentSection: String = "" // New property to store the current section
 )
-class TopBarViewModel (
-        private val userRepository: UserRepository,
+
+class TopBarViewModel(
+    private val userRepository: UserRepository,
     sessionManager: SessionManager,
-    ) : ViewModel() {
+) : ViewModel() {
 
-        var uiState by mutableStateOf(TopBarUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
-            private set
-        init {
-            if (uiState.isAuthenticated) {
-                getCurrentUser()
-            }
+    var uiState by mutableStateOf(TopBarUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
+        private set
+
+    init {
+        if (uiState.isAuthenticated) {
+            getCurrentUser()
         }
+    }
 
-        fun getCurrentUser() = runOnViewModelScope(
-            {
-                userRepository.getCurrentUser()
-            },
-            { state, response -> state.copy(user = response) }
-        )
+    fun getCurrentUser() = runOnViewModelScope(
+        {
+            userRepository.getCurrentUser()
+        },
+        { state, response -> state.copy(user = response) }
+    )
 
+    // New function to update the current section
+    fun updateCurrentSection(section: String) {
+        uiState = uiState.copy(currentSection = section)
+    }
 
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
@@ -57,26 +63,26 @@ class TopBarViewModel (
             uiState = uiState.copy(isFetching = false, error = handleError(e))
         }
     }
-        private fun handleError(e: Throwable): Error {
-            return if (e is DataSourceException) {
-                Error(e.code, e.message ?: "")
-            } else {
-                Error(null, e.message ?: "")
-            }
-        }
 
-        companion object {
-            fun provideFactory(
-                application: MyApplication
-            ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-                @Suppress("UNCHECKED_CAST")
-                override fun<T : ViewModel> create(modelClass: Class<T>): T {
-                    return TopBarViewModel(
-                        application.userRepository,
-                        application.sessionManager
-                        ) as T
-                }
-            }
+    private fun handleError(e: Throwable): Error {
+        return if (e is DataSourceException) {
+            Error(e.code, e.message ?: "")
+        } else {
+            Error(null, e.message ?: "")
         }
-
     }
+
+    companion object {
+        fun provideFactory(
+            application: MyApplication
+        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
+            @Suppress("UNCHECKED_CAST")
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return TopBarViewModel(
+                    application.userRepository,
+                    application.sessionManager
+                ) as T
+            }
+        }
+    }
+}
