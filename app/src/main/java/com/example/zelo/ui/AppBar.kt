@@ -38,6 +38,10 @@ fun AppBar(
     val avatarSize = if (isTablet) 56.dp else 48.dp
     val startPadding: Dp = if (isTablet) 0.dp else horizontalPadding
 
+    LaunchedEffect(Unit) {
+        viewModel.checkAuthenticationStatus()
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp

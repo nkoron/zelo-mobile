@@ -5,6 +5,7 @@ import com.example.zelo.network.WalletApiService
 import com.example.zelo.network.model.Balance
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.WalletDetails
+import com.example.zelo.network.model.getCardsResponse
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.flow
 class WalletRemoteDataSource(
     private val walletApiService: WalletApiService,
 ): RemoteDataSource() {
-    suspend fun getCards(): List<Card> {
+    suspend fun getCards(): getCardsResponse {
         return handleApiResponse{
             walletApiService.getCards()
         }

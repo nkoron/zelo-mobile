@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
@@ -29,8 +30,11 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.network.model.RegisterUser
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -38,16 +42,11 @@ import java.util.*
 fun RegisterScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    onSignUp: (
-        email: String,
-        password: String,
-        phone: String,
-        dni: String,
-        name: String,
-        surname: String,
-        birthDate: String
-    ) -> Unit = { _, _, _, _, _, _, _ -> }
+    authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
+    onSignUp: (user: RegisterUser
+    ) -> Unit = {authViewModel.registerUser(it)}
 ) {
+    val uiState by authViewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
     val screenWidth = configuration.screenWidthDp.dp
     val screenHeight = configuration.screenHeightDp.dp
@@ -66,7 +65,7 @@ fun RegisterScreen(
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
     val calendar = Calendar.getInstance()
-    val dateFormat = SimpleDateFormat("dd/MM/yyyy", Locale.US)
+    val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
     fun openDatePicker() {
         val datePickerDialog = DatePickerDialog(
@@ -87,6 +86,7 @@ fun RegisterScreen(
             .fillMaxSize()
             .background(Color(0xFF1A1B25))
     ) {
+
         if (isLandscape || isTablet) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -122,7 +122,7 @@ fun RegisterScreen(
                     onPasswordVisibilityChange = { passwordVisible = it },
                     onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
                     onDatePickerClick = { openDatePicker() },
-                    onSignUp = { onSignUp(email, password, phone, dni, name, surname, birthDate) },
+                    authViewModel = authViewModel,
                     navController = navController,
                     modifier = Modifier
                         .weight(1f)
@@ -166,7 +166,7 @@ fun RegisterScreen(
                     onPasswordVisibilityChange = { passwordVisible = it },
                     onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
                     onDatePickerClick = { openDatePicker() },
-                    onSignUp = { onSignUp(email, password, phone, dni, name, surname, birthDate) },
+                    authViewModel = authViewModel,
                     navController = navController
                 )
             }
@@ -197,10 +197,11 @@ fun RegisterContent(
     onPasswordVisibilityChange: (Boolean) -> Unit,
     onConfirmPasswordVisibilityChange: (Boolean) -> Unit,
     onDatePickerClick: () -> Unit,
-    onSignUp: () -> Unit,
+    authViewModel: AuthViewModel,
     navController: NavController,
     modifier: Modifier = Modifier
 ) {
+    val uiState by authViewModel.uiState.collectAsState()
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -399,13 +400,33 @@ fun RegisterContent(
         Spacer(modifier = Modifier.height(16.dp))
 
         Button(
-            onClick = onSignUp,
+            onClick = {
+                val user = RegisterUser(name, surname, email, birthDate, password)
+                authViewModel.registerUser(user)
+            },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
         ) {
-            Text(text = stringResource(R.string.register), color = Color.White)
+            if (uiState.isFetching) {
+                CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
+            } else {
+                Text(text = stringResource(R.string.register), color = Color.White)
+            }
+        }
+
+        if (uiState.error != null) {
+            Text(
+                text = uiState.error?.message ?: "An error occurred",
+                color = Color.Red,
+                modifier = Modifier.padding(top = 8.dp)
+            )
+        }
+        LaunchedEffect(uiState.user) {
+            if (uiState.user != null && !uiState.isFetching && uiState.error == null) {
+                navController.navigate("verify_account")
+            }
         }
     }
 }

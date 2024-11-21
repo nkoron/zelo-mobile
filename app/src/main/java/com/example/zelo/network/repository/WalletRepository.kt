@@ -18,7 +18,7 @@ class WalletRepository(
 
     suspend fun getCards(refresh: Boolean = false): List<Card> {
      if(refresh || cards.isEmpty()){
-        val result =  walletRemoteDataSource.getCards()
+        val result =  walletRemoteDataSource.getCards().cards
 
         cardsMutex.withLock {
             Log.d("WalletRepository", "Cards: $result")

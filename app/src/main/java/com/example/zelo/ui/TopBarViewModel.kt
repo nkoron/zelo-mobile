@@ -11,7 +11,6 @@ import com.example.zelo.network.model.User
 import com.example.zelo.network.repository.UserRepository
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,7 +25,7 @@ data class TopBarUiState(
 
 class TopBarViewModel(
     private val userRepository: UserRepository,
-    sessionManager: SessionManager,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     var uiState by mutableStateOf(TopBarUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
@@ -42,8 +41,17 @@ class TopBarViewModel(
         {
             userRepository.getCurrentUser()
         },
-        { state, response -> state.copy(user = response) }
+        { state, response -> state.copy(user = response, isAuthenticated = true) }
     )
+
+    fun checkAuthenticationStatus() {
+        val isAuthenticated = sessionManager.loadAuthToken() != null
+        if (isAuthenticated && uiState.user == null) {
+            getCurrentUser()
+        } else {
+            uiState = uiState.copy(isAuthenticated = isAuthenticated)
+        }
+    }
 
     // New function to update the current section
     fun updateCurrentSection(section: String) {

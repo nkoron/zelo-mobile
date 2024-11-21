@@ -10,12 +10,14 @@ import com.example.zelo.network.model.LoginResponse
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentIdRequest
 import com.example.zelo.network.model.PaymentRequest
+import com.example.zelo.network.model.RegisterResponse
 import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.ResetPasswordRequest
 import com.example.zelo.network.model.UpdateAliasRequest
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.VerificationCodeRequest
 import com.example.zelo.network.model.WalletDetails
+import com.example.zelo.network.model.getCardsResponse
 import retrofit2.Response
 
 import retrofit2.http.Body
@@ -45,13 +47,13 @@ interface WalletApiService {
     suspend fun getUser(): Response<User>
 
     @POST("api/user/verify")
-    suspend fun verifyUser(@Body verificationCodeRequest: VerificationCodeRequest): Response<User>
+    suspend fun verifyUser(@Body verificationCodeRequest: VerificationCodeRequest): Response<RegisterResponse>
 
     @POST("api/user/recover-password")
     suspend fun recoverPassword(@Body emailRequest: EmailRequest): Response<Int>
 
     @POST("api/user")
-    suspend fun registerUser(@Body user: RegisterUser): Response<User>
+    suspend fun registerUser(@Body user: RegisterUser): Response<RegisterResponse>
 
     @POST("api/user/login")
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse> //retorna un "token"
@@ -66,7 +68,7 @@ interface WalletApiService {
     suspend fun getBalance(): Response<Balance>
 
     @GET("api/wallet/cards")
-    suspend fun getCards(): Response<List<Card>>
+    suspend fun getCards(): Response<getCardsResponse>
 
     @GET("api/wallet/details")
     suspend fun getWalletDetails(): Response<WalletDetails>
