@@ -68,7 +68,7 @@ interface WalletApiService {
     suspend fun getBalance(): Response<Balance>
 
     @GET("api/wallet/cards")
-    suspend fun getCards(): Response<getCardsResponse>
+    suspend fun getCards(): Response<List<Card>>
 
     @GET("api/wallet/details")
     suspend fun getWalletDetails(): Response<WalletDetails>

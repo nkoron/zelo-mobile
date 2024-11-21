@@ -3,6 +3,8 @@ package com.example.zelo.network.dataSources
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.WalletApiService
 import com.example.zelo.network.model.Balance
+import com.example.zelo.network.model.BalanceRequest
+import com.example.zelo.network.model.BalanceResponse
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.WalletDetails
 import com.example.zelo.network.model.getCardsResponse
@@ -13,7 +15,7 @@ import kotlinx.coroutines.flow.flow
 class WalletRemoteDataSource(
     private val walletApiService: WalletApiService,
 ): RemoteDataSource() {
-    suspend fun getCards(): getCardsResponse {
+    suspend fun getCards(): List<Card> {
         return handleApiResponse{
             walletApiService.getCards()
         }
@@ -31,6 +33,11 @@ class WalletRemoteDataSource(
     suspend fun getBalance(): Balance {
         return handleApiResponse {
             walletApiService.getBalance()
+        }
+    }
+    suspend fun rechargeWallet(amount: Double): BalanceResponse {
+        return handleApiResponse {
+            walletApiService.rechargeWallet(BalanceRequest(amount))
         }
     }
     val walletDetailStream: Flow<WalletDetails> = flow {
