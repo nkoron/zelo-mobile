@@ -335,11 +335,12 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 ) {
                     Text(stringResource(R.string.transfer))
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        imageVector = Icons.Default.ArrowUpward,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
+
                 Button(
                     onClick = { navController.navigate("home/deposit") },
                     colors = ButtonDefaults.buttonColors(
@@ -350,7 +351,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                     Icon(
                         imageVector = Icons.Default.ArrowDownward,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 8.dp)
+                        modifier = Modifier.padding(start = 4.dp)
                     )
                 }
             }
