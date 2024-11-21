@@ -2,6 +2,7 @@ package com.example.zelo.transference
 
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
@@ -16,10 +17,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.zelo.R
 import com.example.zelo.cards.inferBankName
 
 data class PaymentMethod(
@@ -44,12 +47,13 @@ fun TransferDetailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Transferencias") },
+                title = {Text("Transferencias") },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
+
             )
         }
     ) { paddingValues ->
@@ -75,7 +79,13 @@ fun TransferDetailScreen(
                     label = { Text("CBU / ALIAS") },
                     placeholder = { Text("0000 0000 0000 2222 2222") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                    )
                 )
 
                 // Amount Field
@@ -86,7 +96,14 @@ fun TransferDetailScreen(
                     placeholder = { Text("30000") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+
+                    )
                 )
 
                 // Concept Field
@@ -96,7 +113,13 @@ fun TransferDetailScreen(
                     label = { Text("Concepto") },
                     placeholder = { Text("Ingresar...") },
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(8.dp)
+                    shape = RoundedCornerShape(8.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedBorderColor = MaterialTheme.colorScheme.primary,
+                        unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                    )
                 )
             }
 
@@ -113,7 +136,8 @@ fun TransferDetailScreen(
                 Row(
                     modifier = Modifier
                         .horizontalScroll(rememberScrollState())
-                        .padding(vertical = 8.dp),
+                        .padding(vertical = 8.dp)
+                        .background(color = MaterialTheme.colorScheme.onSurface),
                     horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
                     uiState.availablePaymentMethods.forEach { method ->
@@ -141,21 +165,23 @@ fun TransferDetailScreen(
                         .weight(1f)
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6C63FF)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            "Transferir",
-                            style = MaterialTheme.typography.bodyLarge
+                            stringResource(R.string.transfer),
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = Color.White
                         )
                         Icon(
                             Icons.Default.ArrowForward,
-                            contentDescription = "Transferir"
+                            contentDescription = stringResource(R.string.transfer),
+                            tint = Color.White
                         )
                     }
                 }
@@ -167,12 +193,12 @@ fun TransferDetailScreen(
                         .weight(1f)
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFABABAB)
+                        containerColor = MaterialTheme.colorScheme.secondary
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
-                        "CANCELAR",
+                        stringResource(R.string.cancel),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

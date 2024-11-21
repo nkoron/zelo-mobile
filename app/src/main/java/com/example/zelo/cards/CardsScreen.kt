@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -218,7 +217,7 @@ fun CreditCard(
         backgroundContent = {
             val color by animateColorAsState(
                 when (dismissState.targetValue) {
-                    SwipeToDismissBoxValue.Settled -> Color.White
+                    SwipeToDismissBoxValue.Settled -> MaterialTheme.colorScheme.background
                     SwipeToDismissBoxValue.EndToStart -> Color.Red
                     else -> Color.White
                 }
@@ -335,9 +334,10 @@ fun AddCardButton(onAddCard: (Card) -> Unit, isTablet: Boolean, modifier: Modifi
         colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
         modifier = modifier
     ) {
-        Icon(imageVector = Icons.Default.Add, contentDescription = null)
+        Icon(imageVector = Icons.Default.Add, contentDescription = null, tint=Color.White)
         Spacer(modifier = Modifier.width(8.dp))
-        Text(stringResource(R.string.add_card))
+        Text(text = stringResource(R.string.add_card),
+            color = Color.White)
     }
 
     if (showAddCardDialog) {

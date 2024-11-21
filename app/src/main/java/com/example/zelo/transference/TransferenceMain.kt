@@ -34,7 +34,7 @@ fun TransferScreen(
 ) {
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
-        Column(
+    Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp)
@@ -50,7 +50,7 @@ fun TransferScreen(
                         .weight(1f)
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6B6B7B)
+                        containerColor = MaterialTheme.colorScheme.secondary
                     )
                 ) {
                     Text("CBU, CVU O ALIAS")
@@ -61,15 +61,15 @@ fun TransferScreen(
                         .weight(1f)
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6B6B7B)
+                        containerColor = MaterialTheme.colorScheme.secondary
                     )
                 ) {
-                    Text(stringResource(R.string.contacts))
+                    Text(text = stringResource(R.string.contacts))
                 }
             }
 
             // Search Bar
-            val containerColor = Color(0xFFF3F0F7)
+            val containerColor = MaterialTheme.colorScheme.onSurface
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -83,6 +83,7 @@ fun TransferScreen(
                     focusedContainerColor = containerColor,
                     unfocusedContainerColor = containerColor,
                     disabledContainerColor = containerColor,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary
                 ),
                 singleLine = true
             )
@@ -117,10 +118,10 @@ fun TransferScreen(
                         Button(
                             onClick = { /* Handle transfer */ },
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF854EF9)
+                                containerColor = MaterialTheme.colorScheme.primary
                             )
                         ) {
-                            Text(stringResource(R.string.transfer))
+                            Text(text =stringResource(R.string.transfer), color = Color.White)
                         }
                     }
                 }

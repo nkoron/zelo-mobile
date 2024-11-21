@@ -52,7 +52,7 @@ fun TransactionConfirmedScreen(
                     imageVector = Icons.Default.CheckCircle,
                     contentDescription = "Success",
                     modifier = Modifier.size(80.dp),
-                    tint = Color(0xFF6C63FF)
+                    tint = MaterialTheme.colorScheme.primary
                 )
 
                 // Confirmation Message
@@ -61,7 +61,7 @@ fun TransactionConfirmedScreen(
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
 
                 // Transfer amount
@@ -69,7 +69,7 @@ fun TransactionConfirmedScreen(
                     "$${uiState.amount}",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
-                    color = Color(0xFF6C63FF)
+                    color = MaterialTheme.colorScheme.primary
                 )
 
                 // Recipient info
@@ -86,7 +86,7 @@ fun TransactionConfirmedScreen(
                     .fillMaxWidth()
                     .padding(vertical = 24.dp)
                     .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Row(
@@ -113,7 +113,7 @@ fun TransactionConfirmedScreen(
 fun RecipientCardConfirm(recipient: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -141,7 +141,7 @@ fun RecipientCardConfirm(recipient: String) {
                 Text(
                     recipient,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
                     stringResource(R.string.recipient),
@@ -163,7 +163,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
     }
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -184,7 +184,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 Text(
                     concept,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
@@ -194,12 +194,12 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 Text(
                     "Fecha",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Gray
+                    color =Color.Gray
                 )
                 Text(
                     LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
@@ -214,7 +214,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 Text(
                     paymentMethodText,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
         }

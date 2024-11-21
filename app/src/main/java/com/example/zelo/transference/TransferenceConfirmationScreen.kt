@@ -76,12 +76,13 @@ fun TransferConfirmationScreen(
                             append(stringResource(R.string.will_transfer))
                             append("\n\n")
                         }
-                        withStyle(SpanStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = Color.Black)) {
+                        withStyle(SpanStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.tertiary)) {
                             append("$")
                             append(uiState.amount)
                         }
                     },
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    color = Color.White
                 )
 
                 // Recipient info
@@ -101,7 +102,7 @@ fun TransferConfirmationScreen(
                     .fillMaxWidth()
                     .padding(vertical = 24.dp)
                     .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(
@@ -143,7 +144,7 @@ fun TransferConfirmationScreen(
 fun RecipientCard(recipient: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -170,7 +171,7 @@ fun RecipientCard(recipient: String) {
                 Text(
                     recipient,
                     style = MaterialTheme.typography.titleMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
                 Text(
                     stringResource(R.string.recipient),
@@ -185,7 +186,7 @@ fun RecipientCard(recipient: String) {
 fun TransferDetailsCard(concept: String, paymentMethod: String) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -206,7 +207,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 Text(
                     concept,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
@@ -221,7 +222,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 Text(
                     LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
             Row(
@@ -236,7 +237,7 @@ fun TransferDetailsCard(concept: String, paymentMethod: String) {
                 Text(
                     paymentMethod,
                     style = MaterialTheme.typography.bodyMedium,
-                    color = Color.Black
+                    color = MaterialTheme.colorScheme.tertiary
                 )
             }
         }

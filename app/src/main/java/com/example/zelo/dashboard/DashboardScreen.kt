@@ -362,7 +362,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
             Text(
                 text = "Balance",
                 style = MaterialTheme.typography.titleMedium,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.tertiary
             )
             Text(
                 text = "$${String.format("%,.2f", balance)}",
@@ -384,27 +384,30 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                     onClick = { navController.navigate("transference") },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
-                    )
+                    ),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(stringResource(R.string.transfer))
+                    Text(text= stringResource(R.string.transfer), color= Color.White)
                     Icon(
                         imageVector = Icons.Default.ArrowUpward,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 4.dp)
-                    )
+                        modifier = Modifier.padding(start = 4.dp),
+                        tint= Color.White                    )
                 }
 
                 Button(
                     onClick = { navController.navigate("home/deposit") },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
-                    )
+                    ),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(stringResource(R.string.deposit))
+                    Text(text=stringResource(R.string.deposit), color = Color.White)
                     Icon(
                         imageVector = Icons.Default.ArrowDownward,
                         contentDescription = null,
-                        modifier = Modifier.padding(start = 4.dp)
+                        modifier = Modifier.padding(start = 4.dp),
+                        tint= Color.White
                     )
                 }
             }

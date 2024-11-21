@@ -153,7 +153,7 @@ fun DepositScreen(
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(8.dp)
             ) {
-                Text(stringResource(R.string.start_deposit))
+                Text(text = stringResource(R.string.start_deposit), color = Color.White)
             }
             LaunchedEffect(uiState.balance) {
                 if ( !uiState.isFetching && uiState.error == null && uiState.balance > 0) {

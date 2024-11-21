@@ -29,7 +29,7 @@ fun TransferDetailsDialog(
                 .fillMaxWidth()
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background)
         ) {
             Column(
                 modifier = Modifier
@@ -40,14 +40,15 @@ fun TransferDetailsDialog(
                     text = stringResource(R.string.transaction_details),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(bottom = 24.dp)
+                    modifier = Modifier.padding(bottom = 24.dp),
+                    color = MaterialTheme.colorScheme.tertiary
                 )
 
                 Text(
                     text = stringResource(R.string.transfer_to),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
-                    modifier = Modifier.align(Alignment.Start)
+                    modifier = Modifier.align(Alignment.Start),
                 )
 
                 Surface(
@@ -60,15 +61,18 @@ fun TransferDetailsDialog(
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = "Miguel Rodriguez",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
                             text = "CUIT/CUIL: 20454545456",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
                             text = "mro*****@gmail.com",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 }
@@ -83,11 +87,13 @@ fun TransferDetailsDialog(
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
                             text = stringResource(R.string.money_transfer)+": $3.000",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
                             text = stringResource(R.string.payment_method) + ": Dinero disponible en cuenta",
-                            style = MaterialTheme.typography.bodyMedium
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = MaterialTheme.colorScheme.tertiary
                         )
                     }
                 }
@@ -115,7 +121,7 @@ fun TransferDetailsDialog(
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(stringResource(R.string.see_receipt))
+                    Text(stringResource(R.string.see_receipt),color = Color.White)
                 }
 
                 Button(

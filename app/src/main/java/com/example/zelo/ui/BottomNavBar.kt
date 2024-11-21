@@ -58,26 +58,26 @@ fun BottomNavBar(
                 NavBarItem(
                     icon = Icons.Outlined.Home,
                     label = stringResource(R.string.home),
-                    isSelected = currentRoute == "home" || currentRoute.startsWith("transference"),
+                    isSelected = currentRoute.startsWith("home") || currentRoute.startsWith("transference"),
                     onClick = { navController.navigate("home") }
                 )
                 NavBarItem(
                     icon = Icons.Outlined.ShowChart,
                     label = stringResource(R.string.activity) ,
-                    isSelected = currentRoute == "movements",
+                    isSelected = currentRoute.startsWith("movements"),
                     onClick = { navController.navigate("movements") }
                 )
                 Spacer(modifier = Modifier.width(56.dp))
                 NavBarItem(
                     icon = Icons.Outlined.CreditCard,
                     label = stringResource(R.string.cards),
-                    isSelected = currentRoute == "cards",
+                    isSelected = currentRoute.startsWith("cards"),
                     onClick = { navController.navigate("cards") }
                 )
                 NavBarItem(
                     icon = Icons.Outlined.Person,
                     label = stringResource(R.string.profile),
-                    isSelected = currentRoute == "profile",
+                    isSelected = currentRoute.startsWith("profile"),
                     onClick = { navController.navigate("profile") }
                 )
             }

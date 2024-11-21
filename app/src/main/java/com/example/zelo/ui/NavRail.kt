@@ -36,7 +36,7 @@ fun ZeloNavigationRail(
             modifier = Modifier.fillMaxHeight().verticalScroll(rememberScrollState())
         ) {
             NavigationRailItem(
-                selected = currentRoute == "home" || currentRoute.startsWith("transference"),
+                selected = currentRoute.startsWith("home") || currentRoute.startsWith("transference"),
                 onClick = { navController.navigate("home") },
                 icon = { Icon(Icons.Outlined.Home, contentDescription = stringResource(R.string.home)) },
                 label = { Text(stringResource(R.string.home)) },
@@ -50,7 +50,7 @@ fun ZeloNavigationRail(
             )
 
             NavigationRailItem(
-                selected = currentRoute == "movements",
+                selected = currentRoute.startsWith("movements"),
                 onClick = { navController.navigate("movements") },
                 icon = { Icon(Icons.Outlined.ShowChart, contentDescription = stringResource(R.string.activity)) },
                 modifier = Modifier.padding(vertical = verticalPadding),
@@ -80,7 +80,7 @@ fun ZeloNavigationRail(
             }
 
             NavigationRailItem(
-                selected = currentRoute == "cards",
+                selected = currentRoute.startsWith("cards"),
                 onClick = { navController.navigate("cards") },
                 icon = { Icon(Icons.Outlined.CreditCard, contentDescription = stringResource(R.string.cards)) },
                 label = { Text(stringResource(R.string.cards)) },
@@ -94,7 +94,7 @@ fun ZeloNavigationRail(
             )
 
             NavigationRailItem(
-                selected = currentRoute == "profile",
+                selected = currentRoute.startsWith("profile"),
                 onClick = { navController.navigate("profile") },
                 modifier = Modifier.padding(vertical = verticalPadding),
                 icon = { Icon(Icons.Outlined.Person, contentDescription = stringResource(R.string.profile)) },

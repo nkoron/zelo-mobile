@@ -34,6 +34,8 @@ fun ZeloSearchBar(searchQuery:String, valueChange: (String)->Unit){
             focusedContainerColor = containerColor,
             unfocusedContainerColor = containerColor,
             disabledContainerColor = containerColor,
+            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+            unfocusedLabelColor = MaterialTheme.colorScheme.tertiary
         ),
         singleLine = true
     )
