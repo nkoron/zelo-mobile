@@ -18,7 +18,7 @@ import kotlinx.coroutines.Job
 
 data class TransferenceCBUUiState(
     val isLoading: Boolean = false,
-    val cbuAlias: String = "",
+    val email: String = "",  // Changed from cbuAlias to email
     val amount: String = "",
     val concept: String = "",
     val selectedPaymentMethod: PaymentMethod? = null,
@@ -26,6 +26,7 @@ data class TransferenceCBUUiState(
     val error: Error? = null,
     val transferSuccess: Boolean = false,
 )
+
 
 class TransferenceCBUViewModel(
     private val walletRepository: WalletRepository,
@@ -89,13 +90,15 @@ class TransferenceCBUViewModel(
         return paymentMethods
     }
 
-    fun updateCbuAlias(cbuAlias: String) {
-        _uiState.update { it.copy(cbuAlias = cbuAlias) }
-    }
 
     fun updateAmount(amount: String) {
         _uiState.update { it.copy(amount = amount) }
     }
+
+    fun updateEmail(email: String) {
+        _uiState.update { it.copy(email = email) }
+    }
+
 
     fun updateConcept(concept: String) {
         _uiState.update { it.copy(concept = concept) }
@@ -117,14 +120,14 @@ class TransferenceCBUViewModel(
                 val amount = currentState.amount.toIntOrNull() ?: 0
                 val paymentRequest: PaymentRequest = when (currentState.selectedPaymentMethod?.type) {
                     "BALANCE" -> BalancePaymentRequest(
-                        receiverEmail = currentState.cbuAlias,
+                        receiverEmail = currentState.email,  // Changed to email
                         amount = amount,
                         description = currentState.concept,
                         type = "BALANCE"
                     )
                     "CREDIT" -> CardPaymentRequest(
                         cardId = currentState.selectedPaymentMethod.id?.toInt() ?: 0,
-                        receiverEmail = currentState.cbuAlias,
+                        receiverEmail = currentState.email,  // Changed to email
                         amount = amount,
                         description = currentState.concept,
                         type = "CARD"
@@ -141,9 +144,10 @@ class TransferenceCBUViewModel(
         }
     }
 
+
     private fun resetTransferForm() {
         _uiState.update { it.copy(
-            cbuAlias = "",
+            email = "",
             amount = "",
             concept = "",
             selectedPaymentMethod = null

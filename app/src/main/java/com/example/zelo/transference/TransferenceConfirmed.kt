@@ -73,7 +73,7 @@ fun TransactionConfirmedScreen(
                 )
 
                 // Recipient info
-                RecipientCardConfirm(uiState.cbuAlias)
+                RecipientCardConfirm(uiState.email)
 
                 // Transfer details
                 TransferDetailsCardConfirm(uiState.concept, uiState.selectedPaymentMethod?.type ?: "")

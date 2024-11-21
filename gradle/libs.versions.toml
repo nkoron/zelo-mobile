@@ -54,6 +54,7 @@ androidx-camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycl
 androidx-camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax" }
 mlkit-barcode-scanning = { group = "com.google.mlkit", name = "barcode-scanning", version.ref = "mlkit-barcode-scanning" }
 androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "roomKtx" }
+accompanist-permissions = "com.google.accompanist:accompanist-permissions:0.31.1-alpha"
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
