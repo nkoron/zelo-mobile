@@ -68,11 +68,10 @@ class DashboardViewModel(
     )
     fun getUser() = runOnViewModelScope(
         {
-            userRepository.getCurrentUser(true)
+            userRepository.getCurrentUser()
         },
-        { state, _ -> state.copy(user = state.user) }
+        { state, response -> state.copy(user = response, isAuthenticated = true) }
     )
-
     fun logout() = runOnViewModelScope(
         {
             walletDetailStreamJob?.cancel()

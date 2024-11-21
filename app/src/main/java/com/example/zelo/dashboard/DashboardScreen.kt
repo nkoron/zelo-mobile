@@ -1,3 +1,4 @@
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -113,7 +114,7 @@ private fun LandscapeDashboardContent(
                 .padding(top = 16.dp)
 
         ){
-            QuickActions()
+            QuickActions(uiState)
             RecentMovementsFullScreen(uiState, viewModel())
         }
     }
@@ -206,7 +207,7 @@ private fun TabletDashboardContent(
                 navController = navController,
             )
             Spacer(modifier = Modifier.height(24.dp))
-            QuickActions()
+            QuickActions(uiState)
         }
         RecentMovementsFullScreen(uiState, viewModel() )
     }
@@ -229,7 +230,7 @@ private fun PhoneDashboardContent(
             navController = navController,
         )
         Spacer(modifier = Modifier.height(24.dp))
-        QuickActions()
+        QuickActions(uiState)
         Spacer(modifier = Modifier.height(24.dp))
         RecentMovements(uiState, viewModel())
     }
@@ -291,18 +292,21 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
 }
 
 @Composable
-private fun QuickActions(
+private fun QuickActions(uiState: DashboardUiState
 ) {
+    val context = LocalContext.current
+    val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
+    var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "")}
     var showDialog by remember { mutableStateOf(false) }
     var showPaymentLink by remember { mutableStateOf(false) }
     if (showDialog) {
         UserDataDialog(
             onDismiss = { showDialog = false },
             userData = UserData(
-                fullName = "Juan Rodriguez",
-                alias = "perro.overo.bien.cl",
-                cbu = "0000120043456552634343",
-                cuit = "20-20979631-9"
+                fullName = uiState.user?.firstName + " " + uiState.user?.lastName,
+                alias = uiState.walletDetail?.alias,
+                cbu = uiState.walletDetail?.cbu,
+                cuit = taxId
             )
         )
     }
@@ -592,30 +596,30 @@ fun UserDataDialog(
                 // Data Fields
                 DataField(
                     label = "Nombre y Apellido",
-                    value = userData.fullName,
+                    value = userData.fullName.toString(),
                     canEdit = true,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName)) }
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName.toString())) }
                 )
 
                 DataField(
                     label = "Alias",
-                    value = userData.alias,
+                    value = userData.alias.toString(),
                     canEdit = true,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.alias)) }
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.alias.toString())) }
                 )
 
                 DataField(
                     label = "CBU",
-                    value = userData.cbu,
+                    value = userData.cbu.toString(),
                     canEdit = false,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu)) }
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu.toString())) }
                 )
 
                 DataField(
                     label = "CUIT",
-                    value = userData.cuit,
+                    value = userData.cuit.toString(),
                     canEdit = false,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cuit)) }
+                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cuit.toString())) }
                 )
 
                 // Share Button
@@ -706,10 +710,10 @@ private fun DataField(
 }
 
 data class UserData(
-    val fullName: String,
-    val alias: String,
-    val cbu: String,
-    val cuit: String
+    val fullName: String?,
+    val alias: String?,
+    val cbu: String?,
+    val cuit: String?
 )
 
 @Preview(showBackground = true)
