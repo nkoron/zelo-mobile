@@ -45,6 +45,8 @@ class MovementsViewModel(
     init {
             observePaymentStream()
         getCurrentUser()
+        observeIncomeStream()
+        observeExpenseStream()
     }
     fun getCurrentUser()= runOnViewModelScope(
             block = { userRepository.getCurrentUser() },
@@ -54,9 +56,19 @@ class MovementsViewModel(
     private fun observePaymentStream() {
         paymentStreamJob = collectOnViewModelScope(
             paymentRepository.paymentStream
-        ) { state, response -> state.copy(movements = response)
-                                state.copy(totalIncome = response.filter { it.receiver.id == uiState.value.user?.id }.sumOf { it.amount })
-                                state.copy(totalExpense = response.filter { it.payer.id == uiState.value.user?.id }.sumOf { it.amount })}
+        ) { state, response -> state.copy(movements = response)}
+    }
+
+    private fun observeIncomeStream(){
+        paymentStreamJob = collectOnViewModelScope(
+            paymentRepository.paymentStream
+        ) { state, response -> state.copy(totalIncome = response.filter { it.receiver.id == uiState.value.user?.id }.sumOf { it.amount })}
+    }
+
+    private fun observeExpenseStream(){
+        paymentStreamJob = collectOnViewModelScope(
+            paymentRepository.paymentStream
+        ) { state, response -> state.copy(totalExpense = response.filter { it.payer.id == uiState.value.user?.id }.sumOf { it.amount })}
     }
 
     private fun <T> collectOnViewModelScope(
