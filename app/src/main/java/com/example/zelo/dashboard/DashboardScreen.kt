@@ -38,6 +38,10 @@ import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardViewModel
 import com.example.zelo.dashboard.PaymentLinkDialog
 import com.example.zelo.transference.TransferDetailsDialog
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @Composable
 fun DashboardScreen(
@@ -115,21 +119,21 @@ private fun RecentMovements() {
                     0 -> TransactionItem(
                         name = "Jose",
                         description = stringResource(R.string.transferred) + " $10000",
-                        time = "Ahora",
+                        time = "2022-05-12",
                         showAvatar = true
                     )
 
                     1 -> TransactionItem(
                         name = "Open 25",
                         description = stringResource(R.string.sent) + "$1000",
-                        time = "15m",
+                        time = "2022-05-12",
                         showLogo = true
                     )
 
                     2 -> TransactionItem(
                         name = "Fer Galan",
                         description = stringResource(R.string.sent) + "$1000",
-                        time = "6h",
+                        time = "2022-05-12",
                         showAvatar = true
                     )
                 }
@@ -358,10 +362,24 @@ fun TransactionItem(
             }
         }
         Text(
-            text = time,
+            text = analyzeDate(time),
             style = MaterialTheme.typography.bodySmall,
             color = Color.Gray
         )
+    }
+}
+fun analyzeDate(inputDate: String): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+    val date = LocalDate.parse(inputDate, formatter)
+    val today = LocalDate.now()
+
+    return when {
+        date.isEqual(today) -> "HOY"
+        date.isBefore(today) -> {
+            val daysAgo = ChronoUnit.DAYS.between(date, today)
+            "${daysAgo}D"
+        }
+        else -> throw IllegalArgumentException("La fecha ingresada es mayor a hoy")
     }
 }
 

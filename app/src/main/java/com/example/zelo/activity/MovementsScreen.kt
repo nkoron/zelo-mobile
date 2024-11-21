@@ -1,4 +1,5 @@
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -9,12 +10,20 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.activity.MovementsViewModel
 import com.example.zelo.components.ZeloSearchBar
+import com.example.zelo.dashboard.DashboardViewModel
+import com.example.zelo.network.model.User
+import java.time.LocalDateTime
+import kotlin.time.Duration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -23,7 +32,11 @@ fun MovementsScreen(
     onNavigateToIncomes: () -> Unit,
     onNavigateToExpenses: () -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: MovementsViewModel = viewModel(factory = MovementsViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    ))
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
         Column(
@@ -51,43 +64,33 @@ fun MovementsScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             LazyColumn {
-                items(5) { index ->
-                    when (index) {
-                        0 -> TransactionItem(
-                            name = "Jose",
-                            description = stringResource(R.string.sent) + " $10,000",
-                            time = stringResource(R.string.now),
-                            showAvatar = true
-                        )
-                        1 -> TransactionItem(
-                            name = "Open 25",
-                            description = stringResource(R.string.sent) + " $1000",
-                            time = "15m",
-                            showLogo = true
-                        )
-                        2 -> TransactionItem(
-                            name = "Fer Galan",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = "6h",
-                            showAvatar = true
-                        )
-                        3 -> TransactionItem(
-                            name = "Carlos",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = "2h",
-                            showAvatar = true
-                        )
-                        4 -> TransactionItem(
-                            name = "Miguel Cero",
-                            description = stringResource(R.string.transferred) + " $3,000",
-                            time = "Ahora",
-                            showAvatar = true
-                        )
+                items(uiState.movements.size) {
+                    Log.d("movements", uiState.movements.toString())
+                    val payment = uiState.movements[it]
+                    val me: User;
+                    val you: User;
+                    val receive:Boolean
+                    if(payment.receiver.id == uiState.user?.id){
+                        receive = true
+                         me = payment.receiver
+                         you = payment.payer
+                    } else {
+                        receive = false
+                         me = payment.payer
+                         you = payment.receiver
                     }
+                    TransactionItem(
+                        name = "${you.firstName} ${you.lastName}",
+                        description = "${ if(receive) stringResource(R.string.transferred) else stringResource(R.string.sent)}: ${payment.amount}",
+                        time = payment.createdAt,
+                        showAvatar = true
+                    )
                 }
             }
         }
     }
+
+
 @SuppressLint("DefaultLocale")
 @Composable
 fun SummaryCard(

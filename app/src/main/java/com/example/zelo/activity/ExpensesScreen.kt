@@ -2,6 +2,7 @@ package com.example.zelo.activity
 
 import TransactionItem
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,16 +19,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.components.ZeloSearchBar
+import com.example.zelo.network.model.User
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,7 +40,11 @@ import com.example.zelo.components.ZeloSearchBar
 fun ExpensesScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
+    viewModel: ExpensesViewModel = viewModel(factory = ExpensesViewModel.provideFactory(
+        LocalContext.current.applicationContext as MyApplication
+    ))
 ) {
+    val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
 
@@ -67,34 +76,16 @@ fun ExpensesScreen(
             Spacer(modifier = Modifier.height(24.dp))
 
             LazyColumn {
-                items(4) { index ->
-                    when (index) {
-                        0 -> TransactionItem(
-                            name = "Jose",
-                            description = stringResource(R.string.sent) + " $10,000",
-                            time = stringResource(R.string.now),
-                            showAvatar = true
-                        )
-                        1 -> TransactionItem(
-                            name = "Fer Galan",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = "6h",
-                            showAvatar = true
-                        )
-                        2 -> TransactionItem(
-                            name = "Carlos GPT",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = "2h",
-                            showAvatar = true
-                        )
-                        3 -> TransactionItem(
-                            name = "Miguel Cero",
-                            description = stringResource(R.string.sent) + " $3,000",
-                            time = stringResource(R.string.now),
-                            showAvatar = true
-                        )
-                    }
+                items(uiState.movements.size) {
+                    val payment = uiState.movements[it]
+                    TransactionItem(
+                        name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
+                        description = "${stringResource(R.string.sent)}: ${payment.amount}",
+                        time = payment.createdAt,
+                        showAvatar = true
+                    )
                 }
+
             }
         }
     }

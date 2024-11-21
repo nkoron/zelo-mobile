@@ -1,4 +1,4 @@
-package com.example.zelo.dashboard
+package com.example.zelo.activity
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -7,6 +7,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
+import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.WalletDetails
 import com.example.zelo.network.repository.PaymentRepository
@@ -23,62 +24,41 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 
-data class DashboardUiState (
-    val isAuthenticated: Boolean = false,
-    val user: User? = null,
+data class MovementsUiState (
     val isFetching: Boolean = false,
-    val walletDetail: WalletDetails? = null,
+    val movements: List<Payment> = emptyList(),
+    val user: User? = null,
     val error: Error? = null
 )
 
-class DashboardViewModel(
-    private val walletRepository: WalletRepository,
-    sessionManager: SessionManager,
-    private val userRepository: UserRepository,
-    private val paymentRepository: PaymentRepository
+class MovementsViewModel(
+    private val paymentRepository: PaymentRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
 
-    private var walletDetailStreamJob: Job? = null
-    private val _uiState = MutableStateFlow(DashboardUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
-    val uiState: StateFlow<DashboardUiState> = _uiState.asStateFlow()
+    private var paymentStreamJob: Job? = null
+    private val _uiState = MutableStateFlow(MovementsUiState())
+    val uiState: StateFlow<MovementsUiState> = _uiState.asStateFlow()
 
     init {
-        if (uiState.value.isAuthenticated) {
-            observeWalletDetailStream()
-        }
+            observePaymentStream()
+        getCurrentUser()
     }
+    fun getCurrentUser()= runOnViewModelScope(
+            block = { userRepository.getCurrentUser() },
+            updateState = { state, response -> state.copy(user = response) }
+        )
 
-    fun login(username: String, password: String) = runOnViewModelScope(
-        {
-            userRepository.login(username, password)
-            observeWalletDetailStream()
-        },
-        { state, _ -> state.copy(isAuthenticated = true) }
-    )
-
-    fun logout() = runOnViewModelScope(
-        {
-            walletDetailStreamJob?.cancel()
-            userRepository.logout()
-        },
-        { state, _ ->
-            state.copy(
-                isAuthenticated = false,
-                walletDetail = null
-            )
-        }
-    )
-
-    private fun observeWalletDetailStream() {
-        walletDetailStreamJob = collectOnViewModelScope(
-            walletRepository.walletDetailStream
-        ) { state, response -> state.copy(walletDetail = response) }
+    private fun observePaymentStream() {
+        paymentStreamJob = collectOnViewModelScope(
+            paymentRepository.paymentStream
+        ) { state, response -> state.copy(movements = response) }
     }
 
     private fun <T> collectOnViewModelScope(
         flow: Flow<T>,
-        updateState: (DashboardUiState, T) -> DashboardUiState
+        updateState: (MovementsUiState, T) -> MovementsUiState
     ) = viewModelScope.launch {
         flow
             .distinctUntilChanged()
@@ -87,7 +67,7 @@ class DashboardViewModel(
     }
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
-        updateState: (DashboardUiState, R) -> DashboardUiState
+        updateState: (MovementsUiState, R) -> MovementsUiState
     ): Job = viewModelScope.launch {
         _uiState.update { currentState -> currentState.copy(isFetching = true, error = null) }
         runCatching {
@@ -112,9 +92,8 @@ class DashboardViewModel(
         ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
             @Suppress("UNCHECKED_CAST")
             override fun<T : ViewModel> create(modelClass: Class<T>): T {
-                return DashboardViewModel(
-                    application.walletRepository,
-                    application.sessionManager,
+                return MovementsViewModel(
+                    application.paymentRepository,
                     application.userRepository
                 ) as T
             }

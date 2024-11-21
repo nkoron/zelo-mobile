@@ -14,9 +14,10 @@ class PaymentRemoteDataSource(
     ) : RemoteDataSource() {
 
         suspend fun getPayments() : List<Payment> {
-            return handleApiResponse {
+            val aux =  handleApiResponse {
                 userService.getPayments()
             }
+            return aux.payments
     }
     suspend fun makePayment(payment: PaymentRequest): Payment {
         Log.d("PaymentRemoteDataSource", "Making payment: $payment")
@@ -45,7 +46,7 @@ class PaymentRemoteDataSource(
             val paymentDetails = handleApiResponse {
                 userService.getPayments()
             }
-            emit(paymentDetails)
+            emit(paymentDetails.payments)
             delay(DELAY)
         }
     }

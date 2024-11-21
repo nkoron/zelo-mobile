@@ -10,8 +10,10 @@ data class Payment(
     val balanceBefore: Double,
     val balanceAfter: Double,
     val pending: Boolean,
-    val linkUUID: String,
+    val linkUUID: String? = null,
     val createdAt: String,
     val updatedAt: String,
-    val card: Card,
+    val card: Card?,
+    val payer: User,
+    val receiver: User
 )

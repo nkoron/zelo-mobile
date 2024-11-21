@@ -18,6 +18,7 @@ import com.example.zelo.network.model.User
 import com.example.zelo.network.model.VerificationCodeRequest
 import com.example.zelo.network.model.WalletDetails
 import com.example.zelo.network.model.getCardsResponse
+import com.example.zelo.network.model.getPaymentResponse
 import retrofit2.Response
 
 import retrofit2.http.Body
@@ -29,7 +30,7 @@ import retrofit2.http.Path
 
 interface WalletApiService {
     @GET("api/payment")
-    suspend fun getPayments(): Response<List<Payment>>
+    suspend fun getPayments(): Response<getPaymentResponse>
 
     @GET("api/payment/{paymentId}")
     suspend fun getPaymentById(paymentIdRequest: PaymentIdRequest): Response<Payment>
