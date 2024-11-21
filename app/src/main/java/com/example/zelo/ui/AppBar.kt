@@ -34,8 +34,10 @@ fun AppBar(
     val uiState = viewModel.uiState
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.screenWidthDp > 600 && configuration.screenHeightDp < 600 && !isTablet
     val horizontalPadding = if (isTablet) 32.dp else 16.dp
-    val avatarSize = if (isTablet) 56.dp else 48.dp
+    val avatarSize = if (isTablet) 56.dp else if (isLandscape) 40.dp else 48.dp // Smaller avatar in landscape
+    val topBarHeight = if (isLandscape) 38.dp else 72.dp // Smaller height in landscape
     val startPadding: Dp = if (isTablet) 0.dp else horizontalPadding
 
     LaunchedEffect(Unit) {
@@ -44,7 +46,8 @@ fun AppBar(
 
     Surface(
         color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp
+        tonalElevation = 2.dp,
+        modifier = Modifier.height(topBarHeight)
     ) {
         Row(
             modifier = Modifier
@@ -81,6 +84,10 @@ fun AppBar(
                 if (onBackClick == null && isTablet) {
                     Spacer(modifier = Modifier.width(16.dp))
                 }
+                if (onBackClick == null && isLandscape) {
+                    Spacer(modifier = Modifier.width(8.dp))
+                }
+
 
                 Surface(
                     shape = CircleShape,
@@ -126,7 +133,7 @@ fun AppBar(
                         style = if (isTablet) {
                             MaterialTheme.typography.titleLarge
                         } else {
-                            MaterialTheme.typography.titleMedium
+                            MaterialTheme.typography.titleSmall
                         },
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,

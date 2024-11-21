@@ -1,9 +1,12 @@
+import android.content.res.Configuration
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
@@ -35,65 +38,163 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.zelo.MyApplication
 import com.example.zelo.R
+import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
 import com.example.zelo.dashboard.PaymentLinkDialog
 import com.example.zelo.transference.TransferDetailsDialog
+
 
 @Composable
 fun DashboardScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    userName: String = "Fer Galan",
     viewModel: DashboardViewModel = viewModel(factory = DashboardViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val configuration = LocalConfiguration.current
+    val isTablet = configuration.screenWidthDp >= 600 && configuration.screenHeightDp >=600
+    val isLandscape = configuration.screenWidthDp > 600 && configuration.screenHeightDp < 600 && !isTablet
 
-    if(LocalConfiguration.current.screenWidthDp <= 600) {
+
+    Box(modifier = modifier.fillMaxSize()) {
+        if (uiState.isFetching) {
+            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+        } else {
+            when {
+                isTablet -> TabletDashboardContent(
+                    uiState = uiState,
+                    navController = navController,
+                    onLogin = viewModel::login
+                )
+                isLandscape -> LandscapeDashboardContent(
+                    uiState = uiState,
+                    navController = navController,
+                    onLogin = viewModel::login
+                )
+                else -> PhoneDashboardContent(
+                    uiState = uiState,
+                    navController = navController,
+                    onLogin = viewModel::login
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun LandscapeDashboardContent(
+    uiState: DashboardUiState,
+    navController: NavController,
+    onLogin: (String, String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .padding(16.dp)
+            modifier = Modifier
+                .width(300.dp)
+                .fillMaxHeight()
+                .verticalScroll(rememberScrollState())
         ) {
-
-            // Balance Card
-            BalanceCard(uiState.walletDetail?.balance, navController)
-
-            Spacer(modifier = Modifier.height(24.dp))
-            QuickActions({viewModel.login("johndoe@email.com", "1234567890")})
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Recent Movements
-            RecentMovements()
+            BalanceCard(
+                balance = uiState.walletDetail?.balance,
+                navController = navController,
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            QuickActions { onLogin("landscape@example.com", "1234567890") }
         }
-    } else {
-        Row(
-            modifier = modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+        RecentMovementsFullScreen()
+    }
+}
+
+@Composable
+private fun RecentMovementsFullScreen() {
+    Card(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(vertical = 16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
+    ) {
+        Column(modifier = Modifier.fillMaxSize()) {
+            Text(
+                text = stringResource(R.string.transactions),
+                style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(16.dp)
+            )
+            LazyColumn(
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                items(20) { index ->
+                    TransactionItem(
+                        name = "Transaction ${index + 1}",
+                        description = "Description for transaction ${index + 1}",
+                        time = "${index + 1}h ago",
+                        showAvatar = index % 2 == 0,
+                        showLogo = index % 2 != 0
+                    )
+                    if (index < 19) {
+                        Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun TabletDashboardContent(
+    uiState: DashboardUiState,
+    navController: NavController,
+    onLogin: (String, String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+            .padding(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .width(300.dp)
+                .fillMaxHeight()
         ) {
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                BalanceCard(uiState.walletDetail?.balance, navController)
-                Spacer(modifier = Modifier.height(24.dp))
-                QuickActions( {viewModel.login("ocie.collins86@ethereal.email", "1234567890")})
-            }
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxHeight()
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
-                RecentMovements()
-            }
+            BalanceCard(
+                balance = uiState.walletDetail?.balance,
+                navController = navController,
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            QuickActions { onLogin("ocie.collins86@ethereal.email", "1234567890") }
         }
+        RecentMovementsFullScreen()
+    }
+}
+
+@Composable
+private fun PhoneDashboardContent(
+    uiState: DashboardUiState,
+    navController: NavController,
+    onLogin: (String, String) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color(0xFFF5F5F5))
+            .padding(16.dp)
+    ) {
+        BalanceCard(
+            balance = uiState.walletDetail?.balance,
+            navController = navController,
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        QuickActions { onLogin("johndoe@email.com", "1234567890") }
+        Spacer(modifier = Modifier.height(24.dp))
+        RecentMovements()
     }
 }
 
@@ -108,7 +209,6 @@ private fun RecentMovements() {
             style = MaterialTheme.typography.titleLarge,
             modifier = Modifier.padding(8.dp)
         )
-
         LazyColumn {
             items(3) { index ->
                 when (index) {
@@ -118,14 +218,12 @@ private fun RecentMovements() {
                         time = "Ahora",
                         showAvatar = true
                     )
-
                     1 -> TransactionItem(
                         name = "Open 25",
                         description = stringResource(R.string.sent) + "$1000",
                         time = "15m",
                         showLogo = true
                     )
-
                     2 -> TransactionItem(
                         name = "Fer Galan",
                         description = stringResource(R.string.sent) + "$1000",
@@ -137,7 +235,6 @@ private fun RecentMovements() {
         }
     }
 }
-
 @Composable
 private fun QuickActions(
     login: ()->Unit,
@@ -193,9 +290,11 @@ private fun QuickActions(
 @Composable
 private fun BalanceCard(balance: Double?, navController: NavController) {
     Card(
-        modifier =  Modifier.fillMaxWidth(),
+        modifier =  Modifier.fillMaxWidth()
+        .padding(vertical = 16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
+
         Column(
             modifier = Modifier.padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
