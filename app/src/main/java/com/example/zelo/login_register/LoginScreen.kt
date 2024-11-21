@@ -229,9 +229,12 @@ fun SignInContent(
 
         Button(
             onClick = {
-                onSignIn()
-                authViewModel.login(email, password)
-                navController.navigate("home")
+                if(email.isNotEmpty() && password.isNotEmpty()) {
+                    onSignIn()
+                    authViewModel.login(email, password)
+                    navController.navigate("home")
+                }
+                
             },
             modifier = Modifier
                 .fillMaxWidth()
