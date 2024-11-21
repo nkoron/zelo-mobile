@@ -60,7 +60,7 @@ fun VerificationScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -78,7 +78,7 @@ fun VerificationScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             if (uiState.isFetching) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
@@ -105,7 +105,7 @@ fun VerificationScreen(
         TextButton(
             onClick = { /* Handle resend code logic */ }
         ) {
-            Text(stringResource(R.string.resend_code), color = Color(0xFF6C63FF))
+            Text(stringResource(R.string.resend_code), color = MaterialTheme.colorScheme.primary)
         }
     }
 }

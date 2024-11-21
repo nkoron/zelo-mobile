@@ -106,38 +106,30 @@ fun TransferDetailsDialog(
                 )
 
                 Button(
-                    onClick = onRepeatTransfer,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 24.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFFD14D72)
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(stringResource(R.string.repeat_transfer))
-                }
-
-                Button(
                     onClick = onViewReceipt,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF8F00FF)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(stringResource(R.string.see_receipt))
                 }
 
-                TextButton(
+                Button(
                     onClick = onRequestRefund,
                     modifier = Modifier.padding(top = 8.dp)
+                        .fillMaxWidth(),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Gray
+                    ),
+                    shape = RoundedCornerShape(8.dp)
                 ) {
                     Text(
                         stringResource(R.string.close),
-                        color = Color.Gray,
+                        color = Color.White,
                         style = MaterialTheme.typography.bodySmall,
                         modifier = Modifier.clickable { onDismiss() }
                     )

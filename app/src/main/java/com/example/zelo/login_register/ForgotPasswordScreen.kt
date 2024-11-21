@@ -69,7 +69,7 @@ fun EmailVerificationScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -99,7 +99,7 @@ fun EmailVerificationScreen(
             )
             Text(
                 text = "Iniciar sesión",
-                color = Color(0xFF6C63FF),
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     navController.navigate("login") // Navegar a la pantalla de registro
@@ -124,7 +124,7 @@ fun EmailVerificationScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             shape = RoundedCornerShape(28.dp)
         ) {
             Text("Verificar Correo", fontSize = 18.sp)
@@ -187,7 +187,7 @@ fun ResetPasswordScreen(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -217,7 +217,7 @@ fun ResetPasswordScreen(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -247,7 +247,7 @@ fun ResetPasswordScreen(
             )
             Text(
                 text = stringResource(R.string.login),
-                color = Color(0xFF6C63FF),
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     navController.navigate("login") // Navegar a la pantalla de registro
@@ -264,7 +264,7 @@ fun ResetPasswordScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             shape = RoundedCornerShape(28.dp),
             enabled = hasMinLength && hasUpperCase && hasNumber && hasOnlyAlphanumeric && passwordsMatch
         ) {

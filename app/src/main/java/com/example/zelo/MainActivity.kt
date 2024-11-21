@@ -9,7 +9,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ZeloTheme {
+            ZeloTheme(dynamicColor = false, darkTheme = true) {
                 AppNavigation() // Calls the navigation setup
             }
         }

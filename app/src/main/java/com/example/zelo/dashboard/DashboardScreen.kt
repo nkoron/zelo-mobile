@@ -67,17 +67,14 @@ fun DashboardScreen(
                 isTablet -> TabletDashboardContent(
                     uiState = uiState,
                     navController = navController,
-                    onLogin = viewModel::login
                 )
                 isLandscape -> LandscapeDashboardContent(
                     uiState = uiState,
                     navController = navController,
-                    onLogin = viewModel::login
                 )
                 else -> PhoneDashboardContent(
                     uiState = uiState,
                     navController = navController,
-                    onLogin = viewModel::login
                 )
             }
         }
@@ -88,7 +85,6 @@ fun DashboardScreen(
 private fun LandscapeDashboardContent(
     uiState: DashboardUiState,
     navController: NavController,
-    onLogin: (String, String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -189,7 +185,6 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
 private fun TabletDashboardContent(
     uiState: DashboardUiState,
     navController: NavController,
-    onLogin: (String, String) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -218,7 +213,6 @@ private fun TabletDashboardContent(
 private fun PhoneDashboardContent(
     uiState: DashboardUiState,
     navController: NavController,
-    onLogin: (String, String) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -403,7 +397,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 Button(
                     onClick = { navController.navigate("home/deposit") },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF1A1B25)
+                        containerColor = MaterialTheme.colorScheme.primary
                     )
                 ) {
                     Text(stringResource(R.string.deposit))
@@ -430,7 +424,7 @@ private fun QuickActionButton(
     ) {
         Surface(
             shape = RoundedCornerShape(12.dp),
-            color = Color(0xFF6C63FF),
+            color = MaterialTheme.colorScheme.primary,
             modifier = Modifier.size(48.dp)
         ) {
             Icon(
@@ -518,7 +512,7 @@ fun TransactionItem(
                 Text(
                     text = stringResource(R.string.see_details),
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF6C63FF),
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.clickable { showDetailsDialog =! showDetailsDialog }
                 )
             }
@@ -530,13 +524,14 @@ fun TransactionItem(
         )
     }
 }
+@Composable
 fun analyzeDate(inputDate: String): String {
     val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
     val date = LocalDate.parse(inputDate, formatter)
     val today = LocalDate.now()
 
     return when {
-        date.isEqual(today) -> "HOY"
+        date.isEqual(today) -> stringResource(R.string.today)
         date.isBefore(today) -> {
             val daysAgo = ChronoUnit.DAYS.between(date, today)
             "${daysAgo}D"
@@ -636,7 +631,7 @@ fun UserDataDialog(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6C63FF)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
@@ -674,7 +669,7 @@ private fun DataField(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
-                .background(Color(0xFFF5F5F5))
+                .background(MaterialTheme.colorScheme.background)
                 .padding(12.dp)
         ) {
             Text(

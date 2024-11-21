@@ -79,9 +79,9 @@ fun PaymentLinkDialog(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text(stringResource(R.string.amount_to_receive)) },
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF5F5F5),
-                        unfocusedContainerColor = Color(0xFFF5F5F5),
-                        disabledContainerColor = Color(0xFFF5F5F5),
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = MaterialTheme.colorScheme.background,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                     ),
@@ -96,9 +96,9 @@ fun PaymentLinkDialog(
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = { Text(stringResource(R.string.description)) },
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF5F5F5),
-                        unfocusedContainerColor = Color(0xFFF5F5F5),
-                        disabledContainerColor = Color(0xFFF5F5F5),
+                        focusedContainerColor = MaterialTheme.colorScheme.background,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
+                        disabledContainerColor = MaterialTheme.colorScheme.background,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                     ),
@@ -132,7 +132,7 @@ fun PaymentLinkDialog(
                                 Icon(
                                     Icons.Default.ContentCopy,
                                     contentDescription = "Copy link",
-                                    tint = Color(0xFF6C63FF)
+                                    tint = MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -154,7 +154,7 @@ fun PaymentLinkDialog(
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF6C63FF)
+                        containerColor = MaterialTheme.colorScheme.primary
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {

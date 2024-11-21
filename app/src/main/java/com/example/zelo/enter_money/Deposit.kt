@@ -73,8 +73,8 @@ fun DepositScreen(
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     colors = TextFieldDefaults.colors(
-                        focusedContainerColor = Color(0xFFF5F5F5),
-                        unfocusedContainerColor = Color(0xFFF5F5F5),
+                        focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                        unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent
                     ),
@@ -106,7 +106,7 @@ fun DepositScreen(
                     .fillMaxWidth()
                     .padding(top = 16.dp),
                 colors = TextFieldDefaults.outlinedTextFieldColors(
-                    containerColor = Color(0xFFF5F5F5),
+                    containerColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedBorderColor = Color.Transparent
                 ),
                 shape = RoundedCornerShape(8.dp)
@@ -116,7 +116,7 @@ fun DepositScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(0xFFF5F5F5)),
+                colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.onSurface),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Column(modifier = Modifier.padding(16.dp)) {
@@ -150,7 +150,7 @@ fun DepositScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
                 shape = RoundedCornerShape(8.dp)
             ) {
                 Text(stringResource(R.string.start_deposit))
@@ -225,7 +225,7 @@ private fun DepositItem(deposit: Deposit, onRepeat: (deposit:Deposit)-> Unit) {
             modifier = Modifier
                 .size(40.dp)
                 .background(
-                    color = Color(0xFF6C63FF),
+                    color = MaterialTheme.colorScheme.primary,
                     shape = RoundedCornerShape(8.dp)
                 )
         ) {

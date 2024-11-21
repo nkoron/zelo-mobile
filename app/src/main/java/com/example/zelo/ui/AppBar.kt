@@ -91,7 +91,7 @@ fun AppBar(
 
                 Surface(
                     shape = CircleShape,
-                    color = Color(0xFF6C63FF),
+                    color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(avatarSize)
                 ) {
                     Box(

@@ -225,7 +225,7 @@ fun RegisterContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -252,7 +252,7 @@ fun RegisterContent(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -279,7 +279,7 @@ fun RegisterContent(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -295,7 +295,7 @@ fun RegisterContent(
             singleLine = true,
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -311,7 +311,7 @@ fun RegisterContent(
             singleLine = true,
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -328,7 +328,7 @@ fun RegisterContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -345,7 +345,7 @@ fun RegisterContent(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -370,7 +370,7 @@ fun RegisterContent(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -389,7 +389,7 @@ fun RegisterContent(
             )
             Text(
                 text = stringResource(R.string.login),
-                color = Color(0xFF6C63FF),
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     navController.navigate("login")
@@ -409,7 +409,7 @@ fun RegisterContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF))
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
         ) {
             if (uiState.isFetching) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))

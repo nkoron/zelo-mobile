@@ -196,7 +196,7 @@ fun SignInContent(
             },
             textStyle = TextStyle(color = Color.White),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = Color(0xFF6C63FF),
+                focusedBorderColor = MaterialTheme.colorScheme.primary,
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
@@ -213,7 +213,7 @@ fun SignInContent(
                 checked = useBiometric,
                 onCheckedChange = onBiometricChange,
                 colors = CheckboxDefaults.colors(
-                    checkedColor = Color(0xFF6C63FF),
+                    checkedColor = MaterialTheme.colorScheme.primary,
                     uncheckedColor = Color.Gray
                 )
             )
@@ -238,7 +238,7 @@ fun SignInContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6C63FF)),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
             shape = MaterialTheme.shapes.large
 
         ){
@@ -275,7 +275,7 @@ fun SignInContent(
             )
             Text(
                 text = stringResource(R.string.register),
-                color = Color(0xFF6C63FF),
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     navController.navigate("register")
@@ -295,7 +295,7 @@ fun SignInContent(
             )
             Text(
                 text = stringResource(R.string.reset),
-                color = Color(0xFF6C63FF),
+                color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.clickable {
                     navController.navigate("reset_password")
