@@ -11,7 +11,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,82 +31,102 @@ fun TransactionConfirmedScreen(
     viewModel: TransferenceCBUViewModel,
     onReturnHome: () -> Unit = {}
 ) {
-        val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = 24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.SpaceBetween
+    ) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-                // Success Icon
-                Icon(
-                    imageVector = Icons.Default.CheckCircle,
-                    contentDescription = "Success",
-                    modifier = Modifier.size(80.dp),
-                    tint = MaterialTheme.colorScheme.primary
-                )
+            // Success Icon
+            Icon(
+                imageVector = Icons.Default.CheckCircle,
+                contentDescription = "Success",
+                modifier = Modifier.size(80.dp),
+                tint = MaterialTheme.colorScheme.primary
+            )
 
-                // Confirmation Message
-                Text(
-                    stringResource(R.string.suceessfully_transferred),
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                    color = MaterialTheme.colorScheme.tertiary
-                )
+            // Confirmation Message
+            Text(
+                stringResource(R.string.suceessfully_transferred),
+                style = MaterialTheme.typography.headlineSmall,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                color = MaterialTheme.colorScheme.tertiary
+            )
 
-                // Transfer amount
-                Text(
-                    "$${uiState.amount}",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
+            // Transfer amount
+            Text(
+                "$${uiState.amount}",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary
+            )
 
-                // Recipient info
-                RecipientCardConfirm(uiState.email)
+            // Recipient info
+            RecipientCardConfirm(uiState.email)
 
-                // Transfer details
-                TransferDetailsCardConfirm(uiState.concept, uiState.selectedPaymentMethod?.type ?: "")
-            }
+            // Transfer details
+            TransferDetailsCardConfirm(uiState.concept, uiState.selectedPaymentMethod?.type ?: "")
+        }
 
-            // Return to Home Button
-            Button(
-                onClick = onReturnHome,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Home,
-                        contentDescription = "Home",
-                        tint = Color.White
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text(
-                        stringResource(R.string.go_back_home),
-                        style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
-                    )
+        // Return to Home Button
+        Button(
+            onClick = {
+                if (uiState.error == null) {
+                    onReturnHome()
+                } else {
+                    viewModel.clearError()
                 }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 24.dp)
+                .height(56.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Row(
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Home,
+                    contentDescription = "Home",
+                    tint = Color.White
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    stringResource(R.string.go_back_home),
+                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
+                )
             }
         }
     }
 
+    // Show error dialog
+    if (uiState.error != null) {
+        AlertDialog(
+            onDismissRequest = { viewModel.clearError() },
+            title = { Text("Error") },
+            text = { Text(uiState.error?.message ?: "An unknown error occurred") },
+            confirmButton = {
+                TextButton(onClick = { viewModel.clearError() }) {
+                    Text("OK")
+                }
+            }
+        )
+    }
+}
 
 @Composable
 fun RecipientCardConfirm(recipient: String) {
@@ -194,7 +213,7 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
                 Text(
                     "Fecha",
                     style = MaterialTheme.typography.bodyMedium,
-                    color =Color.Gray
+                    color = Color.Gray
                 )
                 Text(
                     LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
@@ -220,3 +239,4 @@ fun TransferDetailsCardConfirm(concept: String, paymentType: String) {
         }
     }
 }
+

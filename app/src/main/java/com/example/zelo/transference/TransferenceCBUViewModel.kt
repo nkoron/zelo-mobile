@@ -116,6 +116,7 @@ class TransferenceCBUViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
             try {
+                clearError()
                 val currentState = _uiState.value
                 val amount = currentState.amount.toIntOrNull() ?: 0
                 val paymentRequest: PaymentRequest = when (currentState.selectedPaymentMethod?.type) {
@@ -134,9 +135,9 @@ class TransferenceCBUViewModel(
                     )
                     else -> throw IllegalStateException("Invalid payment method selected")
                 }
+                Log.d("TransferenceCBUViewModel", "Making payment: $paymentRequest")
                 val result = paymentRepository.makePayment(paymentRequest)
                 _uiState.update { it.copy(transferSuccess = true, isLoading = false) }
-                Log.d("TransferenceCBUViewModel", "Transfer successful: $result")
                 resetTransferForm()
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = handleError(e), isLoading = false) }
