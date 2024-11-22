@@ -681,7 +681,6 @@ fun AddCardDialog(
         ).show()
     }
 }
-val unknownBank = stringResource(R.string.unknown_bank)
 
 fun inferBankName(cardNumber: String): String {
     return when {
@@ -689,6 +688,6 @@ fun inferBankName(cardNumber: String): String {
         cardNumber.startsWith("5") -> "MasterCard"
         cardNumber.startsWith("34") || cardNumber.startsWith("37") -> "American Express"
         cardNumber.startsWith("6") -> "Discover"
-        else -> unknownBank
+        else -> "Unknown Bank"
     }
 }
