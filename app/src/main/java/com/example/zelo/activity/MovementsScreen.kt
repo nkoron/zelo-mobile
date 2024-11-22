@@ -47,7 +47,7 @@ fun MovementsScreen(
         ) {
             // Action Buttons
             MonthSummaryCard(
-                month = "Agosto",
+                month = stringResource(R.string.last_month),
                 income = uiState.totalIncome,
                 expenses = uiState.totalExpense,
                 onIncomeClick = onNavigateToIncomes,

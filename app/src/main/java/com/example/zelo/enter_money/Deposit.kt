@@ -73,6 +73,8 @@ fun DepositScreen(
                         ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
                     },
                     colors = TextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
                         focusedContainerColor = MaterialTheme.colorScheme.onSurface,
                         unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
                         focusedIndicatorColor = Color.Transparent,
@@ -87,12 +89,13 @@ fun DepositScreen(
                 ) {
                     banks.forEach { bank ->
                         DropdownMenuItem(
-                            text = { Text(bank) },
+                            text = { Text(text = bank, color = MaterialTheme.colorScheme.tertiary) },
                             onClick = {
                                 showSuccessMessage = false
                                 selectedBank = bank
                                 expanded = false
                             }
+
                         )
                     }
                 }
@@ -105,9 +108,14 @@ fun DepositScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp),
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    containerColor = MaterialTheme.colorScheme.onSurface,
-                    unfocusedBorderColor = Color.Transparent
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor =  MaterialTheme.colorScheme.tertiary,
+                    focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    disabledContainerColor = MaterialTheme.colorScheme.onSurface,
+                    errorContainerColor = Color.Transparent,
+                    unfocusedBorderColor = Color.Transparent,
                 ),
                 shape = RoundedCornerShape(8.dp)
             )
@@ -163,7 +171,7 @@ fun DepositScreen(
 
             if (uiState.error != null) {
                 Text(
-                    text = uiState.error?.message ?: "An error occurred",
+                    text = uiState.error?.message ?: stringResource(R.string.error_occurred),
                     color = Color.Red,
                     modifier = Modifier.padding(top = 8.dp)
                 )
@@ -181,7 +189,7 @@ fun DepositScreen(
                 ) {
                     Icon(
                         Icons.Default.CheckCircle,
-                        contentDescription = "Success",
+                        contentDescription = stringResource(R.string.success),
                         tint = Color.White,
                         modifier = Modifier.size(24.dp)
                     )

@@ -1,6 +1,7 @@
 package com.example.zelo.cards
 
 import android.app.DatePickerDialog
+import android.app.Dialog
 import android.icu.util.Calendar
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -397,7 +398,11 @@ fun AddCardDialog(
                                 onValueChange = { if (it.length <= 16) number = it },
                                 label = { Text(stringResource(R.string.card_number)) },
                                 singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                )
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -411,7 +416,11 @@ fun AddCardDialog(
                                     IconButton(onClick = { showDatePicker = true }) {
                                         Icon(Icons.Default.DateRange, contentDescription = "Select date")
                                     }
-                                }
+                                },
+                                colors = OutlinedTextFieldDefaults.colors(
+                                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                            )
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -420,7 +429,11 @@ fun AddCardDialog(
                                 label = { Text(stringResource(R.string.full_name))
                                 },
                                 singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                )
                             )
                         }
                         Column(modifier = Modifier.weight(1f)) {
@@ -435,21 +448,25 @@ fun AddCardDialog(
                                     singleLine = true,
                                     readOnly = true,
                                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                                    modifier = Modifier.menuAnchor().fillMaxWidth()
+                                    modifier = Modifier.menuAnchor().fillMaxWidth(),
+                                    colors = OutlinedTextFieldDefaults.colors(
+                                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                    )
                                 )
                                 ExposedDropdownMenu(
                                     expanded = expanded,
                                     onDismissRequest = { expanded = false },
                                 ) {
                                     DropdownMenuItem(
-                                        text = { Text("CREDIT") },
+                                        text = { Text(text = stringResource(R.string.credit), color = MaterialTheme.colorScheme.tertiary) },
                                         onClick = {
                                             type = "CREDIT"
                                             expanded = false
                                         }
                                     )
                                     DropdownMenuItem(
-                                        text = { Text("DEBIT") },
+                                        text = { Text(text = stringResource(R.string.debit), color = MaterialTheme.colorScheme.tertiary) },
                                         onClick = {
                                             type = "DEBIT"
                                             expanded = false
@@ -473,7 +490,11 @@ fun AddCardDialog(
                         onValueChange = { if (it.length <= 16) number = it },
                         label = { Text(stringResource(R.string.card_number)) },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                        )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -485,9 +506,13 @@ fun AddCardDialog(
                         readOnly = true,
                         trailingIcon = {
                             IconButton(onClick = { showDatePicker = true }) {
-                                Icon(Icons.Default.DateRange, contentDescription = "Select date")
+                                Icon(Icons.Default.DateRange, contentDescription = stringResource(R.string.select_date))
                             }
-                        }
+                        },
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                        )
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -495,8 +520,11 @@ fun AddCardDialog(
                         onValueChange = { fullName = it },
                         label = { Text(stringResource(R.string.full_name)) },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                        )                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     ExposedDropdownMenuBox(
                         expanded = expanded,
@@ -509,21 +537,25 @@ fun AddCardDialog(
                             singleLine = true,
                             readOnly = true,
                             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
-                            modifier = Modifier.menuAnchor().fillMaxWidth()
+                            modifier = Modifier.menuAnchor().fillMaxWidth(),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                            )
                         )
                         ExposedDropdownMenu(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                         ) {
                             DropdownMenuItem(
-                                text = { Text("CREDIT") },
+                                text = { Text(text = stringResource(R.string.credit), color = MaterialTheme.colorScheme.tertiary) },
                                 onClick = {
                                     type = "CREDIT"
                                     expanded = false
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text("DEBIT") },
+                                text = { Text(text = stringResource(R.string.debit),color = MaterialTheme.colorScheme.tertiary) },
                                 onClick = {
                                     type = "DEBIT"
                                     expanded = false
@@ -537,7 +569,11 @@ fun AddCardDialog(
                         onValueChange = { if (it.length <= 3) cvv = it },
                         label = { Text(stringResource(R.string.cvv)) },
                         singleLine = true,
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier.fillMaxWidth(),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                        )
                     )
                 }
             }

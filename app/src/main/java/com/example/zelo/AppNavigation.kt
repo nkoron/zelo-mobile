@@ -190,7 +190,7 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             val email = backStackEntry.arguments?.getString("email")
             TransferDetailScreen(
                 onBack = { navController.popBackStack() },
-                onConfirm = { /* Confirm action */ },
+                onConfirm = { navController.navigate("transference/confirmation") },
                 viewModel = transferenceCBUViewModel,
                 email = email // Pass the email to the TransferDetailScreen
             )

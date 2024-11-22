@@ -99,13 +99,6 @@ fun TransferDetailsDialog(
                 }
 
                 Text(
-                    text = "Creada el 6 de Septiembre - 18:54hs",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-
-                Text(
                     text = stringResource(R.string.transaction_id) + ": 12345678",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray

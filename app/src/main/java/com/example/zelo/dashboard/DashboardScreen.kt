@@ -568,7 +568,7 @@ fun UserDataDialog(
                 .padding(16.dp),
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = Color.White
+                containerColor = MaterialTheme.colorScheme.background
             )
         ) {
             Column(
@@ -584,7 +584,8 @@ fun UserDataDialog(
                     Text(
                         text = stringResource(R.string.your_info),
                         style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.Center)
+                        modifier = Modifier.align(Alignment.Center),
+                        color = MaterialTheme.colorScheme.tertiary
                     )
                     IconButton(
                         onClick = onDismiss,
@@ -600,7 +601,7 @@ fun UserDataDialog(
 
                 // Data Fields
                 DataField(
-                    label = "Nombre y Apellido",
+                    label = stringResource(R.string.name_and_surname),
                     value = userData.fullName.toString(),
                     canEdit = true,
                     onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName.toString())) }
@@ -622,7 +623,7 @@ fun UserDataDialog(
 
                 DataField(
                     label = "CUIT",
-                    value = userData.cuit.toString(),
+                    value = userData.cuit.toString() ,
                     canEdit = false,
                     onCopy = { clipboardManager.setText(AnnotatedString(userData.cuit.toString())) }
                 )
@@ -668,7 +669,7 @@ private fun DataField(
             color = Color.Gray
         )
 
-        Box(
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(8.dp))
@@ -678,12 +679,10 @@ private fun DataField(
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.Black,
-                modifier = Modifier.align(Alignment.CenterStart)
+                color = MaterialTheme.colorScheme.tertiary,
             )
 
             Row(
-                modifier = Modifier.align(Alignment.CenterEnd),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 if (canEdit) {

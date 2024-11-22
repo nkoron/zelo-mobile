@@ -51,6 +51,7 @@ fun TransferenceContactsScreen(
             .padding(16.dp)
     ) {
         // Search Bar
+        val containerColor = Color(0xFFF3F0F7)
         TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -60,8 +61,12 @@ fun TransferenceContactsScreen(
             placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             trailingIcon = { Icon(Icons.Default.FilterList, contentDescription = "Filter") },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFF3F0F7)
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
             ),
             singleLine = true
         )

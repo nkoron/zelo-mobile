@@ -184,4 +184,7 @@
     <string name="no_recent_transactions" translatable="false">No recent transactions</string>
     <string name="today">TODAY</string>
     <string name="enter_placeholder">Enter…</string>
+    <string name="error_occurred">An error occurred</string>
+    <string name="success">Success</string>
+    <string name="last_month">Last month</string>
 </resources>

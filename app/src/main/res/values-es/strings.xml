@@ -175,7 +175,7 @@
     <string name="debit_card">Pagar con tarjeta de débito</string>
     <string name="balance_method">Pagar con saldo en cuenta</string>
     <string name="unknown_method">Método desconocido</string>
-    <string name="balance">SALOD</string>
+    <string name="balance">SALDO</string>
     <string name="credit">CRÉDITO </string>
     <string name="debit">DÉBITO </string>
     <string name="concept">Concepto</string>
@@ -184,9 +184,9 @@
     <string name="date">Fecha</string>
     <string name="no_recent_transactions">No hay transacciones recientes</string>
     <string name="today">HOY</string>
-    <string name="enter_placeholder">Ingresar…</string>"
-
-
-
+    <string name="enter_placeholder">Ingresar…</string>
+    <string name="error_occurred">Ocurrió un error</string>
+    <string name="success">Éxito</string>
+    <string name="last_month">El último mes</string>
 
 </resources>

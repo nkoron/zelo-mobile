@@ -51,7 +51,7 @@ fun TransferScreen(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B6B7B))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
             ) {
                 Text("EMAIL", textAlign = TextAlign.Center, fontSize = 12.sp)
             }
@@ -60,7 +60,7 @@ fun TransferScreen(
                 modifier = Modifier
                     .weight(1f)
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF6B6B7B))
+                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
             ) {
                 Text(
                     stringResource(R.string.contacts),
@@ -71,6 +71,7 @@ fun TransferScreen(
         }
 
         // Search Bar
+        val containerColor = Color(0xFFF3F0F7)
         TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },
@@ -80,8 +81,12 @@ fun TransferScreen(
             placeholder = { Text(stringResource(R.string.search)) },
             leadingIcon = { Icon(Icons.Default.Search, contentDescription = "Search") },
             trailingIcon = { Icon(Icons.Default.FilterList, contentDescription = "Filter") },
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = Color(0xFFF3F0F7)
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor
             ),
             singleLine = true
         )
