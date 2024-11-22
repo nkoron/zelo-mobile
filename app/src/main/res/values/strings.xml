@@ -204,4 +204,6 @@
     <string name="custom">Custom</string>
     <string name="language_and_appearance">Language and appearance</string>
     <string name="dark_mode">Dark mode</string>
+    <string name="confirm_deletion">Confirm Deletion</string>
+    <string name="confirm_deletion_question">Are you sure you want to delete this card?</string>
 </resources>

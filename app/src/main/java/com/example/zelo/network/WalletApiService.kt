@@ -58,7 +58,7 @@ interface WalletApiService {
     suspend fun recoverPassword(@Body emailRequest: EmailRequest): Response<Int>
 
     @POST("api/user")
-    suspend fun registerUser(@Body user: RegisterUser): Response<RegisterResponse>
+    suspend fun registerUser(@Body user: RegisterUser): Response<User>
 
     @POST("api/user/login")
     suspend fun loginUser(@Body loginRequest: LoginRequest): Response<LoginResponse> //retorna un "token"

@@ -113,8 +113,9 @@ fun CardsScreen(
                 viewModel.dismissDeleteConfirmation()
                 resetKey++ // Increment the reset key to trigger a recomposition
             },
-            title = { Text("Confirm Deletion") },
-            text = { Text("Are you sure you want to delete this card?") },
+            containerColor = MaterialTheme.colorScheme.background,
+            title = { Text(stringResource(R.string.confirm_deletion), color= MaterialTheme.colorScheme.tertiary) },
+            text = { Text(stringResource(R.string.confirm_deletion_question), color= MaterialTheme.colorScheme.tertiary) },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -123,7 +124,7 @@ fun CardsScreen(
                         resetKey++
                     }
                 ) {
-                    Text("Delete")
+                    Text(stringResource(R.string.delete))
                 }
             },
             dismissButton = {
@@ -133,7 +134,7 @@ fun CardsScreen(
                         resetKey++ // Increment to trigger LaunchedEffect and reset swipe state
                     }
                 ) {
-                    Text("Cancel")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )
