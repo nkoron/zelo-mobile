@@ -99,7 +99,7 @@ fun TransferScreen(
 
         // Recent Transfers
         Text(
-            "Recent Transfers",
+            stringResource(R.string.recent_transfers),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 16.dp)
         )

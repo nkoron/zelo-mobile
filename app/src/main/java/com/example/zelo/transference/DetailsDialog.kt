@@ -66,12 +66,12 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = if (isPayer) payment.receiver.firstName + " " + payment.receiver.lastName else payment.payer.firstName + " " + payment.payer.lastName,
-                            style = MaterialTheme.typography.bodyLarge,
+                            text = stringResource(R.string.full_name)+": " + if (isPayer) payment.receiver.firstName + " " + payment.receiver.lastName else payment.payer.firstName + " " + payment.payer.lastName,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = if (isPayer) payment.receiver.email else payment.payer.email,
+                            text = stringResource(R.string.email)+": "+ if (isPayer) payment.receiver.email else payment.payer.email,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
@@ -87,12 +87,12 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = stringResource(R.string.money_transfer)+": "+ payment.amount.toString(),
-                            style = MaterialTheme.typography.bodyLarge,
+                            text = stringResource(R.string.amount)+": "+ payment.amount.toString(),
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = stringResource(R.string.payment_method) + ": " + payment.card,
+                            text = stringResource(R.string.payment_method) + ": " + payment.type,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
