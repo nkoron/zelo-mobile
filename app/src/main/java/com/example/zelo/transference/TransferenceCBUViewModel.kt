@@ -121,7 +121,9 @@ class TransferenceCBUViewModel(
             try {
                 clearError()
                 val currentState = _uiState.value
-                val amount = currentState.amount.toIntOrNull() ?: 0
+                var amount = currentState.amount.toDoubleOrNull()
+                if(amount == null)
+                    amount =0.0
                 val paymentRequest: PaymentRequest = when (currentState.selectedPaymentMethod?.type) {
                     "BALANCE" -> BalancePaymentRequest(
                         receiverEmail = currentState.email,  // Changed to email

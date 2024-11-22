@@ -11,7 +11,7 @@ sealed class PaymentRequest {
 @Serializable
 data class BalancePaymentRequest(
     val receiverEmail: String?,
-    val amount: Int,
+    val amount: Double,
     val description: String,
     override val type: String = "BALANCE"
 ) : PaymentRequest()
@@ -20,14 +20,14 @@ data class BalancePaymentRequest(
 data class CardPaymentRequest(
     val cardId: Int,
     val receiverEmail: String?,
-    val amount: Int?,
+    val amount: Double?,
     val description: String,
     override val type: String = "CARD"
 ) : PaymentRequest()
 
 @Serializable
 data class CreateLinkPaymentRequest(
-    val amount: Int,
+    val amount: Double,
     val description: String,
     override val type: String = "LINK"
 ) : PaymentRequest()

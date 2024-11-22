@@ -37,7 +37,7 @@ class PaymentLinkViewModel(
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
-                val amount = _uiState.value.amount.toIntOrNull()
+                val amount = _uiState.value.amount.toDoubleOrNull()
                 if (amount == null) {
                     _uiState.update { it.copy(isLoading = false, error = "Invalid amount") }
                     return@launch
