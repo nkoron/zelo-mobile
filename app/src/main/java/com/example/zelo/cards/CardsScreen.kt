@@ -34,6 +34,7 @@ import com.example.zelo.R
 import com.example.zelo.network.model.Card
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -253,11 +254,22 @@ fun CardItem(card: Card, onDelete: (Card) -> Unit, isTablet: Boolean) {
     var showDetails by remember { mutableStateOf(false) }
     val bankName = remember(card.number) { inferBankName(card.number) }
 
+    // Generate a random color based on the bank name
+    val cardColor = remember(bankName) {
+        when (bankName) {
+            "Visa" -> Color(0xFF1A1F71)  // Visa blue
+            "MasterCard" -> Color(0xFFFF5F00)  // Mastercard orange
+            "American Express" -> Color(0xFF006FCF)  // Amex blue
+            "Discover" -> Color(0xFFFF6000)  // Discover orange
+            else -> Color(0xFF3d251e)
+        }
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(200.dp),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.primary)
+        colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Box(
             modifier = Modifier
