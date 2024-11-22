@@ -56,9 +56,19 @@ class MovementsViewModel(
         )
 
     private fun observePaymentStream() {
-        paymentStreamJob = collectOnViewModelScope(
-            paymentRepository.paymentStream
-        ) { state, response -> state.copy(movements = response)}
+        paymentStreamJob = viewModelScope.launch {
+            combine(
+                paymentRepository.paymentStream,
+                _uiState.map { it.user }
+            ) { payments, user ->
+                payments.filter { it.payer.id == user?.id || it.receiver.id == user?.id }
+            }
+                .distinctUntilChanged()
+                .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
+                .collect { total ->
+                    _uiState.update { currentState -> currentState.copy(movements = total) }
+                }
+        }
     }
 
     private fun observeIncomeStream() {
