@@ -386,6 +386,10 @@ fun AddCardDialog(
 
     val dateFormatter = remember { DateTimeFormatter.ofPattern("MM/yy") }
     val context = LocalContext.current
+    val numberErrorInvalid = stringResource(R.string.invalid_card_number)
+    val numberErrorExpired = stringResource(R.string.expired_card)
+    val numberErrorException = stringResource(R.string.name_required)
+    val numberErrorCvv = stringResource(R.string.invalid_cvv)
 
     fun validateForm(): Boolean {
         var isValid = true
@@ -395,22 +399,22 @@ fun AddCardDialog(
         cvvError = null
 
         if (number.length != 16 || !number.all { it.isDigit() }) {
-            numberError = "Invalid card number"
+            numberError = numberErrorInvalid
             isValid = false
         }
 
         if (expirationDate.isBefore(LocalDate.now())) {
-            expirationError = "Card has expired"
+            expirationError = numberErrorExpired
             isValid = false
         }
 
         if (fullName.isBlank()) {
-            fullNameError = "Name is required"
+            fullNameError = numberErrorException
             isValid = false
         }
 
         if (cvv.length != 3 || !cvv.all { it.isDigit() }) {
-            cvvError = "Invalid CVV"
+            cvvError = numberErrorCvv
             isValid = false
         }
 
@@ -439,7 +443,8 @@ fun AddCardDialog(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    errorTextColor = MaterialTheme.colorScheme.tertiary
                                 ),
                                 isError = numberError != null,
                                 supportingText = { numberError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
@@ -454,12 +459,13 @@ fun AddCardDialog(
                                 readOnly = true,
                                 trailingIcon = {
                                     IconButton(onClick = { showDatePicker = true }) {
-                                        Icon(Icons.Default.DateRange, contentDescription = "Select date")
+                                        Icon(Icons.Default.DateRange, contentDescription = stringResource(R.string.select_date))
                                     }
                                 },
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    errorTextColor = MaterialTheme.colorScheme.tertiary
                                 ),
                                 isError = expirationError != null,
                                 supportingText = { expirationError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
@@ -473,7 +479,8 @@ fun AddCardDialog(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    errorTextColor = MaterialTheme.colorScheme.tertiary
                                 ),
                                 isError = fullNameError != null,
                                 supportingText = { fullNameError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
@@ -494,8 +501,9 @@ fun AddCardDialog(
                                     modifier = Modifier.menuAnchor().fillMaxWidth(),
                                     colors = OutlinedTextFieldDefaults.colors(
                                         focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                                    )
+                                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                        errorTextColor = MaterialTheme.colorScheme.tertiary
+                                    ),
                                 )
                                 ExposedDropdownMenu(
                                     expanded = expanded,
@@ -526,7 +534,8 @@ fun AddCardDialog(
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    errorTextColor = MaterialTheme.colorScheme.tertiary
                                 ),
                                 isError = cvvError != null,
                                 supportingText = { cvvError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
@@ -542,7 +551,8 @@ fun AddCardDialog(
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            errorTextColor = MaterialTheme.colorScheme.tertiary
                         ),
                         isError = numberError != null,
                         supportingText = { numberError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
@@ -576,7 +586,8 @@ fun AddCardDialog(
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            errorTextColor = MaterialTheme.colorScheme.tertiary
                         ),
                         isError = fullNameError != null,
                         supportingText = { fullNameError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
@@ -596,8 +607,9 @@ fun AddCardDialog(
                             modifier = Modifier.menuAnchor().fillMaxWidth(),
                             colors = OutlinedTextFieldDefaults.colors(
                                 focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                            )
+                                unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                errorTextColor = MaterialTheme.colorScheme.tertiary
+                            ),
                         )
                         ExposedDropdownMenu(
                             expanded = expanded,
@@ -628,7 +640,8 @@ fun AddCardDialog(
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                            unfocusedTextColor = MaterialTheme.colorScheme.tertiary,
+                            errorTextColor = MaterialTheme.colorScheme.tertiary
                         ),
                         isError = cvvError != null,
                         supportingText = { cvvError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
@@ -668,6 +681,7 @@ fun AddCardDialog(
         ).show()
     }
 }
+val unknownBank = stringResource(R.string.unknown_bank)
 
 fun inferBankName(cardNumber: String): String {
     return when {
@@ -675,6 +689,6 @@ fun inferBankName(cardNumber: String): String {
         cardNumber.startsWith("5") -> "MasterCard"
         cardNumber.startsWith("34") || cardNumber.startsWith("37") -> "American Express"
         cardNumber.startsWith("6") -> "Discover"
-        else -> "Unknown Bank"
+        else -> unknownBank
     }
 }

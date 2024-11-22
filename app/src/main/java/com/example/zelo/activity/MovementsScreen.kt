@@ -166,7 +166,7 @@ fun MonthSummaryCard(
         Text(
             text = month,
             fontSize = 24.sp,
-            color = Color.Black,
+            color = MaterialTheme.colorScheme.tertiary,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.padding(bottom = 16.dp)
         )

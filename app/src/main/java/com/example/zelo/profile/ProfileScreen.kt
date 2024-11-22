@@ -98,7 +98,7 @@ fun ProfileCard(onLogout: () -> Unit, uiState: ProfileUiState) {
                         uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
                         uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
                     },
-                    color = MaterialTheme.colorScheme.primary,
+                    color = MaterialTheme.colorScheme.tertiary,
                     fontWeight = FontWeight.Bold,
                     fontSize = 32.sp
                 )
@@ -111,7 +111,7 @@ fun ProfileCard(onLogout: () -> Unit, uiState: ProfileUiState) {
                 },
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.onSurface
+                color = MaterialTheme.colorScheme.primary
             )
             Text(
                 text = uiState.user?.email ?: "",
