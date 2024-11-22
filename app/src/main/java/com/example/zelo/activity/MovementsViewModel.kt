@@ -19,7 +19,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -43,10 +45,10 @@ class MovementsViewModel(
     val uiState: StateFlow<MovementsUiState> = _uiState.asStateFlow()
 
     init {
-            observePaymentStream()
-        getCurrentUser()
         observeIncomeStream()
         observeExpenseStream()
+        observePaymentStream()
+        getCurrentUser()
     }
     fun getCurrentUser()= runOnViewModelScope(
             block = { userRepository.getCurrentUser() },
@@ -59,16 +61,36 @@ class MovementsViewModel(
         ) { state, response -> state.copy(movements = response)}
     }
 
-    private fun observeIncomeStream(){
-        paymentStreamJob = collectOnViewModelScope(
-            paymentRepository.paymentStream
-        ) { state, response -> state.copy(totalIncome = response.filter { it.receiver.id == uiState.value.user?.id }.sumOf { it.amount })}
+    private fun observeIncomeStream() {
+        paymentStreamJob = viewModelScope.launch {
+            combine(
+                paymentRepository.paymentStream,
+                _uiState.map { it.user }
+            ) { payments, user ->
+                payments.filter { it.receiver.id == user?.id }.sumOf { it.amount }
+            }
+                .distinctUntilChanged()
+                .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
+                .collect { totalIncome ->
+                    _uiState.update { currentState -> currentState.copy(totalIncome = totalIncome) }
+                }
+        }
     }
 
-    private fun observeExpenseStream(){
-        paymentStreamJob = collectOnViewModelScope(
-            paymentRepository.paymentStream
-        ) { state, response -> state.copy(totalExpense = response.filter { it.payer.id == uiState.value.user?.id }.sumOf { it.amount })}
+    private fun observeExpenseStream() {
+        paymentStreamJob = viewModelScope.launch {
+            combine(
+                paymentRepository.paymentStream,
+                _uiState.map { it.user }
+            ) { payments, user ->
+                payments.filter { it.payer.id == user?.id }.sumOf { it.amount }
+            }
+                .distinctUntilChanged()
+                .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
+                .collect { totalExpense ->
+                    _uiState.update { currentState -> currentState.copy(totalExpense = totalExpense) }
+                }
+        }
     }
 
     private fun <T> collectOnViewModelScope(

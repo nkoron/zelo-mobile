@@ -379,12 +379,50 @@ fun AddCardDialog(
     var showDatePicker by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
 
+    var numberError by remember { mutableStateOf<String?>(null) }
+    var expirationError by remember { mutableStateOf<String?>(null) }
+    var fullNameError by remember { mutableStateOf<String?>(null) }
+    var cvvError by remember { mutableStateOf<String?>(null) }
+
     val dateFormatter = remember { DateTimeFormatter.ofPattern("MM/yy") }
     val context = LocalContext.current
 
+    fun validateForm(): Boolean {
+        var isValid = true
+        numberError = null
+        expirationError = null
+        fullNameError = null
+        cvvError = null
+
+        if (number.length != 16 || !number.all { it.isDigit() }) {
+            numberError = "Invalid card number"
+            isValid = false
+        }
+
+        if (expirationDate.isBefore(LocalDate.now())) {
+            expirationError = "Card has expired"
+            isValid = false
+        }
+
+        if (fullName.isBlank()) {
+            fullNameError = "Name is required"
+            isValid = false
+        }
+
+        if (cvv.length != 3 || !cvv.all { it.isDigit() }) {
+            cvvError = "Invalid CVV"
+            isValid = false
+        }
+
+        return isValid
+    }
+
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.add_new_card)) },
+        title = { Text(
+            stringResource(R.string.add_new_card),
+            color = MaterialTheme.colorScheme.primary
+        ) },
         text = {
             Column {
                 if (isTablet) {
@@ -395,14 +433,16 @@ fun AddCardDialog(
                         Column(modifier = Modifier.weight(1f)) {
                             OutlinedTextField(
                                 value = number,
-                                onValueChange = { if (it.length <= 16) number = it },
+                                onValueChange = { if (it.length <= 16 && it.all { char -> char.isDigit() }) number = it },
                                 label = { Text(stringResource(R.string.card_number)) },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
                                     unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                                )
+                                ),
+                                isError = numberError != null,
+                                supportingText = { numberError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
@@ -418,22 +458,25 @@ fun AddCardDialog(
                                     }
                                 },
                                 colors = OutlinedTextFieldDefaults.colors(
-                                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
-                                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                            )
+                                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                ),
+                                isError = expirationError != null,
+                                supportingText = { expirationError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = fullName,
                                 onValueChange = { fullName = it },
-                                label = { Text(stringResource(R.string.full_name))
-                                },
+                                label = { Text(stringResource(R.string.full_name)) },
                                 singleLine = true,
                                 modifier = Modifier.fillMaxWidth(),
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
                                     unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                                )
+                                ),
+                                isError = fullNameError != null,
+                                supportingText = { fullNameError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
                             )
                         }
                         Column(modifier = Modifier.weight(1f)) {
@@ -477,24 +520,32 @@ fun AddCardDialog(
                             Spacer(modifier = Modifier.height(8.dp))
                             OutlinedTextField(
                                 value = cvv,
-                                onValueChange = { if (it.length <= 3) cvv = it },
+                                onValueChange = { if (it.length <= 3 && it.all { char -> char.isDigit() }) cvv = it },
                                 label = { Text(stringResource(R.string.cvv)) },
                                 singleLine = true,
-                                modifier = Modifier.fillMaxWidth()
+                                modifier = Modifier.fillMaxWidth(),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                                ),
+                                isError = cvvError != null,
+                                supportingText = { cvvError?.let { Text(it, color = MaterialTheme.colorScheme.primary) } }
                             )
                         }
                     }
                 } else {
                     OutlinedTextField(
                         value = number,
-                        onValueChange = { if (it.length <= 16) number = it },
+                        onValueChange = { if (it.length <= 16 && it.all { char -> char.isDigit() }) number = it },
                         label = { Text(stringResource(R.string.card_number)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                        )
+                        ),
+                        isError = numberError != null,
+                        supportingText = { numberError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -512,7 +563,9 @@ fun AddCardDialog(
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                        )
+                        ),
+                        isError = expirationError != null,
+                        supportingText = { expirationError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
                     )
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
@@ -524,7 +577,10 @@ fun AddCardDialog(
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                        )                    )
+                        ),
+                        isError = fullNameError != null,
+                        supportingText = { fullNameError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
                     ExposedDropdownMenuBox(
                         expanded = expanded,
@@ -555,7 +611,7 @@ fun AddCardDialog(
                                 }
                             )
                             DropdownMenuItem(
-                                text = { Text(text = stringResource(R.string.debit),color = MaterialTheme.colorScheme.tertiary) },
+                                text = { Text(text = stringResource(R.string.debit), color = MaterialTheme.colorScheme.tertiary) },
                                 onClick = {
                                     type = "DEBIT"
                                     expanded = false
@@ -566,14 +622,16 @@ fun AddCardDialog(
                     Spacer(modifier = Modifier.height(8.dp))
                     OutlinedTextField(
                         value = cvv,
-                        onValueChange = { if (it.length <= 3) cvv = it },
+                        onValueChange = { if (it.length <= 3 && it.all { char -> char.isDigit() }) cvv = it },
                         label = { Text(stringResource(R.string.cvv)) },
                         singleLine = true,
                         modifier = Modifier.fillMaxWidth(),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedTextColor = MaterialTheme.colorScheme.tertiary,
                             unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                        )
+                        ),
+                        isError = cvvError != null,
+                        supportingText = { cvvError?.let { Text(it, color = MaterialTheme.colorScheme.error) } }
                     )
                 }
             }
@@ -581,7 +639,7 @@ fun AddCardDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    if (number.isNotEmpty() && fullName.isNotEmpty() && type.isNotEmpty()) {
+                    if (validateForm()) {
                         onAddCard(number, expirationDate.format(dateFormatter), fullName, type, cvv)
                     }
                 }

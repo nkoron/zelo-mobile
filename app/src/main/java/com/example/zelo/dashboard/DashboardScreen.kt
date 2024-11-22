@@ -4,6 +4,7 @@ import android.provider.ContactsContract
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -250,7 +251,7 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
             )
         } else {
             // Display the list of transactions if there are movements
@@ -318,7 +319,7 @@ private fun QuickActions(uiState: DashboardUiState
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceAround
+            horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             QuickActionButton(
                 onClick = { showPaymentLink = !showPaymentLink },
@@ -329,6 +330,7 @@ private fun QuickActions(uiState: DashboardUiState
                 onClick = { showDialog = !showDialog },
                 icon = Icons.Default.Person,
                 text = stringResource(R.string.your_info)
+
             )
             QuickActionButton(
                 onClick = {
@@ -347,6 +349,8 @@ private fun QuickActions(uiState: DashboardUiState
 
 @Composable
 private fun BalanceCard(balance: Double?, navController: NavController) {
+    var isBalanceVisible by remember { mutableStateOf(false) } // Initial state: hidden
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -364,13 +368,16 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = "$${String.format("%,.2f", balance)}",
+                text = if (isBalanceVisible)
+                    "$${String.format("%,.2f", balance)}"
+                else "****",
                 style = MaterialTheme.typography.headlineLarge,
                 fontWeight = FontWeight.Bold
             )
-            IconButton(onClick = { /* Toggle balance visibility */ }) {
+            IconButton(onClick = { isBalanceVisible = !isBalanceVisible }) {
                 Icon(
-                    imageVector = Icons.Default.Visibility,
+                    imageVector = if (isBalanceVisible) Icons.Default.VisibilityOff
+                    else Icons.Default.Visibility,
                     contentDescription = stringResource(R.string.balance_visibility)
                 )
             }
@@ -386,12 +393,13 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(text= stringResource(R.string.transfer), color= Color.White)
+                    Text(text = stringResource(R.string.transfer), color = Color.White)
                     Icon(
                         imageVector = Icons.Default.ArrowUpward,
                         contentDescription = null,
                         modifier = Modifier.padding(start = 4.dp),
-                        tint= Color.White                    )
+                        tint = Color.White
+                    )
                 }
 
                 Button(
@@ -401,12 +409,12 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                     ),
                     shape = RoundedCornerShape(8.dp)
                 ) {
-                    Text(text=stringResource(R.string.deposit), color = Color.White)
+                    Text(text = stringResource(R.string.deposit), color = Color.White)
                     Icon(
                         imageVector = Icons.Default.ArrowDownward,
                         contentDescription = null,
                         modifier = Modifier.padding(start = 4.dp),
-                        tint= Color.White
+                        tint = Color.White
                     )
                 }
             }
@@ -542,175 +550,163 @@ fun analyzeDate(inputDate: String): String {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserDataDialog(
     onDismiss: () -> Unit,
-    userData: UserData = UserData(
-        fullName = "Juan Rodriguez",
-        alias = "perro.overo.bien.cl",
-        cbu = "0000120043456552634343",
-        cuit = "20-20979631-9"
-    )
+    userData: UserData
 ) {
     val clipboardManager = LocalClipboardManager.current
-
-    Dialog(
+    var showShareOptions by remember { mutableStateOf(false) }
+    val isTablet = LocalConfiguration.current.screenWidthDp >= 600
+    AlertDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = MaterialTheme.colorScheme.background
+        title = {
+            Text(
+                text = stringResource(R.string.your_info),
+                color = MaterialTheme.colorScheme.primary // Use desired color
             )
-        ) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                // Header
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = stringResource(R.string.your_info),
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.Center),
-                        color = MaterialTheme.colorScheme.tertiary
-                    )
-                    IconButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.CenterEnd)
+        },
+        text = {
+            Column {
+                if (isTablet) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = stringResource(R.string.close),
-                            tint = Color.Black
-                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            DataField(
+                                label = stringResource(R.string.name_and_surname),
+                                value = userData.fullName.toString(),
+                                canEdit = false,
+                                onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName.toString())) }
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            DataField(
+                                label = "Alias",
+                                value = userData.alias.toString(),
+                                canEdit = true,
+                                onCopy = { clipboardManager.setText(AnnotatedString(userData.alias.toString())) }
+                            )
+                        }
+                        Column(modifier = Modifier.weight(1f)) {
+                            DataField(
+                                label = "CBU",
+                                value = userData.cbu.toString(),
+                                canEdit = false,
+                                onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu.toString())) }
+                            )
+                        }
                     }
-                }
-
-                // Data Fields
-                DataField(
-                    label = stringResource(R.string.name_and_surname),
-                    value = userData.fullName.toString(),
-                    canEdit = true,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName.toString())) }
-                )
-
-                DataField(
-                    label = "Alias",
-                    value = userData.alias.toString(),
-                    canEdit = true,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.alias.toString())) }
-                )
-
-                DataField(
-                    label = "CBU",
-                    value = userData.cbu.toString(),
-                    canEdit = false,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu.toString())) }
-                )
-
-                DataField(
-                    label = "CUIT",
-                    value = userData.cuit.toString() ,
-                    canEdit = false,
-                    onCopy = { clipboardManager.setText(AnnotatedString(userData.cuit.toString())) }
-                )
-
-                // Share Button
-                Button(
-                    onClick = { /* Handle sharing */ },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
-                    Text(
-                        stringResource(R.string.share),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
+                } else {
+                    DataField(
+                        label = stringResource(R.string.name_and_surname),
+                        value = userData.fullName.toString(),
+                        canEdit = false,
+                        onCopy = { clipboardManager.setText(AnnotatedString(userData.fullName.toString())) }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DataField(
+                        label = "Alias",
+                        value = userData.alias.toString(),
+                        canEdit = true,
+                        onCopy = { clipboardManager.setText(AnnotatedString(userData.alias.toString())) }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    DataField(
+                        label = "CBU",
+                        value = userData.cbu.toString(),
+                        canEdit = false,
+                        onCopy = { clipboardManager.setText(AnnotatedString(userData.cbu.toString())) }
                     )
                 }
             }
+        },
+        confirmButton = {
+            TextButton(
+                onClick = { showShareOptions = true }
+            ) {
+                Text(stringResource(R.string.share))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.close))
+            }
         }
+    )
+
+    if (showShareOptions) {
+        ShareOptionsDialog(
+            onDismiss = { showShareOptions = false },
+            userData = userData
+        )
     }
 }
 
 @Composable
-private fun DataField(
+fun DataField(
     label: String,
     value: String,
     canEdit: Boolean,
     onCopy: () -> Unit
 ) {
-    Column(
+    OutlinedTextField(
+        value = value,
+        onValueChange = { },
+        label = { Text(label) },
+        singleLine = true,
+        readOnly = !canEdit,
         modifier = Modifier.fillMaxWidth(),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Color.Gray
+        trailingIcon = {
+            IconButton(onClick = onCopy) {
+                Icon(Icons.Default.ContentCopy, contentDescription = stringResource(R.string.copy))
+            }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = MaterialTheme.colorScheme.tertiary,
+            unfocusedTextColor = MaterialTheme.colorScheme.tertiary
         )
+    )
+}
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(8.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(12.dp)
-        ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.tertiary,
-            )
-
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                if (canEdit) {
-                    IconButton(
-                        onClick = { /* Handle edit */ },
-                        modifier = Modifier.size(20.dp)
-                    ) {
-                        Icon(
-                            Icons.Default.Edit,
-                            contentDescription = stringResource(R.string.edit),
-                            tint = Color.Gray
-                        )
-                    }
-                }
-
-                IconButton(
-                    onClick = onCopy,
-                    modifier = Modifier.size(20.dp)
-                ) {
-                    Icon(
-                        Icons.Default.ContentCopy,
-                        contentDescription = stringResource(R.string.copy),
-                        tint = Color.Gray
-                    )
-                }
+@Composable
+fun ShareOptionsDialog(
+    onDismiss: () -> Unit,
+    userData: UserData
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.share_options)) },
+        text = {
+            Column {
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.share_all_info)) },
+                    leadingContent = { Icon(Icons.Default.Share, contentDescription = null) },
+                    modifier = Modifier.clickable { /* Handle sharing all info */ }
+                )
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.share_alias)) },
+                    leadingContent = { Icon(Icons.Default.Link, contentDescription = null) },
+                    modifier = Modifier.clickable { /* Handle sharing alias */ }
+                )
+                ListItem(
+                    headlineContent = { Text(stringResource(R.string.share_cbu)) },
+                    leadingContent = { Icon(Icons.Default.AccountBalance, contentDescription = null) },
+                    modifier = Modifier.clickable { /* Handle sharing CBU */ }
+                )
+            }
+        },
+        confirmButton = {},
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
             }
         }
-    }
+    )
 }
+
+
 
 data class UserData(
     val fullName: String?,
@@ -719,12 +715,3 @@ data class UserData(
     val cuit: String?
 )
 
-@Preview(showBackground = true)
-@Composable
-fun UserDataDialogPreview() {
-    MaterialTheme {
-        UserDataDialog(
-            onDismiss = {}
-        )
-    }
-}

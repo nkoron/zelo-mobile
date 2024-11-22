@@ -191,4 +191,10 @@
     <string name="regenerate_link">Regenerate Link</string>
     <string name="copy_link">Copy Link</string>
     <string name="generated_link">Generated Link:</string>
+    <string name="amount_to_transfer">Amount to transfer</string>
+    <string name="share_options">Share options</string>
+    <string name="share_all_info">Share all info</string>
+    <string name="share_cbu">Share CBU</string>
+    <string name="share_alias">Share Alias</string>"
+
 </resources>
