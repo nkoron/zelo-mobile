@@ -41,6 +41,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
+import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
 import com.example.zelo.transference.TransferDetailsDialog
 import java.time.LocalDate
@@ -172,7 +173,10 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
                                 )
                             }: ${payment.amount}",
                             time = payment.createdAt,
-                            showAvatar = true
+                            showAvatar = true,
+                            movements = uiState.movements,
+                            id = it,
+                            isPayer = !receive
                         )
                     }
                 }
@@ -279,7 +283,10 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                             )
                         }: ${payment.amount}",
                         time = payment.createdAt,
-                        showAvatar = true
+                        showAvatar = true,
+                        movements = uiState.movements,
+                        id = it,
+                        isPayer = !receive
                     )
                 }
             }
@@ -461,7 +468,10 @@ fun TransactionItem(
     description: String,
     time: String,
     showAvatar: Boolean = false,
-    showLogo: Boolean = false
+    showLogo: Boolean = false,
+    movements: List<Payment>,
+    id: Int,
+    isPayer: Boolean
 ) {
 
     var showDetailsDialog by remember { mutableStateOf(false) }
@@ -471,7 +481,10 @@ fun TransactionItem(
             onDismiss = { showDetailsDialog = false },
             onRepeatTransfer = { /* Handle repeat transfer */ },
             onViewReceipt = { /* Handle view receipt */ },
-            onRequestRefund = { /* Handle refund request */ }
+            onRequestRefund = { /* Handle refund request */ },
+            movements = movements,
+            id = id,
+            isPayer = isPayer
         )
     }
     Row(

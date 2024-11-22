@@ -14,6 +14,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.example.zelo.R
+import com.example.zelo.dashboard.DashboardUiState
+import com.example.zelo.network.model.Payment
 
 
 @Composable
@@ -21,8 +23,12 @@ fun TransferDetailsDialog(
     onDismiss: () -> Unit,
     onRepeatTransfer: () -> Unit,
     onViewReceipt: () -> Unit,
-    onRequestRefund: () -> Unit
+    onRequestRefund: () -> Unit,
+    movements: List<Payment>,
+    id: Int,
+    isPayer: Boolean
 ) {
+    val payment = movements[id]
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
@@ -45,7 +51,7 @@ fun TransferDetailsDialog(
                 )
 
                 Text(
-                    text = stringResource(R.string.transfer_to),
+                    text = if (isPayer) stringResource(R.string.transfer_to) else stringResource(R.string.transfer_from),
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray,
                     modifier = Modifier.align(Alignment.Start),
@@ -60,17 +66,12 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = "Miguel Rodriguez",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.tertiary
-                        )
-                        Text(
-                            text = "CUIT/CUIL: 20454545456",
+                            text = stringResource(R.string.full_name)+": " + if (isPayer) payment.receiver.firstName + " " + payment.receiver.lastName else payment.payer.firstName + " " + payment.payer.lastName,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = "mro*****@gmail.com",
+                            text = stringResource(R.string.email)+": "+ if (isPayer) payment.receiver.email else payment.payer.email,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
@@ -86,12 +87,12 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = stringResource(R.string.money_transfer)+": $3.000",
-                            style = MaterialTheme.typography.bodyLarge,
+                            text = stringResource(R.string.amount)+": "+ payment.amount.toString(),
+                            style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
                         Text(
-                            text = stringResource(R.string.payment_method) + ": Dinero disponible en cuenta",
+                            text = stringResource(R.string.payment_method) + ": " + payment.type,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.tertiary
                         )
@@ -99,7 +100,7 @@ fun TransferDetailsDialog(
                 }
 
                 Text(
-                    text = stringResource(R.string.transaction_id) + ": 12345678",
+                    text = stringResource(R.string.transaction_id) + ": "+ payment.id,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
@@ -139,16 +140,16 @@ fun TransferDetailsDialog(
 }
 
 
-// Preview
-@Preview(showBackground = true, locale = "en")
-@Composable
-fun TransferDetailsDialogPreview() {
-    MaterialTheme {
-        TransferDetailsDialog(
-            onDismiss = {},
-            onRepeatTransfer = {},
-            onViewReceipt = {},
-            onRequestRefund = {}
-        )
-    }
-}
+//// Preview
+//@Preview(showBackground = true, locale = "en")
+//@Composable
+//fun TransferDetailsDialogPreview() {
+//    MaterialTheme {
+//        TransferDetailsDialog(
+//            onDismiss = {},
+//            onRepeatTransfer = {},
+//            onViewReceipt = {},
+//            onRequestRefund = {}
+//        )
+//    }
+//}

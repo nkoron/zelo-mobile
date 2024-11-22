@@ -71,7 +71,10 @@ fun ExpensesScreen(
                         name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
                         description = "${stringResource(R.string.sent)}: ${payment.amount}",
                         time = payment.createdAt,
-                        showAvatar = true
+                        showAvatar = true,
+                        movements = uiState.movements,
+                        id = it,
+                        isPayer = true
                     )
                 }
 
