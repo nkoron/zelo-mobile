@@ -34,23 +34,9 @@ fun AccountDataScreen(onBack: () -> Unit) {
     var phone by remember {
         mutableStateOf(sharedPreferences.getString("phone", "+1234567890") ?: "+1234567890")}
 
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.account_data)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.account_changes))
@@ -127,4 +113,3 @@ fun AccountDataScreen(onBack: () -> Unit) {
 
         }
     }
-}

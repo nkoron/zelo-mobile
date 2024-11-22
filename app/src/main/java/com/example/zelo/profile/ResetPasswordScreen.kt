@@ -8,6 +8,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.example.zelo.R
@@ -19,22 +20,9 @@ fun ResetPassScreen(onBack: () -> Unit) {
     var newPassword by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.reset_password)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.change_pass))
@@ -71,7 +59,7 @@ fun ResetPassScreen(onBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Reset password */ }) {
-                Text(stringResource(R.string.chnge_pass))
+                Text(stringResource(R.string.chnge_pass), color = Color.White)
             }
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -81,4 +69,3 @@ fun ResetPassScreen(onBack: () -> Unit) {
             }
         }
     }
-}

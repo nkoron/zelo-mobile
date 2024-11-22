@@ -11,28 +11,14 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.ui.res.stringResource
 import com.example.zelo.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PrivacyScreen(onBack: () -> Unit) {
     var dataSharing by remember { mutableStateOf(false) }
     var locationTracking by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.privacy)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.control_data))
@@ -81,4 +67,3 @@ fun PrivacyScreen(onBack: () -> Unit) {
             }
         }
     }
-}

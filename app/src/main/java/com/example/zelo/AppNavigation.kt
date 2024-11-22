@@ -2,6 +2,7 @@ package com.example.zelo
 
 import BottomNavBar
 import DashboardScreen
+import MessagesScreen
 import MovementsScreen
 import ProfileScreen
 import com.example.zelo.transference.TransferDetailScreen
@@ -33,10 +34,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.zelo.cards.CardsScreen
-import com.example.zelo.contacts.ContactsScreen
 import com.example.zelo.enter_money.DepositScreen
 import com.example.zelo.transference.TransferConfirmationScreen
-import com.example.zelo.transference.TransferDetailScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
 import com.example.zelo.activity.*
@@ -44,7 +43,6 @@ import com.example.zelo.login_register.AuthViewModel
 import com.example.zelo.profile.AccessibilityScreen
 import com.example.zelo.profile.AccountDataScreen
 import com.example.zelo.profile.HelpScreen
-import com.example.zelo.profile.MessagesScreen
 import com.example.zelo.profile.PersonalInfoScreen
 import com.example.zelo.profile.PrivacyScreen
 import com.example.zelo.profile.SecurityScreen
@@ -54,6 +52,7 @@ import com.example.zelo.transference.TransferenceCBUViewModel
 import com.example.zelo.transference.TransferenceContactsScreen
 import com.example.zelo.ui.TopBarViewModel
 import com.example.zelo.ui.ZeloNavigationRail
+
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable

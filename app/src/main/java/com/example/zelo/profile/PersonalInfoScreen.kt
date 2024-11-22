@@ -24,22 +24,9 @@ fun PersonalInfoScreen(onBack: () -> Unit) {
     var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "")}
     var address by remember { mutableStateOf(sharedPreferences.getString("address", "") ?: "")}
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.your_info)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.id_info))
@@ -88,4 +75,3 @@ fun PersonalInfoScreen(onBack: () -> Unit) {
 //            }
         }
     }
-}

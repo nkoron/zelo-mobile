@@ -18,22 +18,9 @@ fun AccessibilityScreen(onBack: () -> Unit) {
     var textSizeMultiplier by remember { mutableFloatStateOf(1f) }
     var highContrastMode by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.accessibility)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.adjust_access_options))
@@ -67,4 +54,3 @@ fun AccessibilityScreen(onBack: () -> Unit) {
             }
         }
     }
-}

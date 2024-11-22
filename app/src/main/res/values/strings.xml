@@ -106,7 +106,7 @@
     <string name="report_issue">Report an issue</string>
     <string name="terms_and_conditions">Terms and conditions</string>
     <string name="messages">Messages</string>
-    <string name="message_settings">Configure the notifications and messages you want to receive.</string>
+    <string name="message_settings">Configure the theme color and languages of the application.</string>
     <string name="offers">Offers and promotions</string>
     <string name="transaction_notification">Transaction notifications</string>
     <string name="security_alerts">Security alerts</string>
@@ -197,4 +197,7 @@
     <string name="name_required">Name is required</string>
     <string name="invalid_cvv">Invalid CVV</string>
     <string name="unknown_bank">Unknown Bank</string>
+    <string name="custom">Custom</string>
+    <string name="language_and_appearance">Language and appearance</string>
+    <string name="dark_mode">Dark mode</string>
 </resources>

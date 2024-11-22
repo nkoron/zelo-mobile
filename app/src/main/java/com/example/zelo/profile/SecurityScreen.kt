@@ -18,22 +18,9 @@ fun SecurityScreen(onBack: () -> Unit) {
     var twoFactorAuth by remember { mutableStateOf(false) }
     var biometricLogin by remember { mutableStateOf(false) }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(stringResource(R.string.security)) },
-                navigationIcon = {
-                    IconButton(onClick = { onBack() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = stringResource(R.string.back))
-                    }
-                }
-            )
-        }
-    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
                 .padding(16.dp)
         ) {
             Text(stringResource(R.string.security_config))
@@ -70,4 +57,3 @@ fun SecurityScreen(onBack: () -> Unit) {
             }
         }
     }
-}

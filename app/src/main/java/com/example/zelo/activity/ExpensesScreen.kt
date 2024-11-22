@@ -48,7 +48,7 @@ fun ExpensesScreen(
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
 
-            Column(
+    Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding()

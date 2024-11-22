@@ -107,7 +107,7 @@
     <string name="report_issue">Reportar un problema</string>
     <string name="terms_and_conditions">Términos y condiciones</string>
     <string name="messages">Mensajes</string>
-    <string name="message_settings">Configura las notificaciones y mensajes que deseas recibir.</string>
+    <string name="message_settings">Configura el idioma y el tema de colores.</string>
     <string name="offers">Promociones y ofertas</string>
     <string name="transaction_notification">Alertas de transacciones</string>
     <string name="security_alerts">Alertas de seguridad</string>
@@ -198,5 +198,8 @@
     <string name="name_required">El nombre es requerido</string>
     <string name="invalid_cvv">CVV inválido</string>
     <string name="unknown_bank">Banco desconocido</string>
+    <string name="custom">Personalizar</string>
+    <string name="language_and_appearance">Apariencia y Lenguaje</string>
+    <string name="dark_mode">Modo Oscuro</string>
 
 </resources>
