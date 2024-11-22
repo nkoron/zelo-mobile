@@ -124,7 +124,7 @@
     <string name="remove_data">Request data removal</string>
     <string name="privacy_policy">View privacy policy</string>
     <string name="profile">Profile</string>
-    <string name="close_session">Close session</string>
+    <string name="close_session">Log out</string>
     <string name="access_functionality">Access the functionality of the accessibility app</string>
     <string name="security">Security</string>
     <string name="admin_sec">Manage your account security</string>
