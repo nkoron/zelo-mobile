@@ -20,9 +20,9 @@ class PaymentRemoteDataSource(
             }
             return aux.payments
     }
-    suspend fun makePayment(payment: PaymentRequest): Payment {
+    suspend fun makePayment(payment: PaymentRequest) {
         Log.d("PaymentRemoteDataSource", "Making payment: $payment")
-        return handleApiResponse {
+        handleApiResponse {
             userService.createPayment(payment)
         }
 

@@ -11,6 +11,7 @@ import com.example.zelo.network.model.LoginResponse
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentIdRequest
 import com.example.zelo.network.model.PaymentRequest
+import com.example.zelo.network.model.PaymentResponse
 import com.example.zelo.network.model.RegisterResponse
 import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.ResetPasswordRequest
@@ -40,7 +41,7 @@ interface WalletApiService {
     suspend fun getPaymentsByLinkUUID(linkUUID: String): Response<Payment>
 
     @POST("api/payment")
-    suspend fun createPayment(@Body paymentRequest: PaymentRequest): Response<Payment>
+    suspend fun createPayment(@Body paymentRequest: PaymentRequest): Response<PaymentResponse>
 
     @POST("api/payment")
     suspend fun createLinkPayment(@Body paymentRequest: PaymentRequest): Response<LinkPayment>

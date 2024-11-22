@@ -139,9 +139,8 @@ class TransferenceCBUViewModel(
                     else -> throw IllegalStateException("Invalid payment method selected")
                 }
                 Log.d("TransferenceCBUViewModel", "Making payment: $paymentRequest")
-                val result = paymentRepository.makePayment(paymentRequest)
+                paymentRepository.makePayment(paymentRequest)
                 _uiState.update { it.copy(transferSuccess = true, isLoading = false) }
-                resetTransferForm()
             } catch (e: Exception) {
                 _uiState.update { it.copy(error = handleError(e), isLoading = false) }
             }
@@ -149,7 +148,7 @@ class TransferenceCBUViewModel(
     }
 
 
-    private fun resetTransferForm() {
+    fun resetTransferForm() {
         _uiState.update { it.copy(
             email = "",
             amount = "",

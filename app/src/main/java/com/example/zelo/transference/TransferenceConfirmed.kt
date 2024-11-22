@@ -32,7 +32,6 @@ fun TransactionConfirmedScreen(
     onReturnHome: () -> Unit = {}
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -83,6 +82,7 @@ fun TransactionConfirmedScreen(
         Button(
             onClick = {
                 if (uiState.error == null) {
+                    viewModel.resetTransferForm()
                     onReturnHome()
                 } else {
                     viewModel.clearError()
