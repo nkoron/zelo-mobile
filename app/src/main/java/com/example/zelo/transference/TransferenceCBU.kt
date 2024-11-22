@@ -22,7 +22,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewModelScope
 import com.example.zelo.R
+import kotlinx.coroutines.launch
 
 data class PaymentMethod(
     val id: Int? = null,
@@ -43,6 +45,10 @@ fun TransferDetailScreen(
     email: String? = null,
     amount: Double? = null
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.resetTransferForm()
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(email) {
@@ -84,10 +90,10 @@ fun TransferDetailScreen(
                     unfocusedTextColor = MaterialTheme.colorScheme.tertiary
                 )
             )
-            Log.d("PAYMENT AMOUNT", "${uiState.amount}")
+
             // Amount Field
             OutlinedTextField(
-                value = if (uiState.amount == " ") "" else uiState.amount,
+                value = if (uiState.amount == "0.0") "" else uiState.amount,
                 onValueChange = { viewModel.updateAmount(it) },
                 label = { Text(stringResource(R.string.amount_to_transfer)) },
                 placeholder = { Text("30000") },
@@ -99,7 +105,7 @@ fun TransferDetailScreen(
                     unfocusedBorderColor = MaterialTheme.colorScheme.primary,
                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
                     unfocusedTextColor = MaterialTheme.colorScheme.tertiary
-                )
+                ),
             )
 
             // Concept Field
@@ -155,9 +161,7 @@ fun TransferDetailScreen(
             Button(
                 onClick = {
                     Log.d("TransferenceCBU", "Transfer Button Clicked")
-                    if(uiState.error == null) {
-                        onConfirm()
-                    }
+                    onConfirm()
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -220,7 +224,7 @@ fun PaymentMethodCard(
             containerColor = paymentMethod.backgroundColor
         ),
         border = if (isSelected) {
-            BorderStroke(2.dp, Color.Magenta)
+            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
         } else null
     ) {
         Column(
@@ -256,7 +260,7 @@ fun PaymentMethodCard(
 
             if (paymentMethod.type == "BALANCE") {
                 Text(
-                    stringResource(R.string.available_balance),
+                    "Dinero Disponible",
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )
