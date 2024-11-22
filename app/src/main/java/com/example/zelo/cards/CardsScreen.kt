@@ -115,7 +115,7 @@ fun CardsScreen(
             },
             containerColor = MaterialTheme.colorScheme.background,
             title = { Text(stringResource(R.string.confirm_deletion), color= MaterialTheme.colorScheme.tertiary) },
-            text = { Text(stringResource(R.string.confirm_deletion_question), color= MaterialTheme.colorScheme.tertiary) },
+            text = { Text(stringResource(R.string.confirm_deletion_subtext), color= MaterialTheme.colorScheme.tertiary) },
             confirmButton = {
                 TextButton(
                     onClick = {
