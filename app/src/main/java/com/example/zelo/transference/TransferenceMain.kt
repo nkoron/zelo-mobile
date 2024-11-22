@@ -1,5 +1,6 @@
 package com.example.zelo.transference
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,9 +22,7 @@ import com.example.zelo.R
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,6 +30,7 @@ fun TransferScreen(
     onNavigateBack: () -> Unit = {},
     onNavigateToForm: () -> Unit = {},
     onNavigateToContacts: () -> Unit = {},
+    onNavigateToTransferenceCBU: (String, Double) -> Unit,
     viewModel: TransferenceViewModel = viewModel(
         factory = TransferenceViewModel.provideFactory(
             LocalContext.current.applicationContext as MyApplication
@@ -114,10 +114,10 @@ fun TransferScreen(
                     description = "${stringResource(R.string.sent)}: ${payment.amount}",
                     time = payment.createdAt,
                     showAvatar = true,
-                    onRedoTransfer = {
-                        // Handle redo transfer
-                        // You might want to call a function in your ViewModel here
-                        // For example: viewModel.redoTransfer(payment)
+                    email = payment.receiver.email,
+                    amount = payment.amount,
+                    onRedoTransfer = { email, amount ->
+                        onNavigateToTransferenceCBU(email, amount)
                     }
                 )
             }
@@ -125,14 +125,15 @@ fun TransferScreen(
     }
 }
 
-
 @Composable
 fun TransactionItem(
     name: String,
     description: String,
     time: String,
     showAvatar: Boolean = false,
-    onRedoTransfer: () -> Unit
+    email: String,
+    amount: Double,
+    onRedoTransfer: (String, Double) -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -165,7 +166,7 @@ fun TransactionItem(
             )
         }
         IconButton(
-            onClick = onRedoTransfer,
+            onClick = { onRedoTransfer(email, amount) },
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape)
@@ -179,6 +180,4 @@ fun TransactionItem(
         }
     }
 }
-
-
 
