@@ -71,7 +71,7 @@ fun TransferScreen(
         }
 
         // Search Bar
-        val containerColor = Color(0xFFF3F0F7)
+        val containerColor = MaterialTheme.colorScheme.onSurface
         TextField(
             value = searchQuery,
             onValueChange = { searchQuery = it },

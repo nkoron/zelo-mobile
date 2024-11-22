@@ -43,7 +43,7 @@ class MovementsViewModel(
     val uiState: StateFlow<MovementsUiState> = _uiState.asStateFlow()
 
     init {
-            observePaymentStream()
+        observePaymentStream()
         getCurrentUser()
         observeIncomeStream()
         observeExpenseStream()
