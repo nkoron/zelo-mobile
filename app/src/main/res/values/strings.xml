@@ -187,4 +187,9 @@
     <string name="error_occurred">An error occurred</string>
     <string name="success">Success</string>
     <string name="last_month">Last month</string>
+    <string name="amount_to_transfer">Amount to transfer</string>
+    <string name="share_options">Share options</string>
+    <string name="share_all_info">Share all info</string>
+    <string name="share_cbu">Share CBU</string>
+    <string name="share_alias">Share Alias</string>"
 </resources>

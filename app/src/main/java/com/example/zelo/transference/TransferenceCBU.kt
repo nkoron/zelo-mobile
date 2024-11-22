@@ -97,7 +97,7 @@ fun TransferDetailScreen(
                 OutlinedTextField(
                     value = uiState.amount,
                     onValueChange = { viewModel.updateAmount(it) },
-                    label = { Text(stringResource(R.string.amount_to_deposit),) },
+                    label = { Text(stringResource(R.string.amount_to_transfer),) },
                     placeholder = { Text("30000") },
                     modifier = Modifier.fillMaxWidth(),
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),

@@ -188,5 +188,10 @@
     <string name="error_occurred">Ocurrió un error</string>
     <string name="success">Éxito</string>
     <string name="last_month">El último mes</string>
+    <string name="amount_to_transfer">Monto a transferir</string>
+    <string name="share_options">Opciones de compartir</string>
+    <string name="share_all_info">Compartir toda la información</string>
+    <string name="share_cbu">Compartir CBU</string>
+    <string name="share_alias">Compartir Alias</string>"
 
 </resources>
