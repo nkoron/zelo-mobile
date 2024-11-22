@@ -195,15 +195,10 @@
     <string name="share_options">Share options</string>
     <string name="share_all_info">Share all info</string>
     <string name="share_cbu">Share CBU</string>
-<<<<<<< HEAD
     <string name="share_alias">Share Alias</string>"
-
-=======
-    <string name="share_alias">Share Alias</string>
     <string name="invalid_card_number">Invalid card number</string>
     <string name="expired_card">Card has expired</string>
     <string name="name_required">Name is required</string>
     <string name="invalid_cvv">Invalid CVV</string>
     <string name="unknown_bank">Unknown Bank</string>
->>>>>>> 786dd18e8a054aa24e5671ddbf27c98005f0c5ad
 </resources>
