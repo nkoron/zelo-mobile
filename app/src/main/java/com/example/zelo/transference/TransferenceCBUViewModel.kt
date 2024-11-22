@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 import android.util.Log
 import com.example.zelo.cards.inferBankName
 import kotlinx.coroutines.Job
+import java.util.Locale
 
 data class TransferenceCBUUiState(
     val isLoading: Boolean = false,
@@ -62,11 +63,13 @@ class TransferenceCBUViewModel(
     private fun createPaymentMethods(walletDetails: WalletDetails, cards: List<Card>): List<PaymentMethod> {
         val paymentMethods = mutableListOf<PaymentMethod>()
 
-        // Add wallet balance as a payment method
+        val language = Locale.getDefault().language
+        val name = if (language == "es") "Saldo en Cuenta" else "Account Balance"
+
         paymentMethods.add(
             PaymentMethod(
                 type = "BALANCE",
-                name = "Saldo en Cuenta",
+                name = name,
                 digits = "",
                 balance = walletDetails.balance.toString(),
                 backgroundColor = Color(0xFFF5F5F5)
