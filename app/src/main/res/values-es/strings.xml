@@ -205,5 +205,8 @@
     <string name="custom">Personalizar</string>
     <string name="language_and_appearance">Apariencia y Lenguaje</string>
     <string name="dark_mode">Modo Oscuro</string>
+    <string name="recent_transfers">Transferencias recientes</string>
+    <string name="confirm_deletion">Eliminar tarjeta</string>
+    <string name="confirm_deletion_subtext">Estás seguro que queres eliminar esta tarjeta?</string>
 
 </resources>
