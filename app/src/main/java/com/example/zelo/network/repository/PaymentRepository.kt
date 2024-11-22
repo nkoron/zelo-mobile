@@ -36,11 +36,12 @@ class PaymentRepository(
         }
         return newCard
     }
-    suspend fun createPayLink(payment: LinkPaymentRequest) {
-        dataSource.makePayment(payment)
+    suspend fun createPayLink(payment: LinkPaymentRequest): Payment {
+        val linkUUID =  dataSource.makePayment(payment)
         payMutex.withLock {
             this.payments = emptyList()
         }
+        return linkUUID
     }
     suspend fun getLinkDetails(linkUUID: String): Payment {
         return dataSource.getLinkDetails(linkUUID)

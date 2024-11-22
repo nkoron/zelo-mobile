@@ -1,182 +1,115 @@
-package com.example.zelo.dashboard
-import androidx.compose.animation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
 import com.example.zelo.R
 
 @Composable
-fun PaymentLinkDialog(
-    onDismiss: () -> Unit,
-    onShareLink: (String) -> Unit = {}
+fun PaymentLinkScreen(
+    viewModel: PaymentLinkViewModel = viewModel(
+        factory = PaymentLinkViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)
+    ),
+    onDismiss: () -> Unit
 ) {
-    var amount by remember { mutableStateOf("") }
-    var description by remember { mutableStateOf("") }
-    var generatedLink by remember { mutableStateOf<String?>(null) }
+    val uiState by viewModel.uiState.collectAsState()
     val clipboardManager = LocalClipboardManager.current
 
-    Dialog(
+    AlertDialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(
-            dismissOnBackPress = true,
-            dismissOnClickOutside = true
-        )
-    ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(
-                containerColor = Color.White
-            )
-        ) {
+        title = { Text(stringResource(R.string.payment_link)) },
+        text = {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(24.dp),
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                // Header
-                Box(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = "Link de Cobro",
-                        style = MaterialTheme.typography.titleLarge,
-                        modifier = Modifier.align(Alignment.CenterStart)
-                    )
-                    IconButton(
-                        onClick = onDismiss,
-                        modifier = Modifier.align(Alignment.CenterEnd)
+                OutlinedTextField(
+                    value = uiState.amount,
+                    onValueChange = { viewModel.updateAmount(it) },
+                    label = { Text(stringResource(R.string.amount)) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                )
+
+                OutlinedTextField(
+                    value = uiState.description,
+                    onValueChange = { viewModel.updateDescription(it) },
+                    label = { Text(stringResource(R.string.description)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                )
+
+                if (uiState.generatedLinkUuid != null) {
+                    Text(stringResource(R.string.generated_link))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            Icons.Default.Close,
-                            contentDescription = "Close",
-                            tint = Color.Black
+                        Text(
+                            text = "https://example.com/pay/${uiState.generatedLinkUuid}",
+                            modifier = Modifier.weight(1f)
                         )
-                    }
-                }
-
-                // Amount Input
-                TextField(
-                    value = amount,
-                    onValueChange = { amount = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text(stringResource(R.string.amount_to_receive)) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        disabledContainerColor = MaterialTheme.colorScheme.background,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(8.dp),
-                    prefix = { Text("$ ") }
-                )
-
-                // Description Input
-                TextField(
-                    value = description,
-                    onValueChange = { description = it },
-                    modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text(stringResource(R.string.description)) },
-                    colors = TextFieldDefaults.colors(
-                        focusedContainerColor = MaterialTheme.colorScheme.background,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.background,
-                        disabledContainerColor = MaterialTheme.colorScheme.background,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                )
-
-                // Generated Link Display
-                AnimatedVisibility(
-                    visible = generatedLink != null,
-                    enter = fadeIn() + expandVertically(),
-                    exit = fadeOut() + shrinkVertically()
-                ) {
-                    generatedLink?.let { link ->
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(vertical = 8.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(
-                                text = link,
-                                modifier = Modifier.weight(1f),
-                                style = MaterialTheme.typography.bodyMedium
+                        IconButton(onClick = {
+                            clipboardManager.setText(AnnotatedString("https://example.com/pay/${uiState.generatedLinkUuid}"))
+                        }) {
+                            Icon(
+                                imageVector = Icons.Default.ContentCopy,
+                                contentDescription = stringResource(R.string.copy_link)
                             )
-                            IconButton(
-                                onClick = {
-                                    clipboardManager.setText(AnnotatedString(link))
-                                }
-                            ) {
-                                Icon(
-                                    Icons.Default.ContentCopy,
-                                    contentDescription = "Copy link",
-                                    tint = MaterialTheme.colorScheme.primary
-                                )
-                            }
                         }
                     }
                 }
 
-                // Action Button
-                Button(
-                    onClick = {
-                        if (generatedLink == null) {
-                            // Generate link logic
-                            generatedLink = "https://payment.example.com/wy7srl2vu"
-                        } else {
-                            // Share link logic
-                            onShareLink(generatedLink!!)
-                        }
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.primary
-                    ),
-                    shape = RoundedCornerShape(8.dp)
-                ) {
+                if (uiState.error != null) {
                     Text(
-                        if (generatedLink == null) stringResource(R.string.generate_link) else stringResource(R.string.share_link),
-                        style = MaterialTheme.typography.bodyLarge.copy(
-                            color = Color.White,
-                            fontWeight = FontWeight.Medium,
-                        )
+                        text = uiState.error!!,
+                        color = MaterialTheme.colorScheme.error
                     )
                 }
             }
+        },
+        confirmButton = {
+            Button(
+                onClick = { viewModel.generatePaymentLink() },
+                enabled = !uiState.isLoading
+            ) {
+                Text(
+                    if (uiState.generatedLinkUuid == null)
+                        stringResource(R.string.generate_link)
+                    else
+                        stringResource(R.string.regenerate_link)
+                )
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.close))
+            }
+        }
+    )
+
+    if (uiState.isLoading) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
         }
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PaymentLinkDialogPreview() {
-    MaterialTheme {
-        PaymentLinkDialog(
-            onDismiss = {}
-        )
-    }
-}

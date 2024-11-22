@@ -187,4 +187,8 @@
     <string name="error_occurred">An error occurred</string>
     <string name="success">Success</string>
     <string name="last_month">Last month</string>
+    <string name="amount">Amount</string>
+    <string name="regenerate_link">Regenerate Link</string>
+    <string name="copy_link">Copy Link</string>
+    <string name="generated_link">Generated Link:</string>
 </resources>

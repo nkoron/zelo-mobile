@@ -39,7 +39,6 @@ import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
-import com.example.zelo.dashboard.PaymentLinkDialog
 import com.example.zelo.network.model.User
 import com.example.zelo.transference.TransferDetailsDialog
 import java.time.LocalDate
@@ -306,7 +305,7 @@ private fun QuickActions(uiState: DashboardUiState
         )
     }
     if (showPaymentLink) {
-        PaymentLinkDialog(
+        PaymentLinkScreen(
             onDismiss = { showPaymentLink = false },
         )
     }
