@@ -18,7 +18,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -41,17 +43,27 @@ class ExpensesViewModel(
 
     init {
         getCurrentUser()
-        observeExpensesStream()
+        observeExpenseStream()
     }
     fun getCurrentUser()= runOnViewModelScope(
         block = { userRepository.getCurrentUser() },
         updateState = { state, response -> state.copy(user = response) }
     )
 
-    private fun observeExpensesStream() {
-        expensesStreamJob = collectOnViewModelScope(
-            paymentRepository.paymentStream
-        ) { state, response -> state.copy(movements = response.filter { it.payer.id == uiState.value.user?.id }) }
+    private fun observeExpenseStream() {
+        expensesStreamJob = viewModelScope.launch {
+            combine(
+                paymentRepository.paymentStream,
+                _uiState.map { it.user }
+            ) { payments, user ->
+                payments.filter { it.payer.id == user?.id }
+            }
+                .distinctUntilChanged()
+                .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
+                .collect { totalExpense ->
+                    _uiState.update { currentState -> currentState.copy(movements = totalExpense) }
+                }
+        }
     }
 
     private fun <T> collectOnViewModelScope(

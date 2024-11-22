@@ -7,7 +7,6 @@ import kotlinx.serialization.json.*
 
 @Serializable(with = PaymentRequestSerializer::class)
 sealed class PaymentRequest {
-    abstract val receiverEmail: String?
     abstract val amount: Int?
     abstract val description: String
     abstract val type: String
@@ -15,7 +14,7 @@ sealed class PaymentRequest {
 
 @Serializable
 data class BalancePaymentRequest(
-    override val receiverEmail: String?,
+    val receiverEmail: String?,
     override val amount: Int,
     override val description: String,
     override val type: String = "BALANCE"
@@ -24,7 +23,7 @@ data class BalancePaymentRequest(
 @Serializable
 data class CardPaymentRequest(
     val cardId: Int,
-    override val receiverEmail: String?,
+    val receiverEmail: String?,
     override val amount: Int?,
     override val description: String,
     override val type: String = "CARD"
@@ -34,7 +33,6 @@ data class CardPaymentRequest(
 data class LinkPaymentRequest(
     override val amount: Int,
     override val description: String,
-    override val receiverEmail: String?,
     override val type: String = "LINK"
 ) : PaymentRequest()
 

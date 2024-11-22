@@ -188,6 +188,10 @@
     <string name="error_occurred">Ocurrió un error</string>
     <string name="success">Éxito</string>
     <string name="last_month">El último mes</string>
+    <string name="amount">Monto</string>
+    <string name="regenerate_link">Regenerar Link</string>
+    <string name="copy_link">Copiar Link</string>
+    <string name="generated_link">Link Generado:</string>
     <string name="amount_to_transfer">Monto a transferir</string>
     <string name="share_options">Opciones de compartir</string>
     <string name="share_all_info">Compartir toda la información</string>

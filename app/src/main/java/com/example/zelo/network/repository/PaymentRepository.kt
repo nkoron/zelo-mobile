@@ -3,6 +3,7 @@ package com.example.zelo.network.repository
 import android.util.Log
 import com.example.zelo.network.dataSources.PaymentRemoteDataSource
 import com.example.zelo.network.model.Card
+import com.example.zelo.network.model.LinkPayment
 import com.example.zelo.network.model.LinkPaymentRequest
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentRequest
@@ -36,11 +37,13 @@ class PaymentRepository(
         }
         return newCard
     }
-    suspend fun createPayLink(payment: LinkPaymentRequest) {
-        dataSource.makePayment(payment)
+
+    suspend fun createPayLink(payment: LinkPaymentRequest): LinkPayment {
+        val linkUUID =  dataSource.makeLinkPayment(payment)
         payMutex.withLock {
             this.payments = emptyList()
         }
+        return linkUUID
     }
     suspend fun getLinkDetails(linkUUID: String): Payment {
         return dataSource.getLinkDetails(linkUUID)
