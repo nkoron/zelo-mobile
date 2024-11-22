@@ -32,13 +32,18 @@ import com.example.zelo.login_register.SignInScreen
 
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.zelo.cards.CardsScreen
 import com.example.zelo.enter_money.DepositScreen
 import com.example.zelo.transference.TransferConfirmationScreen
 import com.example.zelo.transference.TransferScreen
 import com.example.zelo.ui.AppBar
 import com.example.zelo.activity.*
+import com.example.zelo.dashboard.PaymentLinkDetailsScreen
+import com.example.zelo.dashboard.PaymentSuccessScreen
 import com.example.zelo.login_register.AuthViewModel
 import com.example.zelo.profile.AccessibilityScreen
 import com.example.zelo.profile.AccountDataScreen
@@ -56,37 +61,41 @@ import com.example.zelo.ui.ZeloNavigationRail
 
 @SuppressLint("StateFlowValueCalledInComposition")
 @Composable
-fun AppNavigation() {
-    val profile = stringResource(R.string.profile)
-    val cards = stringResource(R.string.cards)
-    val transference = stringResource(R.string.transfer)
-    val movements = stringResource(R.string.activity)
-    val home = stringResource(R.string.home)
-
+fun AppNavigation(
+    navController: NavHostController = rememberNavController(),
+    onDeepLinkReceived: ((String) -> Unit) -> Unit
+) {
     val authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
     val uiState by authViewModel.uiState.collectAsState()
 
-    val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
 
-    // Create a TopBarViewModel instance
     val topBarViewModel: TopBarViewModel = viewModel(
         factory = TopBarViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)
     )
 
-    // Update the current section based on the route
-    LaunchedEffect(currentRoute) {
-        val section = when {
-            currentRoute.startsWith("home") && !currentRoute.startsWith("home/transference") -> home
-            currentRoute.startsWith("movements") -> movements
-            currentRoute.startsWith("home/transference") -> transference
-            currentRoute.startsWith("cards") -> cards
-            currentRoute.startsWith("profile") -> profile
-            else -> ""
-        }
+    val handleDeepLink: (String) -> Unit = { linkUuid ->
+        navController.navigate("payment/$linkUuid")
+    }
+
+    onDeepLinkReceived(handleDeepLink)
+
+    val updateCurrentSection: (String) -> Unit = { section ->
         topBarViewModel.updateCurrentSection(section)
+    }
+    val section = when {
+        currentRoute.startsWith("home") && !currentRoute.startsWith("home/transference") -> stringResource(R.string.home)
+        currentRoute.startsWith("movements") -> stringResource(R.string.activity)
+        currentRoute.startsWith("home/transference") -> stringResource(R.string.transfer)
+        currentRoute.startsWith("cards") -> stringResource(R.string.cards)
+        currentRoute.startsWith("profile") -> stringResource(R.string.profile)
+        else -> ""
+    }
+
+    LaunchedEffect(currentRoute) {
+        updateCurrentSection(section)
     }
 
     Scaffold(
@@ -120,17 +129,20 @@ fun AppNavigation() {
                 navController = navController,
                 isLoggedIn = uiState.isAuthenticated,
                 paddingValues = paddingValues,
-                authViewModel = authViewModel
+                authViewModel = authViewModel,
+                handleDeepLink = handleDeepLink
             )
         }
     }
 }
 
+
 // Keep the rest of the file unchanged
 
 
+
 @Composable
-fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValues: PaddingValues, authViewModel: AuthViewModel) {
+fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValues: PaddingValues, authViewModel: AuthViewModel, handleDeepLink: (String) -> Unit) {
     val transferenceCBUViewModel: TransferenceCBUViewModel = viewModel(
         factory = TransferenceCBUViewModel.provideFactory(
             LocalContext.current.applicationContext as MyApplication
@@ -216,6 +228,32 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
                         // Handle logout logic here
                         authViewModel.logout()
                         navController.navigate("login") {
+                            popUpTo("home") { inclusive = true }
+                        }
+                    }
+                )
+            }
+            composable(
+                route = "payment/{linkUuid}",
+                arguments = listOf(navArgument("linkUuid") { type = NavType.StringType }),
+                deepLinks = listOf(navDeepLink {
+                    uriPattern = "myapp://payment/{linkUuid}"
+                })
+            ) { backStackEntry ->
+                val linkUuid = backStackEntry.arguments?.getString("linkUuid")
+                if (linkUuid != null) {
+                    PaymentLinkDetailsScreen(
+                        linkUuid = linkUuid,
+                        onPaymentComplete = {
+                            navController.navigate("payment/paymentSuccess")
+                        }
+                    )
+                }
+            }
+            composable("payment/paymentSuccess") {
+                PaymentSuccessScreen(
+                    onBackToHome = {
+                        navController.navigate("home") {
                             popUpTo("home") { inclusive = true }
                         }
                     }
