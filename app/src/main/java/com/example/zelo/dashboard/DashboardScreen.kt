@@ -388,7 +388,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 Button(
-                    onClick = { navController.navigate("transference") },
+                    onClick = { navController.navigate("home/transference") },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     ),

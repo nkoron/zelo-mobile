@@ -61,7 +61,13 @@ fun AccountDataScreen(onBack: () -> Unit) {
                 onValueChange = {},
                 label = { Text(stringResource(R.string.full_name)) },
                 modifier = Modifier.fillMaxWidth(),
-                readOnly = true
+                readOnly = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -71,7 +77,13 @@ fun AccountDataScreen(onBack: () -> Unit) {
                 onValueChange = {},
                 label = { Text(stringResource(R.string.email)) },
                 modifier = Modifier.fillMaxWidth(),
-                readOnly = true
+                readOnly = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -81,7 +93,13 @@ fun AccountDataScreen(onBack: () -> Unit) {
                 onValueChange = {},
                 label = { Text(stringResource(R.string.birth_date)) },
                 modifier = Modifier.fillMaxWidth(),
-                readOnly = true
+                readOnly = true,
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -90,7 +108,13 @@ fun AccountDataScreen(onBack: () -> Unit) {
                 value = phone,
                 onValueChange = { phone = it },
                 label = { Text(stringResource(R.string.phone)) },
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    focusedBorderColor = MaterialTheme.colorScheme.primary,
+                    unfocusedBorderColor = MaterialTheme.colorScheme.primary,
+                    focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                    unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                )
             )
 
             Spacer(modifier = Modifier.height(16.dp))

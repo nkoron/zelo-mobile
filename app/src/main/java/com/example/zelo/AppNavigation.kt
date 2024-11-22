@@ -80,9 +80,9 @@ fun AppNavigation() {
     // Update the current section based on the route
     LaunchedEffect(currentRoute) {
         val section = when {
-            currentRoute.startsWith("home") -> home
+            currentRoute.startsWith("home") && !currentRoute.startsWith("home/transference") -> home
             currentRoute.startsWith("movements") -> movements
-            currentRoute.startsWith("transference") -> transference
+            currentRoute.startsWith("home/transference") -> transference
             currentRoute.startsWith("cards") -> cards
             currentRoute.startsWith("profile") -> profile
             else -> ""
@@ -162,44 +162,44 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         }
         composable("movements/incomes") { IncomeScreen(navController) }
         composable("movements/expenses") { ExpensesScreen(navController) }
-        composable("transference") {
+        composable("home/transference") {
             TransferScreen(
                 onNavigateBack = { navController.popBackStack() },
-                onNavigateToForm = { navController.navigate("transference/form") },
-                onNavigateToContacts = { navController.navigate("transference/contacts") }
+                onNavigateToForm = { navController.navigate("home/transference/form") },
+                onNavigateToContacts = { navController.navigate("home/transference/contacts") }
             )
         }
 
 
-        composable("transference/confirmed") {
+        composable("home/transference/confirmed") {
             TransactionConfirmedScreen(onReturnHome = {
                 navController.navigate(
                     "home"
                 )
             }, viewModel = transferenceCBUViewModel)
         }
-        composable("transference/contacts") {
+        composable("home/transference/contacts") {
             TransferenceContactsScreen(
                 onBack = { navController.popBackStack() },
                 onNavigateToTransferenceCBU = { email ->
-                    navController.navigate("transference/form?email=$email")
+                    navController.navigate("home/transference/form?email=$email")
                 }
             )
         }
 
-        composable("transference/form?email={email}") { backStackEntry ->
+        composable("home/transference/form?email={email}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email")
             TransferDetailScreen(
                 onBack = { navController.popBackStack() },
-                onConfirm = { navController.navigate("transference/confirmation") },
+                onConfirm = { navController.navigate("home/transference/confirmation") },
                 viewModel = transferenceCBUViewModel,
                 email = email // Pass the email to the TransferDetailScreen
             )
         }
-            composable("transference/confirmation") {
+            composable("home/transference/confirmation") {
                 TransferConfirmationScreen(
                     onBack = { navController.popBackStack() },
-                    onConfirm = { navController.navigate("transference/confirmed") },
+                    onConfirm = { navController.navigate("home/transference/confirmed") },
                     viewModel = transferenceCBUViewModel
                 )
             }
