@@ -677,21 +677,21 @@ fun ShareOptionsDialog(
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.share_options)) },
+        title = { Text(text = stringResource(R.string.share_options), color = MaterialTheme.colorScheme.tertiary) },
         text = {
             Column {
                 ListItem(
-                    headlineContent = { Text(stringResource(R.string.share_all_info)) },
+                    headlineContent = { Text(text = stringResource(R.string.share_all_info), color = MaterialTheme.colorScheme.tertiary) },
                     leadingContent = { Icon(Icons.Default.Share, contentDescription = null) },
                     modifier = Modifier.clickable { /* Handle sharing all info */ }
                 )
                 ListItem(
-                    headlineContent = { Text(stringResource(R.string.share_alias)) },
+                    headlineContent = { Text(text = stringResource(R.string.share_alias), color = MaterialTheme.colorScheme.tertiary) },
                     leadingContent = { Icon(Icons.Default.Link, contentDescription = null) },
                     modifier = Modifier.clickable { /* Handle sharing alias */ }
                 )
                 ListItem(
-                    headlineContent = { Text(stringResource(R.string.share_cbu)) },
+                    headlineContent = { Text(text = stringResource(R.string.share_cbu), color = MaterialTheme.colorScheme.tertiary) },
                     leadingContent = { Icon(Icons.Default.AccountBalance, contentDescription = null) },
                     modifier = Modifier.clickable { /* Handle sharing CBU */ }
                 )

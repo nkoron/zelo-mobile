@@ -3,9 +3,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.*
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -31,9 +33,8 @@ fun PaymentLinkScreen(
         title = {
             Text(
                 text = stringResource(R.string.payment_link),
-                color = MaterialTheme.colorScheme.primary
-            )
-        },
+                color = MaterialTheme.colorScheme.tertiary
+            )},
         text = {
             Column(
                 modifier = Modifier
@@ -47,7 +48,7 @@ fun PaymentLinkScreen(
                     label = { Text(stringResource(R.string.amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface)
+                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.tertiary)
                 )
 
                 OutlinedTextField(
@@ -55,7 +56,12 @@ fun PaymentLinkScreen(
                     onValueChange = { viewModel.updateDescription(it) },
                     label = { Text(stringResource(R.string.description)) },
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.onSurface)
+                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.tertiary),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        focusedTextColor = MaterialTheme.colorScheme.tertiary,
+                        unfocusedTextColor = MaterialTheme.colorScheme.tertiary
+                    )
+
                 )
 
                 if (uiState.generatedLinkUuid != null) {
@@ -90,7 +96,8 @@ fun PaymentLinkScreen(
         confirmButton = {
             Button(
                 onClick = { viewModel.generatePaymentLink() },
-                enabled = !uiState.isLoading
+                enabled = !uiState.isLoading,
+                colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.tertiary)
             ) {
                 Text(
                     if (uiState.generatedLinkUuid == null)
