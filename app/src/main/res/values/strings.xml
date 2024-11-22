@@ -181,8 +181,7 @@
     <string name="transfer_confirmation">Confirm Transfer</string>
     <string name="will_transfer">You are going to transfer</string>
     <string name="date">Date</string>
-    <string name="no_recent_transactions">No recent transactions</string>
+    <string name="no_recent_transactions" translatable="false">No recent transactions</string>
     <string name="today">TODAY</string>
-    <string name="no_recent_transactions">No recent transactions</string>
     <string name="enter_placeholder">Enter…</string>
 </resources>
