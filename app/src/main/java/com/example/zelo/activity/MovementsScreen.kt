@@ -91,7 +91,10 @@ fun FormatItems(uiState: MovementsUiState, it: Int) {
         name = "${you.firstName} ${you.lastName}",
         description = "${if (receive) stringResource(R.string.transferred) else stringResource(R.string.sent)}: ${payment.amount}",
         time = payment.createdAt,
-        showAvatar = true
+        showAvatar = true,
+        movements = uiState.movements,
+        id = it,
+        isPayer = !receive
     )
 }
 

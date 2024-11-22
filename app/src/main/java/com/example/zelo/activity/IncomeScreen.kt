@@ -68,7 +68,10 @@ fun IncomeScreen(
                         name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
                         description = "${stringResource(R.string.transferred)}: ${payment.amount}",
                         time = payment.createdAt,
-                        showAvatar = true
+                        showAvatar = true,
+                        movements = uiState.movements,
+                        id = it,
+                        isPayer = false
                     )
                 }
             }

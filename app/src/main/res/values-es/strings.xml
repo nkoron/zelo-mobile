@@ -207,5 +207,6 @@
     <string name="dark_mode">Modo Oscuro</string>
     <string name="confirm_deletion">Confirmar borrado</string>
     <string name="confirm_deletion_question">¿Seguro que quieres borrar la tarjeta?</string>
+    <string name="transfer_from">Recibido de:</string>
 
 </resources>
