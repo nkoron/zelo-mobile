@@ -2,12 +2,11 @@ package com.example.zelo.network.repository
 
 import android.util.Log
 import com.example.zelo.network.dataSources.PaymentRemoteDataSource
-import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.LinkPayment
+import com.example.zelo.network.model.CreateLinkPaymentRequest
 import com.example.zelo.network.model.LinkPaymentRequest
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentRequest
-import com.example.zelo.network.model.WalletDetails
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
@@ -39,7 +38,7 @@ class PaymentRepository(
         return newCard
     }
 
-    suspend fun createPayLink(payment: LinkPaymentRequest): LinkPayment {
+    suspend fun createPayLink(payment: CreateLinkPaymentRequest): LinkPayment {
         val linkUUID =  dataSource.makeLinkPayment(payment)
         payMutex.withLock {
             this.payments = emptyList()

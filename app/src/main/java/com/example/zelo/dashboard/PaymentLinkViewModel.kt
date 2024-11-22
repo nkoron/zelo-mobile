@@ -2,7 +2,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.zelo.MyApplication
-import com.example.zelo.network.model.LinkPaymentRequest
+import com.example.zelo.network.model.CreateLinkPaymentRequest
 import com.example.zelo.network.repository.PaymentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -43,7 +43,7 @@ class PaymentLinkViewModel(
                     return@launch
                 }
 
-                val linkPaymentRequest = LinkPaymentRequest(
+                val linkPaymentRequest = CreateLinkPaymentRequest(
                     amount = amount,
                     description = _uiState.value.description
                 )

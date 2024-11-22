@@ -70,12 +70,13 @@ fun PaymentLinkScreen(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val deepLink = "myapp://payment/${uiState.generatedLinkUuid}"
                         Text(
-                            text = "${uiState.generatedLinkUuid}",
+                            text = deepLink,
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = {
-                            clipboardManager.setText(AnnotatedString("${uiState.generatedLinkUuid}"))
+                            clipboardManager.setText(AnnotatedString(deepLink))
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ContentCopy,
