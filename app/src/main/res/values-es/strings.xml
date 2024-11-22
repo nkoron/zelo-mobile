@@ -205,5 +205,7 @@
     <string name="custom">Personalizar</string>
     <string name="language_and_appearance">Apariencia y Lenguaje</string>
     <string name="dark_mode">Modo Oscuro</string>
+    <string name="confirm_deletion">Confirmar borrado</string>
+    <string name="confirm_deletion_question">¿Seguro que quieres borrar la tarjeta?</string>
 
 </resources>

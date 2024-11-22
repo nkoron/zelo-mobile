@@ -4,5 +4,5 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class RegisterResponse (
-    val user: User?
+    val user: User? = null
 )

@@ -39,80 +39,70 @@ fun TransferConfirmationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(stringResource(R.string.transfer_confirmation))
-                        },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
-        Column(
+           Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp),
 
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(24.dp)
-            ) {
-                Spacer(modifier = Modifier.height(24.dp))
+               Column(
+                   horizontalAlignment = Alignment.CenterHorizontally,
+                   verticalArrangement = Arrangement.spacedBy(24.dp)
+               ) {
+                   Spacer(modifier = Modifier.height(24.dp))
 
-                // Transfer amount
-                Text(
-                    buildAnnotatedString {
-                        withStyle(SpanStyle(fontSize = 16.sp, color = Color.Gray)) {
-                            append(stringResource(R.string.will_transfer))
-                            append("\n\n")
-                        }
-                        withStyle(SpanStyle(fontSize = 32.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.tertiary)) {
-                            append("$")
-                            append(uiState.amount)
-                        }
-                    },
-                    textAlign = TextAlign.Center,
-                    color = Color.White
-                )
+                   // Transfer amount
+                   Text(
+                       buildAnnotatedString {
+                           withStyle(SpanStyle(fontSize = 16.sp, color = Color.Gray)) {
+                               append(stringResource(R.string.will_transfer))
+                               append("\n\n")
+                           }
+                           withStyle(
+                               SpanStyle(
+                                   fontSize = 32.sp,
+                                   fontWeight = FontWeight.Bold,
+                                   color = MaterialTheme.colorScheme.tertiary
+                               )
+                           ) {
+                               append("$")
+                               append(uiState.amount)
+                           }
+                       },
+                       textAlign = TextAlign.Center,
+                       color = Color.White
+                   )
 
-                // Recipient info
-                RecipientCard(uiState.email)
+                   // Recipient info
+                   RecipientCard(uiState.email)
 
-                // Transfer details
-                TransferDetailsCard(uiState.concept, uiState.selectedPaymentMethod?.name ?: "")
-            }
+                   // Transfer details
+                   TransferDetailsCard(uiState.concept, uiState.selectedPaymentMethod?.name ?: "")
+               }
 
-            // Confirm Button
-            Button(
-                onClick = {
-                    viewModel.makeTransfer()
-                    onConfirm()
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 24.dp)
-                    .height(56.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(8.dp)
-            ) {
-                Text(
-                    stringResource(R.string.transfer_confirmation),
-                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
-                )
-            }
-        }
-    }
-
+               // Confirm Button
+               Button(
+                   onClick = {
+                       viewModel.makeTransfer()
+                       onConfirm()
+                   },
+                   modifier = Modifier
+                       .fillMaxWidth()
+                       .padding(vertical = 24.dp)
+                       .height(56.dp),
+                   colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+                   shape = RoundedCornerShape(8.dp)
+               ) {
+                   Text(
+                       stringResource(R.string.transfer_confirmation),
+                       style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
+                   )
+               }
+           }
     // Show loading indicator
     if (uiState.isLoading) {
         Box(
