@@ -30,7 +30,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 @Composable
 fun TransferenceContactsScreen(
     onBack: () -> Unit = {},
-    onNavigateToTransferenceCBU: (String) -> Unit = {} // Callback to navigate with email
+    onNavigateToTransferenceCBU: (String, Double) -> Unit // Callback to navigate with email
 ) {
     val context = LocalContext.current
     val contactsViewModel: ContactsViewModel = viewModel()
@@ -100,12 +100,13 @@ fun TransferenceContactsScreen(
                         )
                         Text(contact.name, fontSize = 16.sp)
                     }
+                    val amount = 0.0
                     Button(
                         onClick = {
 
                             Log.d("TransferenceContacts", "Transfer button clicked for contact: ${contact.name} with email: ${contact.email}")
-                            contact.email?.let { email ->
-                                onNavigateToTransferenceCBU(email)  // Pass email to the navigation callback
+                            contact.email?.let { email->
+                                onNavigateToTransferenceCBU(email, 0.0)  // Pass email to the navigation callback
                             }
                         },
                         enabled = contact.email != null, // Disable if email is null

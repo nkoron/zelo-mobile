@@ -55,6 +55,7 @@ import com.example.zelo.qr.QRScannerScreen
 import com.example.zelo.transference.TransactionConfirmedScreen
 import com.example.zelo.transference.TransferenceCBUViewModel
 import com.example.zelo.transference.TransferenceContactsScreen
+import com.example.zelo.transference.TransferenceViewModel
 import com.example.zelo.ui.TopBarViewModel
 import com.example.zelo.ui.ZeloNavigationRail
 
@@ -148,6 +149,11 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             LocalContext.current.applicationContext as MyApplication
         )
     )
+    val transferenceViewModel: TransferenceViewModel = viewModel(
+        factory = TransferenceViewModel.provideFactory(
+            LocalContext.current.applicationContext as MyApplication
+        )
+    )
     NavHost(
         navController = navController,
         startDestination = if (isLoggedIn) "home" else "login",
@@ -177,7 +183,11 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             TransferScreen(
                 onNavigateBack = { navController.popBackStack() },
                 onNavigateToForm = { navController.navigate("home/transference/form") },
-                onNavigateToContacts = { navController.navigate("home/transference/contacts") }
+                onNavigateToContacts = { navController.navigate("home/transference/contacts") },
+                onNavigateToTransferenceCBU = { email, amount ->
+                    navController.navigate("home/transference/form?email=$email?amount=$amount")
+                },
+                viewModel = transferenceViewModel
             )
         }
 
@@ -192,19 +202,21 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
         composable("home/transference/contacts") {
             TransferenceContactsScreen(
                 onBack = { navController.popBackStack() },
-                onNavigateToTransferenceCBU = { email ->
-                    navController.navigate("home/transference/form?email=$email")
+                onNavigateToTransferenceCBU = { email, amount ->
+                    navController.navigate("home/transference/form?email=$email?amount=$amount")
                 }
             )
         }
 
-        composable("home/transference/form?email={email}") { backStackEntry ->
+        composable("home/transference/form?email={email}?amount={amount}") { backStackEntry ->
             val email = backStackEntry.arguments?.getString("email")
+            val amount = backStackEntry.arguments?.getString("amount")?.toDoubleOrNull() ?: 0.0
             TransferDetailScreen(
                 onBack = { navController.popBackStack() },
                 onConfirm = { navController.navigate("home/transference/confirmation") },
                 viewModel = transferenceCBUViewModel,
-                email = email // Pass the email to the TransferDetailScreen
+                email = email, // Pass the email to the TransferDetailScreen
+                amount = amount
             )
         }
             composable("home/transference/confirmation") {
