@@ -9,6 +9,7 @@ import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentRequest
 import com.example.zelo.network.model.WalletDetails
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -62,4 +63,10 @@ class PaymentRepository(
 
     val paymentStream: Flow<List<Payment>> =
         dataSource.paymentStream
+    val paymentsStream: Flow<List<Payment>> = dataSource.paymentStream.map { newPayments ->
+        payMutex.withLock {
+            payments = newPayments
+            payments
+        }
+    }
 }

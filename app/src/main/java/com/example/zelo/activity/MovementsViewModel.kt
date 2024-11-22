@@ -57,16 +57,15 @@ class MovementsViewModel(
 
     private fun observePaymentStream() {
         paymentStreamJob = viewModelScope.launch {
-            combine(
-                paymentRepository.paymentStream,
-                _uiState.map { it.user }
-            ) { payments, user ->
-                payments.filter { it.payer.id == user?.id || it.receiver.id == user?.id }
-            }
-                .distinctUntilChanged()
+            paymentRepository.paymentStream
+                .distinctUntilChanged { old, new ->
+                    old.size == new.size && old.zip(new).all { (a, b) -> a.id == b.id && a.amount == b.amount }
+                }
                 .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
-                .collect { total ->
-                    _uiState.update { currentState -> currentState.copy(movements = total) }
+                .collect { payments ->
+                    _uiState.update { currentState ->
+                        currentState.copy(movements = payments.toList())
+                    }
                 }
         }
     }
@@ -108,7 +107,6 @@ class MovementsViewModel(
         updateState: (MovementsUiState, T) -> MovementsUiState
     ) = viewModelScope.launch {
         flow
-            .distinctUntilChanged()
             .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
             .collect { response -> _uiState.update { currentState -> updateState(currentState, response) } }
     }
