@@ -2,6 +2,7 @@ package com.example.zelo.network.dataSources
 
 import android.util.Log
 import com.example.zelo.network.WalletApiService
+import com.example.zelo.network.model.LinkPayment
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.PaymentIdRequest
 import com.example.zelo.network.model.PaymentRequest
@@ -23,6 +24,13 @@ class PaymentRemoteDataSource(
         Log.d("PaymentRemoteDataSource", "Making payment: $payment")
         return handleApiResponse {
             userService.createPayment(payment)
+        }
+
+    }
+    suspend fun makeLinkPayment(payment: PaymentRequest): LinkPayment {
+        Log.d("PaymentRemoteDataSource", "Making payment: $payment")
+        return handleApiResponse {
+            userService.createLinkPayment(payment)
         }
 
     }

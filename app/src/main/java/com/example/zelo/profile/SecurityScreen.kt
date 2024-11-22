@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -65,7 +66,7 @@ fun SecurityScreen(onBack: () -> Unit) {
             Spacer(modifier = Modifier.height(16.dp))
 
             Button(onClick = { /* Change password */ }) {
-                Text(stringResource(R.string.chnge_pass))
+                Text(stringResource(R.string.chnge_pass), color = Color.White)
             }
         }
     }

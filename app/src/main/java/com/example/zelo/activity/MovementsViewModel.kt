@@ -102,6 +102,7 @@ class MovementsViewModel(
             .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
             .collect { response -> _uiState.update { currentState -> updateState(currentState, response) } }
     }
+
     private fun <R> runOnViewModelScope(
         block: suspend () -> R,
         updateState: (MovementsUiState, R) -> MovementsUiState

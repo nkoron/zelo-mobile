@@ -5,6 +5,7 @@ import com.example.zelo.network.model.BalanceRequest
 import com.example.zelo.network.model.BalanceResponse
 import com.example.zelo.network.model.Card
 import com.example.zelo.network.model.EmailRequest
+import com.example.zelo.network.model.LinkPayment
 import com.example.zelo.network.model.LoginRequest
 import com.example.zelo.network.model.LoginResponse
 import com.example.zelo.network.model.Payment
@@ -40,6 +41,9 @@ interface WalletApiService {
 
     @POST("api/payment")
     suspend fun createPayment(@Body paymentRequest: PaymentRequest): Response<Payment>
+
+    @POST("api/payment")
+    suspend fun createLinkPayment(@Body paymentRequest: PaymentRequest): Response<LinkPayment>
 
     @POST("api/payment/link/{linkUUID}")
     suspend fun createPaymentByLinkUUID(@Body paymentRequest: PaymentRequest, @Path("linkUUID") linkUUID: String): Response<Payment>

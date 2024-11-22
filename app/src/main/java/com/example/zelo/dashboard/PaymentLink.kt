@@ -3,6 +3,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ContentCopy
 import androidx.compose.material3.*
+import androidx.compose.material3.ListItemDefaults.contentColor
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -29,7 +30,11 @@ fun PaymentLinkScreen(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text(stringResource(R.string.payment_link)) },
+        title = {
+            Text(
+                text = stringResource(R.string.payment_link),
+                color = MaterialTheme.colorScheme.tertiary
+            )},
         text = {
             Column(
                 modifier = Modifier
@@ -43,7 +48,7 @@ fun PaymentLinkScreen(
                     label = { Text(stringResource(R.string.amount)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.tertiary)
                 )
 
                 OutlinedTextField(
@@ -51,7 +56,7 @@ fun PaymentLinkScreen(
                     onValueChange = { viewModel.updateDescription(it) },
                     label = { Text(stringResource(R.string.description)) },
                     modifier = Modifier.fillMaxWidth(),
-                    textStyle = LocalTextStyle.current.copy(color = Color.Black)
+                    textStyle = LocalTextStyle.current.copy(color = MaterialTheme.colorScheme.tertiary)
                 )
 
                 if (uiState.generatedLinkUuid != null) {
@@ -61,11 +66,11 @@ fun PaymentLinkScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "https://example.com/pay/${uiState.generatedLinkUuid}",
+                            text = "${uiState.generatedLinkUuid}",
                             modifier = Modifier.weight(1f)
                         )
                         IconButton(onClick = {
-                            clipboardManager.setText(AnnotatedString("https://example.com/pay/${uiState.generatedLinkUuid}"))
+                            clipboardManager.setText(AnnotatedString("${uiState.generatedLinkUuid}"))
                         }) {
                             Icon(
                                 imageVector = Icons.Default.ContentCopy,
@@ -86,7 +91,8 @@ fun PaymentLinkScreen(
         confirmButton = {
             Button(
                 onClick = { viewModel.generatePaymentLink() },
-                enabled = !uiState.isLoading
+                enabled = !uiState.isLoading,
+                colors = ButtonDefaults.buttonColors(contentColor = MaterialTheme.colorScheme.tertiary)
             ) {
                 Text(
                     if (uiState.generatedLinkUuid == null)

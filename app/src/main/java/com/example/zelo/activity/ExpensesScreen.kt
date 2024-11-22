@@ -48,21 +48,10 @@ fun ExpensesScreen(
     var searchQuery by remember { mutableStateOf("") }
     val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
 
-    Scaffold(
-        topBar = {
-            TopAppBar(modifier= Modifier.padding(5.dp), title = { Text(stringResource(R.string.spent)) },
-                navigationIcon = {
-                    IconButton(onClick = { navController.popBackStack()}) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
-            )
-        },
-    ) { paddingValues ->
-        Column(
+            Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding()
                 .padding(16.dp)
         ) {
             Text(
@@ -90,4 +79,3 @@ fun ExpensesScreen(
         }
     }
 
-}

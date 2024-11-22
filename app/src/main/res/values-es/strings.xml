@@ -196,6 +196,11 @@
     <string name="share_options">Opciones de compartir</string>
     <string name="share_all_info">Compartir toda la información</string>
     <string name="share_cbu">Compartir CBU</string>
-    <string name="share_alias">Compartir Alias</string>"
+    <string name="share_alias">Compartir Alias</string>
+    <string name="invalid_card_number">Número de tarjeta inválido</string>
+    <string name="expired_card">La tarjeta ha expirado</string>
+    <string name="name_required">El nombre es requerido</string>
+    <string name="invalid_cvv">CVV inválido</string>
+    <string name="unknown_bank">Banco desconocido</string>
 
 </resources>

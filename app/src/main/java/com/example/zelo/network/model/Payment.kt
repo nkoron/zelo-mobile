@@ -1,19 +1,24 @@
 package com.example.zelo.network.model
 
 import kotlinx.serialization.Serializable
+import kotlin.uuid.Uuid
 
 @Serializable
 data class Payment(
-    val id: Int? = null,
-    val amount: Double? = null,
-    val type: String? = null,
-    val balanceBefore: Double? = null,
-    val balanceAfter: Double? = null,
-    val pending: Boolean? = null,
-    val linkUUID: String? = null,
-    val createdAt: String? = null,
-    val updatedAt: String? = null,
-    val card: Card? = null,
-    val payer: User? = null,
-    val receiver: User? = null
+    val id: Int,
+    val amount: Double,
+    val type: String,
+    val balanceBefore: Double,
+    val balanceAfter: Double,
+    val pending: Boolean,
+    val createdAt: String,
+    val updatedAt: String,
+    val card: Card?,
+    val payer: User,
+    val receiver: User
+)
+
+@Serializable
+data class LinkPayment(
+    val linkUuid: String,
 )
