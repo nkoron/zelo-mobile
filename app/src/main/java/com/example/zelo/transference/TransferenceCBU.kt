@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.zelo.R
 import com.example.zelo.cards.inferBankName
+import com.example.zelo.ui.AppBar
 
 data class PaymentMethod(
     val id : Int? = null,
@@ -50,23 +51,10 @@ fun TransferDetailScreen(
         email?.let { viewModel.updateEmail(it) }
     }
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {Text("Transferencias") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
-                    }
-                }
-
-            )
-        }
-    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
+                .padding()
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp)
@@ -210,7 +198,6 @@ fun TransferDetailScreen(
             }
         }
     }
-}
 
 
 @Composable

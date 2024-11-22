@@ -95,7 +95,8 @@ fun AppNavigation() {
             if (uiState.isAuthenticated) {
                 AppBar(
                     viewModel = topBarViewModel,
-                    onNotificationsClick = {},
+                    currentRoute = currentRoute,
+                    onBackClick = { navController.popBackStack() }
                 )
             }
         },
