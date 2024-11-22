@@ -1,3 +1,4 @@
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
@@ -347,6 +348,7 @@ private fun QuickActions(uiState: DashboardUiState
     }
 }
 
+@SuppressLint("DefaultLocale")
 @Composable
 private fun BalanceCard(balance: Double?, navController: NavController) {
     var isBalanceVisible by remember { mutableStateOf(false) } // Initial state: hidden
@@ -368,7 +370,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = if (isBalanceVisible)
+                text = if (!isBalanceVisible)
                     "$${String.format("%,.2f", balance)}"
                 else "****",
                 style = MaterialTheme.typography.headlineLarge,
