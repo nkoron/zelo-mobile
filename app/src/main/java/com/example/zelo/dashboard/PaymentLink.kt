@@ -33,7 +33,7 @@ fun PaymentLinkScreen(
         title = {
             Text(
                 text = stringResource(R.string.payment_link),
-                color = MaterialTheme.colorScheme.tertiary
+                color = MaterialTheme.colorScheme.primary
             )},
         text = {
             Column(
@@ -104,7 +104,8 @@ fun PaymentLinkScreen(
                     if (uiState.generatedLinkUuid == null)
                         stringResource(R.string.generate_link)
                     else
-                        stringResource(R.string.regenerate_link)
+                        stringResource(R.string.regenerate_link),
+                    color = Color.White
                 )
             }
         },

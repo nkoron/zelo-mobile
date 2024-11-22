@@ -127,11 +127,15 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
             .padding(vertical = 16.dp),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
             Text(
                 text = stringResource(R.string.transactions),
                 style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(8.dp)
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.padding(12.dp)
             )
 
             // Check if there are no movements
@@ -243,11 +247,16 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
-        Text(
-            text = stringResource(R.string.transactions),
-            style = MaterialTheme.typography.titleLarge,
-            modifier = Modifier.padding(8.dp)
-        )
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.transactions),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.padding(12.dp)
+            )
         if (uiState.movements.isEmpty()) {
             // Display "No recent transactions" if no movements
             Text(
@@ -293,13 +302,14 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
         }
     }
 }
+}
 
 @Composable
 private fun QuickActions(uiState: DashboardUiState
 ) {
     val context = LocalContext.current
     val sharedPreferences = context.getSharedPreferences("user_prefs", Context.MODE_PRIVATE)
-    var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "")}
+    var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "") }
     var showDialog by remember { mutableStateOf(false) }
     var showPaymentLink by remember { mutableStateOf(false) }
     if (showDialog) {
@@ -323,34 +333,45 @@ private fun QuickActions(uiState: DashboardUiState
         modifier = Modifier.fillMaxWidth(),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            horizontalArrangement = Arrangement.SpaceEvenly
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            QuickActionButton(
-                onClick = { showPaymentLink = !showPaymentLink },
-                icon = Icons.Default.Link,
-                text = stringResource(R.string.payment_link)
+            Text(
+                text = stringResource(R.string.quick_actions),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.padding(12.dp)
             )
-            QuickActionButton(
-                onClick = { showDialog = !showDialog },
-                icon = Icons.Default.Person,
-                text = stringResource(R.string.your_info)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                QuickActionButton(
+                    onClick = { showPaymentLink = !showPaymentLink },
+                    icon = Icons.Default.Link,
+                    text = stringResource(R.string.payment_link)
+                )
+                QuickActionButton(
+                    onClick = { showDialog = !showDialog },
+                    icon = Icons.Default.Person,
+                    text = stringResource(R.string.your_info)
 
-            )
-            QuickActionButton(
-                onClick = {
-                    val intent = Intent(Intent.ACTION_INSERT).apply {
-                    type = ContactsContract.RawContacts.CONTENT_TYPE
-                    putExtra(ContactsContract.Intents.Insert.NAME, "John Doe") // Optional
-                    putExtra(ContactsContract.Intents.Insert.PHONE, "123456789") // Optional
-                }
-                    context.startActivity(intent) },
-                icon = Icons.Default.PersonAdd,
-                text = stringResource(R.string.contacts)
-            )
+                )
+                QuickActionButton(
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_INSERT).apply {
+                            type = ContactsContract.RawContacts.CONTENT_TYPE
+                            putExtra(ContactsContract.Intents.Insert.NAME, "John Doe") // Optional
+                            putExtra(ContactsContract.Intents.Insert.PHONE, "123456789") // Optional
+                        }
+                        context.startActivity(intent)
+                    },
+                    icon = Icons.Default.PersonAdd,
+                    text = stringResource(R.string.contacts)
+                )
+            }
         }
     }
 }

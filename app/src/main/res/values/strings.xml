@@ -50,7 +50,7 @@
     <string name="edit">Edit</string>
     <string name="generate_link">Generate link</string>
     <string name="amount_to_receive">Amount to receive</string>
-    <string name="description">Description (optional)</string>
+    <string name="description">Description</string>
     <string name="deposit_by_bank">Deposit by bank</string>
     <string name="select_your_bank">Select your bank</string>
     <string name="amount_to_deposit">Amount to deposit</string>
@@ -210,4 +210,7 @@
     <string name="confirm_deletion">Confirm deletion</string>
     <string name="confirm_deletion_subtext">Are you sure you want to delete this card?</string>
     <string name="available_balance">Available money</string>
+    <string name="quick_actions">Quick Actions</string>
+
+
 </resources>

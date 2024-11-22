@@ -52,7 +52,7 @@
     <string name="generate_link">Generar enlace</string>
     <string name="amount_to_receive">Monto a recibir</string>
     <string name="amount_to_deposit">Monto a ingresar</string>
-    <string name="description">Descripción (opcional)</string>
+    <string name="description">Descripción</string>
     <string name="deposit_by_bank">Ingresar por banco</string>
     <string name="select_your_bank">Selecciona tu banco</string>
     <string name="target_account">Cuenta a la cual transferir</string>
@@ -211,4 +211,5 @@
     <string name="confirm_deletion">Eliminar tarjeta</string>
     <string name="confirm_deletion_subtext">Estás seguro que queres eliminar esta tarjeta?</string>
     <string name="available_balance">Dinero Disponible</string>
+    <string name="quick_actions">Acciones Rápidas</string>
 </resources>
