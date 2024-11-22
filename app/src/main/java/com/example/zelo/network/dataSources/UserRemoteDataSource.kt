@@ -35,7 +35,7 @@ class UserRemoteDataSource(
         }
     }
 
-    suspend fun registerUser(user: RegisterUser): RegisterResponse {
+    suspend fun registerUser(user: RegisterUser): User {
         return handleApiResponse {
             userService.registerUser(user)
         }

@@ -39,10 +39,10 @@ class UserRepository(
         }
         return currentUserMutex.withLock { this.currentUser }
     }
-    suspend fun registerUser(user: RegisterUser): User? {
-        return userRemoteDataSource.registerUser(user).user
+    suspend fun registerUser(user: RegisterUser): User {
+        return userRemoteDataSource.registerUser(user)
     }
-    suspend fun verifyUser(token: String): User? {
+    suspend fun verifyUser(token: String): User {
         return userRemoteDataSource.verifyUser(VerificationCodeRequest( token))
     }
 

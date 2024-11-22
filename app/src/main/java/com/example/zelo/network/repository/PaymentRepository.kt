@@ -29,13 +29,12 @@ class PaymentRepository(
         }
         return payMutex.withLock { this.payments }
     }
-    suspend fun makePayment(payment: PaymentRequest): Payment {
+    suspend fun makePayment(payment: PaymentRequest) {
         Log.d("PaymentRepository", "Making payment: $payment")
         val newCard =  dataSource.makePayment(payment)
         payMutex.withLock {
             this.payments = emptyList()
         }
-        return newCard
     }
 
     suspend fun createPayLink(payment: CreateLinkPaymentRequest): LinkPayment {
