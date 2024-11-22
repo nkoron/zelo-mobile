@@ -39,7 +39,7 @@ fun TransferConfirmationScreen(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-           Column(
+    Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding()
@@ -88,7 +88,10 @@ fun TransferConfirmationScreen(
                Button(
                    onClick = {
                        viewModel.makeTransfer()
-                       onConfirm()
+                       while(uiState.isLoading);
+                       if(uiState.error != null){
+                           onConfirm()
+                       }
                    },
                    modifier = Modifier
                        .fillMaxWidth()
@@ -118,8 +121,8 @@ fun TransferConfirmationScreen(
     // Show error dialog
     if (uiState.error != null) {
         AlertDialog(
-            onDismissRequest = { },
-            title = { Text("Error") },
+            onDismissRequest = {onBack() },
+            title = { Text("Error", color = MaterialTheme.colorScheme.tertiary) },
             text = { Text(uiState.error?.message ?: "An unknown error occurred") },
             confirmButton = {
                 TextButton(onClick = { viewModel.clearError() }) {

@@ -117,7 +117,7 @@ fun TransactionConfirmedScreen(
     if (uiState.error != null) {
         AlertDialog(
             onDismissRequest = { viewModel.clearError() },
-            title = { Text("Error") },
+            title = { Text("Error", color = MaterialTheme.colorScheme.tertiary )},
             text = { Text(uiState.error?.message ?: "An unknown error occurred") },
             confirmButton = {
                 TextButton(onClick = { viewModel.clearError() }) {

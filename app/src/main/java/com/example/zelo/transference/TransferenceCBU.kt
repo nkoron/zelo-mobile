@@ -155,7 +155,9 @@ fun TransferDetailScreen(
             Button(
                 onClick = {
                     Log.d("TransferenceCBU", "Transfer Button Clicked")
-                    onConfirm()
+                    if(uiState.error == null) {
+                        onConfirm()
+                    }
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -218,7 +220,7 @@ fun PaymentMethodCard(
             containerColor = paymentMethod.backgroundColor
         ),
         border = if (isSelected) {
-            BorderStroke(2.dp, MaterialTheme.colorScheme.primary)
+            BorderStroke(2.dp, Color.Magenta)
         } else null
     ) {
         Column(
@@ -254,7 +256,7 @@ fun PaymentMethodCard(
 
             if (paymentMethod.type == "BALANCE") {
                 Text(
-                    "Dinero Disponible",
+                    stringResource(R.string.available_balance),
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.Gray
                 )

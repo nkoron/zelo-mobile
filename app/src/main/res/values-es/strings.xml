@@ -210,4 +210,5 @@
     <string name="recent_transfers">Transferencias recientes</string>
     <string name="confirm_deletion">Eliminar tarjeta</string>
     <string name="confirm_deletion_subtext">Estás seguro que queres eliminar esta tarjeta?</string>
+    <string name="available_balance">Dinero Disponible</string>
 </resources>
