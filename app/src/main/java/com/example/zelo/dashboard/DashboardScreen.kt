@@ -251,7 +251,7 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
             )
         } else {
             // Display the list of transactions if there are movements
