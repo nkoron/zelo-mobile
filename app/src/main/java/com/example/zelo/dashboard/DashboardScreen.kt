@@ -281,19 +281,21 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                             me = payment.payer
                             you = payment.receiver
                         }
-                        TransactionItem(
-                            name = "${you?.firstName} ${you?.lastName}",
-                            description = "${
-                                if (receive) stringResource(R.string.transferred) else stringResource(
-                                    R.string.sent
-                                )
-                            }: ${payment.amount}",
-                            time = payment.createdAt,
-                            showAvatar = true,
-                            movements = uiState.movements,
-                            id = it,
-                            isPayer = !receive
-                        )
+                        if (you?.firstName != null) {
+                            TransactionItem(
+                                name = "${you.firstName} ${you.lastName}",
+                                description = "${
+                                    if (receive) stringResource(R.string.transferred) else stringResource(
+                                        R.string.sent
+                                    )
+                                }: ${payment.amount}",
+                                time = payment.createdAt,
+                                showAvatar = true,
+                                movements = uiState.movements,
+                                id = it,
+                                isPayer = !receive
+                            )
+                        }
                     }
                 }
             }
