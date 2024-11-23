@@ -21,9 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewModelScope
 import com.example.zelo.R
-import kotlinx.coroutines.launch
 
 import android.util.Log
 
@@ -36,6 +34,8 @@ fun TransferDetailScreen(
     email: String? = null,
     amount: Double? = null
 ) {
+    val errorAmount = stringResource(R.string.valid_amount)
+    val errorEmail = stringResource(R.string.valid_email)
     LaunchedEffect(Unit) {
         viewModel.resetTransferForm()
         viewModel.refreshPaymentMethods()
@@ -167,9 +167,9 @@ fun TransferDetailScreen(
             Button(
                 onClick = {
                     when {
-                        uiState.email.isBlank() -> validationError = "Email cannot be empty."
+                        uiState.email.isBlank() -> validationError = errorEmail
                         uiState.amount.isBlank() || uiState.amount.toDoubleOrNull() == null || uiState.amount.toDouble() <= 0 -> {
-                            validationError = "Please enter a valid amount."
+                            validationError = errorAmount
                         }
                         else -> {
                             validationError = null
