@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.zelo.MyApplication
+import com.example.zelo.network.SessionManager
 
 import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
@@ -30,7 +31,8 @@ data class DepositUiState(
 
 class DepositViewModel(
     private val walletRepository: WalletRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var walletDetailStreamJob: Job? = null
@@ -39,6 +41,15 @@ class DepositViewModel(
 
     init {
             observeWalletDetailStream()
+        observeLogoutSignal()
+    }
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                walletDetailStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(walletDetail = null) }
+            }
+        }
     }
 
     private fun observeWalletDetailStream() {
@@ -46,6 +57,7 @@ class DepositViewModel(
             walletRepository.walletDetailStream
         ) { state, response -> state.copy(walletDetail = response) }
     }
+
 
     fun rechargeWallet(amount: Double) = runOnViewModelScope(
         {
@@ -93,7 +105,8 @@ class DepositViewModel(
             override fun<T : ViewModel> create(modelClass: Class<T>): T {
                 return DepositViewModel(
                     application.walletRepository,
-                    application.userRepository
+                    application.userRepository,
+                    application.sessionManager
                 ) as T
             }
         }

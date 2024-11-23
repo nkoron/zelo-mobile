@@ -64,6 +64,21 @@ fun ExpensesScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
+        if (uiState.movements.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
             LazyColumn {
                 items(uiState.movements.size) {
                     val payment = uiState.movements[it]
@@ -81,4 +96,5 @@ fun ExpensesScreen(
             }
         }
     }
+}
 

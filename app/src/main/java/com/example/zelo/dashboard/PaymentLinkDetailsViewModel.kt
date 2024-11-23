@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 enum class PaymentMethod {
     BALANCE, CARD
@@ -40,6 +41,8 @@ class PaymentLinkDetailsViewModel(
         loadBalance()
         loadCards()
     }
+    val invalidAmountError = if (Locale.getDefault().language == "es") "Error desconocido" else "Unknown error"
+
 
     fun loadLinkDetails(linkUuid: String) {
         viewModelScope.launch {
@@ -48,7 +51,7 @@ class PaymentLinkDetailsViewModel(
                 val details = paymentRepository.getLinkDetails(linkUuid)
                 _uiState.update { it.copy(isLoading = false, paymentDetails = details) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "An error occurred") }
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: invalidAmountError) }
             }
         }
     }
@@ -83,6 +86,7 @@ class PaymentLinkDetailsViewModel(
             )
         }
     }
+    val invalidMethodError = if (Locale.getDefault().language == "es") "Ningún método de pago seleccionado" else "No payment method selected"
 
     fun processPayment() {
         viewModelScope.launch {
@@ -99,13 +103,13 @@ class PaymentLinkDetailsViewModel(
                             cardId = uiState.value.selectedCardId ?: 0,
                             type = "CARD"
                         )}
-                    null -> throw IllegalStateException("No payment method selected")
+                    null -> throw IllegalStateException(invalidMethodError)
                 }
 
                 val result = paymentRepository.payPaymentByLinkUUID(paymentRequest, linkUuid)
                 _uiState.update { it.copy(isLoading = false, paymentComplete = true) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "An error occurred") }
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: invalidAmountError) }
             }
         }
     }

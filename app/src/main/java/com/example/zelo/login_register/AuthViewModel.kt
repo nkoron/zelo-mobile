@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 data class AuthUiState (
@@ -35,7 +36,7 @@ data class AuthUiState (
 
 class AuthViewModel(
     private val walletRepository: WalletRepository,
-    sessionManager: SessionManager,
+    private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
@@ -46,6 +47,7 @@ class AuthViewModel(
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     init {
+        observeLogoutSignal()
         if (uiState.value.isAuthenticated) {
             observeWalletDetailStream()
             getCurrentUser()
@@ -55,6 +57,7 @@ class AuthViewModel(
     fun login(username: String, password: String) = runOnViewModelScope(
         {
             userRepository.login(username, password)
+            userRepository.getCurrentUser()
             observeWalletDetailStream()
         },
         { state, _ -> state.copy(isAuthenticated = true) }
@@ -62,6 +65,7 @@ class AuthViewModel(
 
     fun logout() = runOnViewModelScope(
         {
+            sessionManager.logout()
             walletDetailStreamJob?.cancel()
             paymentRepository.logout()
             walletRepository.logout()
@@ -70,8 +74,10 @@ class AuthViewModel(
         { state, _ ->
             state.copy(
                 isAuthenticated = false,
-                walletDetail = null,
-                user = null
+            walletDetail = null, // Reinicia datos de wallet
+            user = null,         // Reinicia datos de usuario
+            isResetLinkSent = false,
+            error = null         // Limpia errores previos
             )
         }
     )
@@ -130,6 +136,14 @@ class AuthViewModel(
             Error(null, e.message ?: "")
         }
     }
+    private fun observeLogoutSignal(){
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                walletDetailStreamJob?.cancel()
+                _uiState.update { c ->c.copy(walletDetail = null, user = null) }
+            }
+        }
+    }
 
     companion object {
         fun provideFactory(
@@ -147,15 +161,21 @@ class AuthViewModel(
         }
     }
 
+    val InvalidError = if (Locale.getDefault().language == "es") "Fallo al enviar link de reestablecimiento" else "Failed to send reset link"
+
+
     fun recoverPassword(email: String) = viewModelScope.launch {
         _uiState.update { it.copy(isFetching = true, error = null, isResetLinkSent = false) }
         try {
             userRepository.recoverPassword(email)
             _uiState.update { it.copy(isFetching = false, isResetLinkSent = true) }
         } catch (e: Exception) {
-            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to send reset link"), isFetching = false) }
+            _uiState.update { it.copy(error = Error(null, e.message ?: InvalidError), isFetching = false) }
         }
     }
+
+    val FailedPasswordError = if (Locale.getDefault().language == "es") "Fallo al reestablecer contraseña" else "Failed to reset password"
+
 
     fun resetPassword(token: String, newPassword: String) = viewModelScope.launch {
         _uiState.update { it.copy(isFetching = true, error = null) }
@@ -163,7 +183,7 @@ class AuthViewModel(
             userRepository.resetPassword(token, newPassword)
             _uiState.update { it.copy(isAuthenticated = true, isFetching = false) }
         } catch (e: Exception) {
-            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to reset password"), isFetching = false) }
+            _uiState.update { it.copy(error = Error(null, e.message ?: FailedPasswordError), isFetching = false) }
         }
     }
 

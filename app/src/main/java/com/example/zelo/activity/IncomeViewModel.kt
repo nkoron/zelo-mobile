@@ -34,7 +34,8 @@ data class IncomeUiState (
 
 class IncomeViewModel(
     private val paymentRepository: PaymentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var expensesStreamJob: Job? = null
@@ -44,7 +45,16 @@ class IncomeViewModel(
     init {
         getCurrentUser()
         observesExpenseStream()
+        observeLogoutSignal()
     }
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                expensesStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(movements = emptyList()) }
+            }
+        }
+        }
     fun getCurrentUser()= runOnViewModelScope(
         block = { userRepository.getCurrentUser() },
         updateState = { state, response -> state.copy(user = response) }
@@ -104,7 +114,8 @@ class IncomeViewModel(
             override fun<T : ViewModel> create(modelClass: Class<T>): T {
                 return IncomeViewModel(
                     application.paymentRepository,
-                    application.userRepository
+                    application.userRepository,
+                    application.sessionManager
                 ) as T
             }
         }
