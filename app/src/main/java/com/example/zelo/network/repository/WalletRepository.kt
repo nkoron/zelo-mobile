@@ -28,8 +28,10 @@ class WalletRepository(
         }
         return cardsMutex.withLock { this.cards }
     }
-    suspend fun logout(){
-        cards = emptyList()
+    suspend fun logout() {
+        cardsMutex.withLock {
+            cards = emptyList()
+        }
     }
     suspend fun addCard(card: Card): Card{
         val newCard =  walletRemoteDataSource.addCard(card)
@@ -54,10 +56,6 @@ class WalletRepository(
     val walletDetailStream: Flow<WalletDetails> =
         walletRemoteDataSource.walletDetailStream
 
-    val cardsStream: Flow<List<Card>> = walletRemoteDataSource.cardsStream.map { newCards ->
-        cardsMutex.withLock {
-            cards = newCards
-            cards
-        }
-    }
+    val cardsStream: Flow<List<Card>> =
+        walletRemoteDataSource.cardsStream
 }

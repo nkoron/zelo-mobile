@@ -1,6 +1,5 @@
 package com.example.zelo.transference
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -26,15 +25,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.zelo.R
 import kotlinx.coroutines.launch
 
-data class PaymentMethod(
-    val id: Int? = null,
-    val type: String,
-    val name: String,
-    val digits: String,
-    val balance: String? = null,
-    val cardType: String? = null,
-    val backgroundColor: Color = Color(0xFFF5F5F5)
-)
+import android.util.Log
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +36,11 @@ fun TransferDetailScreen(
     email: String? = null,
     amount: Double? = null
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.resetTransferForm()
+        viewModel.refreshPaymentMethods()
+    }
+
     LaunchedEffect(Unit) {
         viewModel.resetTransferForm()
     }
@@ -146,7 +142,7 @@ fun TransferDetailScreen(
                     PaymentMethodCard(
                         paymentMethod = method,
                         isSelected = uiState.selectedPaymentMethod == method,
-                        onClick = { viewModel.selectPaymentMethod(method) }
+                        onClick = { viewModel.selectPaymentMethod(method) },
                     )
                 }
             }
@@ -208,11 +204,13 @@ fun TransferDetailScreen(
     }
 }
 
+
+
 @Composable
 fun PaymentMethodCard(
     paymentMethod: PaymentMethod,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Card(
         modifier = Modifier
