@@ -2,7 +2,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -22,9 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
@@ -33,19 +30,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
-import com.example.zelo.dashboard.generateQRCode
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
+import com.example.zelo.qr.QRCodeDialog
 import com.example.zelo.transference.TransferDetailsDialog
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
@@ -379,12 +373,6 @@ private fun QuickActions(uiState: DashboardUiState
                     },
                     icon = Icons.Default.PersonAdd,
                     text = stringResource(R.string.contacts)
-                )
-                QuickActionButton(
-                    onClick = { showQRDialog = !showQRDialog },
-                    icon = Icons.Default.QrCode,
-                    text = "QR"
-
                 )
             }
         }
@@ -757,42 +745,6 @@ fun ShareOptionsDialog(
     )
 }
 
-
-
-@Composable
-fun QRCodeDialog(
-    onDismiss: () -> Unit,
-    content: String
-) {
-    Dialog(onDismissRequest = onDismiss) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Spacer(modifier = Modifier.height(16.dp))
-                Image(
-                    bitmap = generateQRCode(content).asImageBitmap(),
-                    contentDescription = stringResource(R.string.qr_code),
-                    modifier = Modifier
-                        .size(200.dp)
-                        .align(Alignment.CenterHorizontally)
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                TextButton(onClick = onDismiss) {
-                    Text(stringResource(R.string.cancel))
-                }
-            }
-        }
-    }
-}
 
 
 
