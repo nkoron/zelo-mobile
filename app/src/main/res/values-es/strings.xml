@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Zelo</string>
-    <string name="spent">Gastado</string>
+    <string name="spent">Egreso</string>
     <string name="recent_expenses">Tus gastos recientes</string>
     <string name="search">Buscar</string>
     <string name="filter">Filtrar</string>
