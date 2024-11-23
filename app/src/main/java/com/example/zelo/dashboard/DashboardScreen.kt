@@ -335,7 +335,7 @@ private fun QuickActions(uiState: DashboardUiState
     if (showQRDialog) {
         QRCodeDialog(
             onDismiss = { showQRDialog = false },
-            content = "https://www.google.com"
+            content = uiState.user?.email.toString()
         )
     }
     // Quick Actions
@@ -772,14 +772,18 @@ fun QRCodeDialog(
             elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Image(
                     bitmap = generateQRCode(content).asImageBitmap(),
                     contentDescription = stringResource(R.string.qr_code),
-                    modifier = Modifier.size(200.dp).align(Alignment.CenterHorizontally)
+                    modifier = Modifier
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(16.dp))
                 TextButton(onClick = onDismiss) {
