@@ -44,22 +44,36 @@ fun IncomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-    val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding()
+            .padding(16.dp)
+    ) {
+        Text(
+            stringResource(R.string.recent_incomes),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+        ZeloSearchBar(searchQuery = searchQuery, valueChange = { searchQuery = it })
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding()
-                .padding(16.dp)
-        ) {
-            Text(
-                stringResource( R.string.recent_incomes),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
-            ZeloSearchBar(searchQuery= searchQuery, valueChange = { searchQuery = it })
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
+        if (uiState.movements.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
 
             LazyColumn {
                 items(uiState.movements.size) {
@@ -77,4 +91,5 @@ fun IncomeScreen(
             }
         }
     }
+}
 

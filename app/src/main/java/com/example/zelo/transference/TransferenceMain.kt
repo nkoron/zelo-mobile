@@ -104,22 +104,38 @@ fun TransferScreen(
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        LazyColumn(
-            modifier = Modifier.weight(1f)
-        ) {
-            items(uiState.movements.size) { index ->
-                val payment = uiState.movements[index]
-                TransactionItem(
-                    name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
-                    description = "${stringResource(R.string.sent)}: ${payment.amount}",
-                    time = payment.createdAt,
-                    showAvatar = true,
-                    email = payment.receiver.email,
-                    amount = payment.amount,
-                    onRedoTransfer = { email, amount ->
-                        onNavigateToTransferenceCBU(email, amount)
-                    }
+        if (uiState.movements.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
                 )
+            }
+        } else {
+            LazyColumn(
+                modifier = Modifier.weight(1f)
+            ) {
+                items(uiState.movements.size) { index ->
+                    val payment = uiState.movements[index]
+                    TransactionItem(
+                        name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
+                        description = "${stringResource(R.string.sent)}: ${payment.amount}",
+                        time = payment.createdAt,
+                        showAvatar = true,
+                        email = payment.receiver.email,
+                        amount = payment.amount,
+                        onRedoTransfer = { email, amount ->
+                            onNavigateToTransferenceCBU(email, amount)
+                        }
+                    )
+                }
             }
         }
     }

@@ -57,7 +57,7 @@ class TransferenceCBUViewModel(
             val cards = walletRepository.cardsStream.first()
             createPaymentMethods(walletDetails, cards)
         },
-        { state, paymentMethods -> state.copy(availablePaymentMethods = paymentMethods) }
+        { state, paymentMethods -> state.copy(availablePaymentMethods = paymentMethods, selectedPaymentMethod = paymentMethods.first()) }
     )
 //    private fun observeLogoutSignal(){
 //        viewModelScope.launch {
@@ -118,6 +118,9 @@ class TransferenceCBUViewModel(
         _uiState.update { it.copy(error = null) }
     }
 
+    val invalidPaymentMethod = if (Locale.getDefault().language == "es") "Método de pago seleccionado inválido" else "Invalid payment method selected"
+
+
     fun makeTransfer() = runOnViewModelScope(
         {
             val currentState = _uiState.value
@@ -126,17 +129,17 @@ class TransferenceCBUViewModel(
                 "BALANCE" -> BalancePaymentRequest(
                     receiverEmail = currentState.email,
                     amount = amount,
-                    description = currentState.concept,
+                    description = currentState.concept.ifBlank { "-" },
                     type = "BALANCE"
                 )
                 "CREDIT" -> CardPaymentRequest(
                     cardId = currentState.selectedPaymentMethod.id?.toInt() ?: 0,
                     receiverEmail = currentState.email,
                     amount = amount,
-                    description = currentState.concept,
+                    description = currentState.concept.ifBlank { "-" },
                     type = "CARD"
                 )
-                else -> throw IllegalStateException("Invalid payment method selected")
+                else -> throw IllegalStateException(invalidPaymentMethod)
             }
             paymentRepository.makePayment(paymentRequest)
         },

@@ -101,12 +101,14 @@ fun AppNavigation(
 
     Scaffold(
         topBar = {
+            if (uiState.isAuthenticated) {
                 AppBar(
                     viewModel = topBarViewModel,
                     currentRoute = currentRoute,
                     onBackClick = { navController.popBackStack() },
-                    isAuthenticated = uiState.isAuthenticated
+                    onHome = { navController.navigate("home") }
                 )
+            }
         },
         bottomBar = {
             if (uiState.isAuthenticated && !isTablet) {
