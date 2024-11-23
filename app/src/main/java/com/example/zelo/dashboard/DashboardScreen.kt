@@ -2,6 +2,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalConfiguration
@@ -41,6 +43,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.dashboard.DashboardUiState
 import com.example.zelo.dashboard.DashboardViewModel
+import com.example.zelo.dashboard.generateQRCode
 import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.User
 import com.example.zelo.transference.TransferDetailsDialog
@@ -257,51 +260,51 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                 color = MaterialTheme.colorScheme.tertiary,
                 modifier = Modifier.padding(12.dp)
             )
-        if (uiState.movements.isEmpty()) {
-            // Display "No recent transactions" if no movements
-            Text(
-                text = stringResource(R.string.no_recent_transactions),
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp),
-                color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
-            )
-        } else {
-            // Display the list of transactions if there are movements
-            LazyColumn {
-                items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
-                    val payment = uiState.movements[it]
-                    val me: User?
-                    val you: User?
-                    val receive: Boolean
-                    if (payment.receiver.id == uiState.user?.id) {
-                        receive = true
-                        me = payment.receiver
-                        you = payment.payer
-                    } else {
-                        receive = false
-                        me = payment.payer
-                        you = payment.receiver
+            if (uiState.movements.isEmpty()) {
+                // Display "No recent transactions" if no movements
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.6f)
+                )
+            } else {
+                // Display the list of transactions if there are movements
+                LazyColumn {
+                    items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
+                        val payment = uiState.movements[it]
+                        val me: User?
+                        val you: User?
+                        val receive: Boolean
+                        if (payment.receiver.id == uiState.user?.id) {
+                            receive = true
+                            me = payment.receiver
+                            you = payment.payer
+                        } else {
+                            receive = false
+                            me = payment.payer
+                            you = payment.receiver
+                        }
+                        TransactionItem(
+                            name = "${you?.firstName} ${you?.lastName}",
+                            description = "${
+                                if (receive) stringResource(R.string.transferred) else stringResource(
+                                    R.string.sent
+                                )
+                            }: ${payment.amount}",
+                            time = payment.createdAt,
+                            showAvatar = true,
+                            movements = uiState.movements,
+                            id = it,
+                            isPayer = !receive
+                        )
                     }
-                    TransactionItem(
-                        name = "${you?.firstName} ${you?.lastName}",
-                        description = "${
-                            if (receive) stringResource(R.string.transferred) else stringResource(
-                                R.string.sent
-                            )
-                        }: ${payment.amount}",
-                        time = payment.createdAt,
-                        showAvatar = true,
-                        movements = uiState.movements,
-                        id = it,
-                        isPayer = !receive
-                    )
                 }
             }
         }
     }
-}
 }
 
 @Composable
@@ -312,6 +315,7 @@ private fun QuickActions(uiState: DashboardUiState
     var taxId by remember { mutableStateOf(sharedPreferences.getString("taxId", "") ?: "") }
     var showDialog by remember { mutableStateOf(false) }
     var showPaymentLink by remember { mutableStateOf(false) }
+    var showQRDialog by remember { mutableStateOf(false) }
     if (showDialog) {
         UserDataDialog(
             onDismiss = { showDialog = false },
@@ -326,6 +330,12 @@ private fun QuickActions(uiState: DashboardUiState
     if (showPaymentLink) {
         PaymentLinkScreen(
             onDismiss = { showPaymentLink = false },
+        )
+    }
+    if (showQRDialog) {
+        QRCodeDialog(
+            onDismiss = { showQRDialog = false },
+            content = uiState.user?.email.toString()
         )
     }
     // Quick Actions
@@ -369,6 +379,12 @@ private fun QuickActions(uiState: DashboardUiState
                     },
                     icon = Icons.Default.PersonAdd,
                     text = stringResource(R.string.contacts)
+                )
+                QuickActionButton(
+                    onClick = { showQRDialog = !showQRDialog },
+                    icon = Icons.Default.QrCode,
+                    text = "QR"
+
                 )
             }
         }
@@ -743,10 +759,46 @@ fun ShareOptionsDialog(
 
 
 
+@Composable
+fun QRCodeDialog(
+    onDismiss: () -> Unit,
+    content: String
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Image(
+                    bitmap = generateQRCode(content).asImageBitmap(),
+                    contentDescription = stringResource(R.string.qr_code),
+                    modifier = Modifier
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        }
+    }
+}
+
+
+
 data class UserData(
     val fullName: String?,
     val alias: String?,
     val cbu: String?,
     val cuit: String?
 )
-
