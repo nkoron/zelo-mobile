@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 data class PaymentLinkUiState(
     val amount: String = "",
@@ -32,6 +33,8 @@ class PaymentLinkViewModel(
     fun updateDescription(description: String) {
         _uiState.update { it.copy(description = description) }
     }
+    val invalidAmountError = if (Locale.getDefault().language == "es") "Monto inválido" else "Invalid amount"
+    val errorMessage = if (Locale.getDefault().language == "es") "Error al generar el enlace de pago" else "Error generating payment link"
 
     fun generatePaymentLink() {
         viewModelScope.launch {
@@ -39,7 +42,7 @@ class PaymentLinkViewModel(
             try {
                 val amount = _uiState.value.amount.toDoubleOrNull()
                 if (amount == null) {
-                    _uiState.update { it.copy(isLoading = false, error = "Invalid amount") }
+                    _uiState.update { it.copy(isLoading = false, error = invalidAmountError) }
                     return@launch
                 }
 
