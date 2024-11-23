@@ -42,7 +42,7 @@ fun EmailVerificationScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(color = Color(0xFF1A1B25))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -56,7 +56,7 @@ fun EmailVerificationScreen(
         OutlinedTextField(
             value = email,
             onValueChange = { email = it },
-            label = { Text(stringResource(R.string.email)) },
+            label = { Text(stringResource(R.string.email), color = Color.White) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             modifier = Modifier.fillMaxWidth(),
@@ -148,7 +148,7 @@ fun ResetPasswordScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
+            .background(color = Color(0xFF1A1B25))
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -162,7 +162,7 @@ fun ResetPasswordScreen(
         OutlinedTextField(
             value = token,
             onValueChange = { token = it },
-            label = { Text(stringResource(R.string.reset_token)) },
+            label = { Text(stringResource(R.string.reset_token), color = Color.White) },
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
