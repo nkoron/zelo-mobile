@@ -65,6 +65,7 @@ class DashboardViewModel(
         }
     }
     private fun observePaymentStream() {
+        paymentStreamJob?.cancel()
         paymentStreamJob = collectOnViewModelScope(
             paymentRepository.paymentStream
         ) { state, response -> state.copy(movements = response) }
@@ -97,6 +98,7 @@ class DashboardViewModel(
     )
 
     private fun observeWalletDetailStream() {
+        walletDetailStreamJob?.cancel()
         walletDetailStreamJob = collectOnViewModelScope(
             walletRepository.walletDetailStream
         ) { state, response -> state.copy(walletDetail = response) }

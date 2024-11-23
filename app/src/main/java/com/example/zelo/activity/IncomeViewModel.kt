@@ -61,6 +61,7 @@ class IncomeViewModel(
     )
 
     private fun observesExpenseStream() {
+        expensesStreamJob?.cancel()
         expensesStreamJob = viewModelScope.launch {
             combine(
                 paymentRepository.paymentStream,

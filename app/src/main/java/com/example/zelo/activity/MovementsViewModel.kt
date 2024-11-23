@@ -43,6 +43,8 @@ class MovementsViewModel(
 ) : ViewModel() {
 
     private var paymentStreamJob: Job? = null
+    private var incomeStreamJob: Job? = null
+    private var expenseStreamJob: Job? = null
     private val _uiState = MutableStateFlow(MovementsUiState())
     val uiState: StateFlow<MovementsUiState> = _uiState.asStateFlow()
 
@@ -67,6 +69,7 @@ class MovementsViewModel(
     }
 
     private fun observePaymentStream() {
+        paymentStreamJob?.cancel()
         paymentStreamJob = viewModelScope.launch {
             paymentRepository.paymentStream
                 .distinctUntilChanged()
@@ -81,7 +84,8 @@ class MovementsViewModel(
     }
 
     private fun observeIncomeStream() {
-        paymentStreamJob = viewModelScope.launch {
+        incomeStreamJob?.cancel()
+        incomeStreamJob = viewModelScope.launch {
             combine(
                 paymentRepository.paymentStream,
                 _uiState.map { it.user }
@@ -97,7 +101,8 @@ class MovementsViewModel(
     }
 
     private fun observeExpenseStream() {
-        paymentStreamJob = viewModelScope.launch {
+        expenseStreamJob?.cancel()
+        expenseStreamJob = viewModelScope.launch {
             combine(
                 paymentRepository.paymentStream,
                 _uiState.map { it.user }

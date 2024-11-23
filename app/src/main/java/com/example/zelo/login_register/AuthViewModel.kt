@@ -102,6 +102,7 @@ class AuthViewModel(
     )
 
     private fun observeWalletDetailStream() {
+        walletDetailStreamJob?.cancel()
         walletDetailStreamJob = collectOnViewModelScope(
             walletRepository.walletDetailStream
         ) { state, response -> state.copy(walletDetail = response) }
