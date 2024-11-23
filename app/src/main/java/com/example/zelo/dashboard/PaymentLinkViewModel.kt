@@ -54,7 +54,7 @@ class PaymentLinkViewModel(
                 val result = paymentRepository.createPayLink(linkPaymentRequest)
                 _uiState.update { it.copy(isLoading = false, generatedLinkUuid = result.linkUuid) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message ?: "An error occurred") }
+                _uiState.update { it.copy(isLoading = false, error = e.message ?: errorMessage) }
             }
         }
     }
