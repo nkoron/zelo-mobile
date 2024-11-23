@@ -30,7 +30,7 @@ data class AuthUiState (
     val isFetching: Boolean = false,
     val walletDetail: WalletDetails? = null,
     val error: Error? = null,
-    val isResetLinkSent: Boolean = true
+    val isResetLinkSent: Boolean = false
 )
 
 class AuthViewModel(

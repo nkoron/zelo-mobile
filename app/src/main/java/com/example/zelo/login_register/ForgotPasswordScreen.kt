@@ -49,7 +49,7 @@ fun EmailVerificationScreen(
         Text(
             text = stringResource(R.string.recover_password),
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.onBackground,
+            color = MaterialTheme.colorScheme.tertiary,
             modifier = Modifier.padding(vertical = 32.dp)
         )
 
@@ -59,26 +59,29 @@ fun EmailVerificationScreen(
             label = { Text(stringResource(R.string.email)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
         )
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Button(
-            onClick = {
-                viewModel.recoverPassword(email)
-            },
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            enabled = email.isNotEmpty() && !uiState.isFetching
-        ) {
-            if (uiState.isFetching) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
-            } else {
-                Text(stringResource(R.string.send_reset_link))
+        if(!uiState.isResetLinkSent){
+            Button(
+                onClick = {
+                    viewModel.recoverPassword(email)
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                enabled = email.isNotEmpty() && !uiState.isFetching
+            ) {
+                if (uiState.isFetching) {
+                    CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+                } else {
+                    Text(stringResource(R.string.send_reset_link))
+                }
             }
         }
+
 
         if (uiState.error != null) {
             Text(

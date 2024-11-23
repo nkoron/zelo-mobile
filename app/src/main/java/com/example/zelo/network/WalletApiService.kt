@@ -56,7 +56,7 @@ interface WalletApiService {
     suspend fun verifyUser(@Body verificationCodeRequest: VerificationCodeRequest): Response<User>
 
     @POST("api/user/recover-password")
-    suspend fun recoverPassword(@Body emailRequest: EmailRequest): Response<Int>
+    suspend fun recoverPassword(@Body emailRequest: EmailRequest): Response<Unit>
 
     @POST("api/user")
     suspend fun registerUser(@Body user: RegisterUser): Response<User>
@@ -68,7 +68,7 @@ interface WalletApiService {
     suspend fun logoutUser(): Response<Unit>
 
     @POST("api/user/reset-password")
-    suspend fun resetPassword(@Body resetPasswordRequest: ResetPasswordRequest): Response<Int>//tenemos qeu manejar el si es error o si es una user
+    suspend fun resetPassword(@Body resetPasswordRequest: ResetPasswordRequest): Response<Unit>//tenemos qeu manejar el si es error o si es una user
 
     @GET("api/wallet/balance")
     suspend fun getBalance(): Response<Balance>
