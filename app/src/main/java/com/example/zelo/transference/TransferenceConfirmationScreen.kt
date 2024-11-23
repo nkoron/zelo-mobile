@@ -29,6 +29,7 @@ import com.example.zelo.MyApplication
 import com.example.zelo.R
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -116,12 +117,15 @@ fun TransferConfirmationScreen(
         }
     }
 
+    val unknownError = if (Locale.getDefault().language == "es") "Error desconocido" else "Unknown error"
+
+
     // Show error dialog
     if (uiState.error != null) {
         AlertDialog(
             onDismissRequest = {onBack() },
             title = { Text("Error", color = MaterialTheme.colorScheme.tertiary) },
-            text = { Text(uiState.error?.message ?: "An unknown error occurred") },
+            text = { Text(uiState.error?.message ?: unknownError) },
             confirmButton = {
                 TextButton(onClick = { viewModel.clearError() }) {
                     Text("OK")

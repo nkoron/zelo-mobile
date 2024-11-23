@@ -111,6 +111,9 @@ class TransferenceCBUViewModel(
         _uiState.update { it.copy(error = null) }
     }
 
+    val invalidPaymentMethod = if (Locale.getDefault().language == "es") "Método de pago seleccionado inválido" else "Invalid payment method selected"
+
+
     fun makeTransfer() = runOnViewModelScope(
         {
             val currentState = _uiState.value
@@ -129,7 +132,7 @@ class TransferenceCBUViewModel(
                     description = currentState.concept.ifBlank { "-" },
                     type = "CARD"
                 )
-                else -> throw IllegalStateException("Invalid payment method selected")
+                else -> throw IllegalStateException(invalidPaymentMethod)
             }
             paymentRepository.makePayment(paymentRequest)
         },
