@@ -22,6 +22,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Locale
 
 
 data class AuthUiState (
@@ -157,15 +158,21 @@ class AuthViewModel(
         }
     }
 
+    val InvalidError = if (Locale.getDefault().language == "es") "Fallo al enviar link de reestablecimiento" else "Failed to send reset link"
+
+
     fun recoverPassword(email: String) = viewModelScope.launch {
         _uiState.update { it.copy(isFetching = true, error = null, isResetLinkSent = false) }
         try {
             userRepository.recoverPassword(email)
             _uiState.update { it.copy(isFetching = false, isResetLinkSent = true) }
         } catch (e: Exception) {
-            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to send reset link"), isFetching = false) }
+            _uiState.update { it.copy(error = Error(null, e.message ?: InvalidError), isFetching = false) }
         }
     }
+
+    val FailedPasswordError = if (Locale.getDefault().language == "es") "Fallo al reestablecer contraseña" else "Failed to reset password"
+
 
     fun resetPassword(token: String, newPassword: String) = viewModelScope.launch {
         _uiState.update { it.copy(isFetching = true, error = null) }
@@ -173,7 +180,7 @@ class AuthViewModel(
             userRepository.resetPassword(token, newPassword)
             _uiState.update { it.copy(isAuthenticated = true, isFetching = false) }
         } catch (e: Exception) {
-            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to reset password"), isFetching = false) }
+            _uiState.update { it.copy(error = Error(null, e.message ?: FailedPasswordError), isFetching = false) }
         }
     }
 
