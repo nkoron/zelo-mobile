@@ -43,8 +43,7 @@ fun RegisterScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
     authViewModel: AuthViewModel = viewModel(factory = AuthViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication)),
-    onSignUp: (user: RegisterUser
-    ) -> Unit = {authViewModel.registerUser(it)}
+    onSignUp: (user: RegisterUser) -> Unit = { authViewModel.registerUser(it) }
 ) {
     val uiState by authViewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
@@ -64,6 +63,15 @@ fun RegisterScreen(
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
 
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var confirmPasswordError by remember { mutableStateOf<String?>(null) }
+    var phoneError by remember { mutableStateOf<String?>(null) }
+    var dniError by remember { mutableStateOf<String?>(null) }
+    var nameError by remember { mutableStateOf<String?>(null) }
+    var surnameError by remember { mutableStateOf<String?>(null) }
+    var ageError by remember { mutableStateOf<String?>(null) }
+
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.US)
 
@@ -73,6 +81,14 @@ fun RegisterScreen(
             { _, year, month, dayOfMonth ->
                 calendar.set(year, month, dayOfMonth)
                 birthDate = dateFormat.format(calendar.time)
+                val currentDate = Calendar.getInstance()
+                val age = currentDate.get(Calendar.YEAR) - year
+                if (age < 15 || (age == 15 && (currentDate.get(Calendar.MONTH) < month ||
+                            (currentDate.get(Calendar.MONTH) == month && currentDate.get(Calendar.DAY_OF_MONTH) < dayOfMonth)))) {
+                    ageError = "You must be at least 15 years old to register"
+                } else {
+                    ageError = null
+                }
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -81,12 +97,31 @@ fun RegisterScreen(
         datePickerDialog.show()
     }
 
+    fun validateEmail(email: String): Boolean {
+        val emailRegex = "^[A-Za-z](.*)([@]{1})(.{1,})(\\.)(.{1,})"
+        return email.matches(emailRegex.toRegex())
+    }
+
+    fun validatePassword(password: String): Boolean {
+        val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"
+        return password.matches(passwordRegex.toRegex())
+    }
+
+    fun validatePhone(phone: String): Boolean {
+        val phoneRegex = "^[+]?[0-9]{10,13}$"
+        return phone.matches(phoneRegex.toRegex())
+    }
+
+    fun validateDNI(dni: String): Boolean {
+        val dniRegex = "^[0-9]{8}[A-Za-z]$"
+        return dni.matches(dniRegex.toRegex())
+    }
+
     Box(
         modifier = modifier
             .fillMaxSize()
             .background(Color(0xFF1A1B25))
     ) {
-
         if (isLandscape || isTablet) {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -111,13 +146,42 @@ fun RegisterScreen(
                     birthDate = birthDate,
                     passwordVisible = passwordVisible,
                     confirmPasswordVisible = confirmPasswordVisible,
-                    onEmailChange = { email = it },
-                    onPasswordChange = { password = it },
-                    onConfirmPasswordChange = { confirmPassword = it },
-                    onPhoneChange = { phone = it },
-                    onDniChange = { dni = it },
-                    onNameChange = { name = it },
-                    onSurnameChange = { surname = it },
+                    emailError = emailError,
+                    passwordError = passwordError,
+                    confirmPasswordError = confirmPasswordError,
+                    phoneError = phoneError,
+                    dniError = dniError,
+                    nameError = nameError,
+                    surnameError = surnameError,
+                    ageError = ageError,
+                    onEmailChange = {
+                        email = it
+                        emailError = if (validateEmail(it)) null else "Invalid email format"
+                    },
+                    onPasswordChange = {
+                        password = it
+                        passwordError = if (validatePassword(it)) null else "Password must be at least 8 characters long, contain at least one digit, one lowercase, one uppercase letter, and one special character"
+                    },
+                    onConfirmPasswordChange = {
+                        confirmPassword = it
+                        confirmPasswordError = if (it == password) null else "Passwords do not match"
+                    },
+                    onPhoneChange = {
+                        phone = it
+                        phoneError = if (validatePhone(it)) null else "Invalid phone number format"
+                    },
+                    onDniChange = {
+                        dni = it
+                        dniError = if (validateDNI(it)) null else "Invalid DNI format"
+                    },
+                    onNameChange = {
+                        name = it
+                        nameError = if (it.isNotBlank()) null else "Name cannot be empty"
+                    },
+                    onSurnameChange = {
+                        surname = it
+                        surnameError = if (it.isNotBlank()) null else "Surname cannot be empty"
+                    },
                     onBirthDateChange = { birthDate = it },
                     onPasswordVisibilityChange = { passwordVisible = it },
                     onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
@@ -155,13 +219,42 @@ fun RegisterScreen(
                     birthDate = birthDate,
                     passwordVisible = passwordVisible,
                     confirmPasswordVisible = confirmPasswordVisible,
-                    onEmailChange = { email = it },
-                    onPasswordChange = { password = it },
-                    onConfirmPasswordChange = { confirmPassword = it },
-                    onPhoneChange = { phone = it },
-                    onDniChange = { dni = it },
-                    onNameChange = { name = it },
-                    onSurnameChange = { surname = it },
+                    emailError = emailError,
+                    passwordError = passwordError,
+                    confirmPasswordError = confirmPasswordError,
+                    phoneError = phoneError,
+                    dniError = dniError,
+                    nameError = nameError,
+                    surnameError = surnameError,
+                    ageError = ageError,
+                    onEmailChange = {
+                        email = it
+                        emailError = if (validateEmail(it)) null else "Invalid email format"
+                    },
+                    onPasswordChange = {
+                        password = it
+                        passwordError = if (validatePassword(it)) null else "Password must be at least 8 characters long, contain at least one digit, one lowercase, one uppercase letter, and one special character"
+                    },
+                    onConfirmPasswordChange = {
+                        confirmPassword = it
+                        confirmPasswordError = if (it == password) null else "Passwords do not match"
+                    },
+                    onPhoneChange = {
+                        phone = it
+                        phoneError = if (validatePhone(it)) null else "Invalid phone number format"
+                    },
+                    onDniChange = {
+                        dni = it
+                        dniError = if (validateDNI(it)) null else "Invalid DNI format"
+                    },
+                    onNameChange = {
+                        name = it
+                        nameError = if (it.isNotBlank()) null else "Name cannot be empty"
+                    },
+                    onSurnameChange = {
+                        surname = it
+                        surnameError = if (it.isNotBlank()) null else "Surname cannot be empty"
+                    },
                     onBirthDateChange = { birthDate = it },
                     onPasswordVisibilityChange = { passwordVisible = it },
                     onConfirmPasswordVisibilityChange = { confirmPasswordVisible = it },
@@ -186,6 +279,14 @@ fun RegisterContent(
     birthDate: String,
     passwordVisible: Boolean,
     confirmPasswordVisible: Boolean,
+    emailError: String?,
+    passwordError: String?,
+    confirmPasswordError: String?,
+    phoneError: String?,
+    dniError: String?,
+    nameError: String?,
+    surnameError: String?,
+    ageError: String?,
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onConfirmPasswordChange: (String) -> Unit,
@@ -229,8 +330,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = emailError != null
         )
+        if (emailError != null) {
+            Text(text = emailError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -256,8 +361,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = passwordError != null
         )
+        if (passwordError != null) {
+            Text(text = passwordError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -283,8 +392,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = confirmPasswordError != null
         )
+        if (confirmPasswordError != null) {
+            Text(text = confirmPasswordError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -299,8 +412,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = nameError != null
         )
+        if (nameError != null) {
+            Text(text = nameError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -315,8 +432,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = surnameError != null
         )
+        if (surnameError != null) {
+            Text(text = surnameError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -332,8 +453,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = dniError != null
         )
+        if (dniError != null) {
+            Text(text = dniError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -349,8 +474,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = phoneError != null
         )
+        if (phoneError != null) {
+            Text(text = phoneError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 
@@ -374,8 +503,12 @@ fun RegisterContent(
                 unfocusedBorderColor = Color.Gray,
                 cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier.fillMaxWidth(),
+            isError = ageError != null
         )
+        if (ageError != null) {
+            Text(text = ageError, color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
 
         Spacer(modifier = Modifier.height(24.dp))
 
@@ -401,7 +534,11 @@ fun RegisterContent(
 
         Button(
             onClick = {
-                if(email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty() && name.isNotEmpty() && surname.isNotEmpty() && birthDate.isNotEmpty()) {
+                if (email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty() &&
+                    name.isNotEmpty() && surname.isNotEmpty() && birthDate.isNotEmpty() &&
+                    emailError == null && passwordError == null && confirmPasswordError == null &&
+                    nameError == null && surnameError == null && ageError == null &&
+                    phoneError == null && dniError == null) {
                     val user = RegisterUser(name, surname, email, birthDate, password)
                     authViewModel.registerUser(user)
                 }
@@ -409,7 +546,12 @@ fun RegisterContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
+            enabled = email.isNotEmpty() && password.isNotEmpty() && confirmPassword.isNotEmpty() &&
+                    name.isNotEmpty() && surname.isNotEmpty() && birthDate.isNotEmpty() &&
+                    emailError == null && passwordError == null && confirmPasswordError == null &&
+                    nameError == null && surnameError == null && ageError == null &&
+                    phoneError == null && dniError == null
         ) {
             if (uiState.isFetching) {
                 CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
