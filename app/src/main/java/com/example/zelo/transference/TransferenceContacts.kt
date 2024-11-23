@@ -78,7 +78,19 @@ fun TransferenceContactsScreen(
             modifier = Modifier.padding(vertical = 16.dp)
         )
         if(contacts.isEmpty()){
-         Text(text = stringResource(R.string.no_contacts), color = MaterialTheme.colorScheme.tertiary, textAlign = TextAlign.Center)
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_contacts),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
         } else {
             // Display Contacts
             LazyColumn(
