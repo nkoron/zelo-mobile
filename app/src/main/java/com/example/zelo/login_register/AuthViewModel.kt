@@ -29,7 +29,8 @@ data class AuthUiState (
     val user: User? = null,
     val isFetching: Boolean = false,
     val walletDetail: WalletDetails? = null,
-    val error: Error? = null
+    val error: Error? = null,
+    val isResetLinkSent: Boolean = true
 )
 
 class AuthViewModel(
@@ -145,5 +146,26 @@ class AuthViewModel(
             }
         }
     }
+
+    fun recoverPassword(email: String) = viewModelScope.launch {
+        _uiState.update { it.copy(isFetching = true, error = null, isResetLinkSent = false) }
+        try {
+            userRepository.recoverPassword(email)
+            _uiState.update { it.copy(isFetching = false, isResetLinkSent = true) }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to send reset link"), isFetching = false) }
+        }
+    }
+
+    fun resetPassword(token: String, newPassword: String) = viewModelScope.launch {
+        _uiState.update { it.copy(isFetching = true, error = null) }
+        try {
+            userRepository.resetPassword(token, newPassword)
+            _uiState.update { it.copy(isAuthenticated = true, isFetching = false) }
+        } catch (e: Exception) {
+            _uiState.update { it.copy(error = Error(null, e.message ?: "Failed to reset password"), isFetching = false) }
+        }
+    }
+
 
 }

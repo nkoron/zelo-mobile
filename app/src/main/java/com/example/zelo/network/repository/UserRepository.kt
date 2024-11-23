@@ -46,6 +46,14 @@ class UserRepository(
         return userRemoteDataSource.verifyUser(VerificationCodeRequest( token))
     }
 
+    suspend fun recoverPassword(email: String) {
+        userRemoteDataSource.recoverPassword(email)
+    }
+
+    suspend fun resetPassword(token: String, newPassword: String) {
+        userRemoteDataSource.resetPassword(token, newPassword)
+    }
+
 
     fun isAuthenticated(): Boolean {
         return this.currentUser != null
