@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -29,7 +31,8 @@ fun AppBar(
         )
     ),
     currentRoute: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    onHome: () -> Unit,
 ) {
     val uiState = viewModel.uiState
     val configuration = LocalConfiguration.current
@@ -53,18 +56,34 @@ fun AppBar(
         ) {
             // Back Button (if it's a second-level route)
             if (showBackButton) {
-                IconButton(
-                    onClick = onBackClick,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
+                if (currentRoute == "home/transference/confirmed") {
+                    IconButton(
+                        onClick = onHome,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Close,
+                            contentDescription = stringResource(R.string.close),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
                 }
+
             }
 
             // Section Title

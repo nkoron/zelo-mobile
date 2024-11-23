@@ -56,7 +56,7 @@ class TransferenceCBUViewModel(
             val cards = walletRepository.cardsStream.first()
             createPaymentMethods(walletDetails, cards)
         },
-        { state, paymentMethods -> state.copy(availablePaymentMethods = paymentMethods) }
+        { state, paymentMethods -> state.copy(availablePaymentMethods = paymentMethods, selectedPaymentMethod = paymentMethods.first()) }
     )
 
     private fun createPaymentMethods(walletDetails: WalletDetails, cards: List<Card>): List<PaymentMethod> {
@@ -119,14 +119,14 @@ class TransferenceCBUViewModel(
                 "BALANCE" -> BalancePaymentRequest(
                     receiverEmail = currentState.email,
                     amount = amount,
-                    description = currentState.concept,
+                    description = currentState.concept.ifBlank { "-" },
                     type = "BALANCE"
                 )
                 "CREDIT" -> CardPaymentRequest(
                     cardId = currentState.selectedPaymentMethod.id?.toInt() ?: 0,
                     receiverEmail = currentState.email,
                     amount = amount,
-                    description = currentState.concept,
+                    description = currentState.concept.ifBlank { "-" },
                     type = "CARD"
                 )
                 else -> throw IllegalStateException("Invalid payment method selected")

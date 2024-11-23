@@ -105,7 +105,8 @@ fun AppNavigation(
                 AppBar(
                     viewModel = topBarViewModel,
                     currentRoute = currentRoute,
-                    onBackClick = { navController.popBackStack() }
+                    onBackClick = { navController.popBackStack() },
+                    onHome = { navController.navigate("home") }
                 )
             }
         },

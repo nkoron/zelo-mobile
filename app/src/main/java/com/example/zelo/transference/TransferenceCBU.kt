@@ -46,6 +46,7 @@ fun TransferDetailScreen(
     }
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    var validationError by remember { mutableStateOf<String?>(null) }
 
     LaunchedEffect(email) {
         email?.let { viewModel.updateEmail(it) }
@@ -121,6 +122,15 @@ fun TransferDetailScreen(
             )
         }
 
+        validationError?.let { errorMessage ->
+            Text(
+                text = errorMessage,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+        }
+
         // Payment Method Selection
         Column(
             verticalArrangement = Arrangement.spacedBy(16.dp)
@@ -156,8 +166,17 @@ fun TransferDetailScreen(
             // Transfer Button
             Button(
                 onClick = {
-                    Log.d("TransferenceCBU", "Transfer Button Clicked")
-                    onConfirm()
+                    when {
+                        uiState.email.isBlank() -> validationError = "Email cannot be empty."
+                        uiState.amount.isBlank() || uiState.amount.toDoubleOrNull() == null || uiState.amount.toDouble() <= 0 -> {
+                            validationError = "Please enter a valid amount."
+                        }
+                        else -> {
+                            validationError = null
+                            Log.d("TransferenceCBU", "Transfer Button Clicked")
+                            onConfirm()
+                        }
+                    }
                 },
                 modifier = Modifier
                     .weight(1f)
@@ -274,7 +293,7 @@ fun PaymentMethodCard(
                     color = Color.White
                 )
                 Text(
-                    paymentMethod.type ?: "",
+                    paymentMethod.type,
                     style = MaterialTheme.typography.bodySmall,
                     color = Color.White.copy(alpha = 0.8f)
                 )
