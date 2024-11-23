@@ -331,7 +331,6 @@ private fun QuickActions(uiState: DashboardUiState
     // Quick Actions
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
@@ -340,7 +339,7 @@ private fun QuickActions(uiState: DashboardUiState
                 text = stringResource(R.string.quick_actions),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.tertiary,
-                modifier = Modifier.padding(12.dp)
+                modifier = Modifier.padding(3.dp)
             )
             Row(
                 modifier = Modifier
