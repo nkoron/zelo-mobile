@@ -3,9 +3,11 @@ package com.example.zelo.network.dataSources
 import android.util.Log
 import com.example.zelo.network.SessionManager
 import com.example.zelo.network.WalletApiService
+import com.example.zelo.network.model.EmailRequest
 import com.example.zelo.network.model.LoginRequest
 import com.example.zelo.network.model.RegisterResponse
 import com.example.zelo.network.model.RegisterUser
+import com.example.zelo.network.model.ResetPasswordRequest
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.VerificationCodeRequest
 
@@ -43,6 +45,18 @@ class UserRemoteDataSource(
     suspend fun verifyUser(token: VerificationCodeRequest): User {
         return handleApiResponse {
             userService.verifyUser(token)
+        }
+    }
+
+    suspend fun recoverPassword(email: String) {
+        handleApiResponse {
+            userService.recoverPassword(EmailRequest(email))
+        }
+    }
+
+    suspend fun resetPassword(token: String, newPassword: String) {
+        handleApiResponse {
+            userService.resetPassword(ResetPasswordRequest(token, newPassword))
         }
     }
 }

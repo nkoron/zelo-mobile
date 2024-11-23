@@ -212,4 +212,12 @@
     <string name="confirm_deletion_subtext">Estás seguro que queres eliminar esta tarjeta?</string>
     <string name="available_balance">Dinero Disponible</string>
     <string name="quick_actions">Acciones Rápidas</string>
+    <string name="verify_email">Verificar Email</string>
+    <string name="send_reset_link">Enviar link de reestablecer contraseña</string>
+    <string name="back_to_login">Volver al inicio de sesión</string>
+    <string name="passwords_do_not_match">Las contraseñas no coinciden</string>
+    <string name="reset_token">Token de reestablecimiento</string>
+    <string name="reset_link_sent">Enviado</string>"
+    <string name="recover_password">Recuperar contraseña</string>
+    <string name="proceed_to_reset_password">Proceder a reestablecer contraseña</string>
 </resources>

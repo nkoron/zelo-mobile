@@ -211,6 +211,16 @@
     <string name="confirm_deletion_subtext">Are you sure you want to delete this card?</string>
     <string name="available_balance">Available money</string>
     <string name="quick_actions">Quick Actions</string>
+    <string name="verify_email">Verify Email</string>
+    <string name="send_reset_link">Send reset link</string>
+    <string name="back_to_login">Back to login</string>
+    <string name="passwords_do_not_match">Passwords do not match</string>
+    <string name="reset_token">Reset token</string>
+    <string name="reset_link_sent">Sent</string>"
+    <string name="recover_password">Recover password</string>
+    <string name="proceed_to_reset_password">Proceed to reset password</string>
+
+
 
 
 </resources>

@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.zelo.login_register.EmailVerificationScreen
 import com.example.zelo.login_register.RegisterScreen
 import com.example.zelo.login_register.ResetPasswordScreen
 import com.example.zelo.login_register.VerificationScreen
@@ -45,6 +44,7 @@ import com.example.zelo.activity.*
 import com.example.zelo.dashboard.PaymentLinkDetailsScreen
 import com.example.zelo.dashboard.PaymentSuccessScreen
 import com.example.zelo.login_register.AuthViewModel
+import com.example.zelo.login_register.EmailVerificationScreen
 import com.example.zelo.profile.AccessibilityScreen
 import com.example.zelo.profile.AccountDataScreen
 import com.example.zelo.profile.HelpScreen
@@ -164,8 +164,8 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             SignInScreen(navController, authViewModel)
         }
         composable("register") { RegisterScreen(navController) }
-        composable("reset_password") { EmailVerificationScreen(navController) }
-        composable("reset_password_form") { ResetPasswordScreen(navController) }
+        composable("reset_password") { EmailVerificationScreen(authViewModel, navController) }
+        composable("reset_password_form") { ResetPasswordScreen(authViewModel, navController) }
         composable("verify_account") { VerificationScreen(navController) }
 
         // Screens for logged-in users

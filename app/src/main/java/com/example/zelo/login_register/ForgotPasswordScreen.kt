@@ -32,246 +32,276 @@ import com.example.zelo.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailVerificationScreen(
+    viewModel: AuthViewModel,
     navController: NavController,
-    modifier: Modifier = Modifier,
-    onEmailVerified: () -> Unit = {}
+    modifier: Modifier = Modifier
 ) {
     var email by remember { mutableStateOf("") }
-    var emailError by remember { mutableStateOf("") }
-    var showResetPasswordScreen by remember { mutableStateOf(false) }
-
-    // Validación del correo electrónico
-    val isEmailValid = Patterns.EMAIL_ADDRESS.matcher(email).matches()
+    val uiState by viewModel.uiState.collectAsState()
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF1A1B25))
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Verificar Correo Electrónico",
-            style = MaterialTheme.typography.headlineLarge,
-            color = Color.White,
+            text = stringResource(R.string.recover_password),
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(vertical = 32.dp)
         )
 
-        // Campo para ingresar el correo electrónico
         OutlinedTextField(
             value = email,
-            onValueChange = {
-                email = it
-                emailError = ""
-            },
-            label = { Text("Correo Electrónico", color = Color.Gray) },
+            onValueChange = { email = it },
+            label = { Text(stringResource(R.string.email)) },
             singleLine = true,
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-            textStyle = TextStyle(color = Color.White),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
-            ),
             modifier = Modifier.fillMaxWidth()
         )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Mostrar mensaje de error si el correo no es válido
-        if (emailError.isNotEmpty()) {
-            Text(
-                text = emailError,
-                color = Color.Red,
-                style = MaterialTheme.typography.bodyMedium
-            )
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = "Recordaste tu contraseña? ",
-                color = Color.Gray
-            )
-            Text(
-                text = "Iniciar sesión",
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable {
-                    navController.navigate("login") // Navegar a la pantalla de registro
-                }
-            )
-        }
 
         Spacer(modifier = Modifier.height(32.dp))
 
         Button(
             onClick = {
-                // Validación y simulación de existencia del usuario
-                if (isEmailValid) {
-                    // Aquí iría la lógica para verificar si el usuario existe
-                    // Si el usuario existe, navegar a la pantalla de restablecer contraseña
-                    onEmailVerified()
-                    navController.navigate("reset_password_form")
-                } else {
-                    emailError = "Por favor ingrese un correo válido."
-                }
+                viewModel.recoverPassword(email)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            shape = RoundedCornerShape(28.dp)
+            enabled = email.isNotEmpty() && !uiState.isFetching
         ) {
-            Text("Verificar Correo", fontSize = 18.sp)
+            if (uiState.isFetching) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+            } else {
+                Text(stringResource(R.string.send_reset_link))
+            }
+        }
+
+        if (uiState.error != null) {
+            Text(
+                text = uiState.error!!.message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
+        if (uiState.isResetLinkSent) {
+            Text(
+                text = stringResource(R.string.reset_link_sent),
+                color = MaterialTheme.colorScheme.primary,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Button(
+                onClick = {
+                    navController.navigate("reset_password_form")
+                },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            ) {
+                Text(stringResource(R.string.proceed_to_reset_password))
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { navController.navigate("login") }
+        ) {
+            Text(stringResource(R.string.back_to_login))
         }
     }
 }
 
+
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ResetPasswordScreen(
+    viewModel: AuthViewModel,
     navController: NavController,
-    modifier: Modifier = Modifier,
-    onResetPassword: (password: String) -> Unit = { _ -> }
+    modifier: Modifier = Modifier
 ) {
+    var token by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmPassword by remember { mutableStateOf("") }
     var passwordVisible by remember { mutableStateOf(false) }
     var confirmPasswordVisible by remember { mutableStateOf(false) }
-    var showValidation by remember { mutableStateOf(false) }
+    val uiState by viewModel.uiState.collectAsState()
 
-    // Validación de la contraseña
-    val hasMinLength = password.length >= 6
-    val hasUpperCase = password.any { it.isUpperCase() }
-    val hasNumber = password.any { it.isDigit() }
-    val hasOnlyAlphanumeric = password.all { it.isLetterOrDigit() }
-    val passwordsMatch = password == confirmPassword
+    val passwordRequirements = remember { PasswordRequirements() }
+    val isPasswordValid = passwordRequirements.validatePassword(password)
+    val doPasswordsMatch = password == confirmPassword
 
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFF1A1B25))
+            .background(MaterialTheme.colorScheme.background)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = stringResource(R.string.reset_password),
-            style = MaterialTheme.typography.headlineLarge,
-            color = Color.White,
+            style = MaterialTheme.typography.headlineMedium,
+            color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier.padding(vertical = 32.dp)
         )
 
         OutlinedTextField(
-            value = password,
-            onValueChange = {
-                password = it
-                showValidation = false
-            },
-            label = { Text(stringResource(R.string.new_password), color = Color.Gray) },
+            value = token,
+            onValueChange = { token = it },
+            label = { Text(stringResource(R.string.reset_token)) },
             singleLine = true,
-            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                IconButton(onClick = { passwordVisible = !passwordVisible }) {
-                    Icon(
-                        imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
-                        tint = Color.Gray
-                    )
-                }
-            },
-            textStyle = TextStyle(color = Color.White),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
-            ),
             modifier = Modifier.fillMaxWidth()
         )
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        OutlinedTextField(
-            value = confirmPassword,
-            onValueChange = {
-                confirmPassword = it
-                showValidation = true
-            },
-            label = { Text(stringResource(R.string.repeat_password), color = Color.Gray) },
-            singleLine = true,
-            visualTransformation = if (confirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-            trailingIcon = {
-                IconButton(onClick = { confirmPasswordVisible = !confirmPasswordVisible }) {
-                    Icon(
-                        imageVector = if (confirmPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                        contentDescription = if (confirmPasswordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password),
-                        tint = Color.Gray
-                    )
-                }
-            },
-            textStyle = TextStyle(color = Color.White),
-            colors = TextFieldDefaults.outlinedTextFieldColors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
-            ),
-            modifier = Modifier.fillMaxWidth()
+        PasswordField(
+            password = password,
+            onPasswordChange = { password = it },
+            passwordVisible = passwordVisible,
+            onPasswordVisibilityChange = { passwordVisible = it },
+            label = stringResource(R.string.new_password)
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        PasswordField(
+            password = confirmPassword,
+            onPasswordChange = { confirmPassword = it },
+            passwordVisible = confirmPasswordVisible,
+            onPasswordVisibilityChange = { confirmPasswordVisible = it },
+            label = stringResource(R.string.confirm_password)
         )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Mostrar mensajes de validación
-        if (showValidation) {
-            ValidationMessage(stringResource(R.string.password_min_length), hasMinLength)
-            ValidationMessage(stringResource(R.string.uppercase_passwords), hasUpperCase)
-            ValidationMessage(stringResource(R.string.number_passwords), hasNumber)
-            ValidationMessage(stringResource(R.string.alpha_passwords), hasOnlyAlphanumeric)
-            ValidationMessage(stringResource(R.string.matching_passwords), passwordsMatch)
+        PasswordRequirementsDisplay(passwordRequirements, password)
+
+        if (!doPasswordsMatch && confirmPassword.isNotEmpty()) {
+            Text(
+                text = stringResource(R.string.passwords_do_not_match),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall
+            )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(
-                text = stringResource(R.string.remembered_password),
-                color = Color.Gray
-            )
-            Text(
-                text = stringResource(R.string.login),
-                color = MaterialTheme.colorScheme.primary,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.clickable {
-                    navController.navigate("login") // Navegar a la pantalla de registro
-                }
-            )
-        }
-
         Button(
             onClick = {
-                if (hasMinLength && hasUpperCase && hasNumber && hasOnlyAlphanumeric && passwordsMatch) {
-                    onResetPassword(password)
-                }
+                viewModel.resetPassword(token, password)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-            shape = RoundedCornerShape(28.dp),
-            enabled = hasMinLength && hasUpperCase && hasNumber && hasOnlyAlphanumeric && passwordsMatch
+            enabled = token.isNotEmpty() && isPasswordValid && doPasswordsMatch && !uiState.isFetching
         ) {
-            Text(stringResource(R.string.reset), fontSize = 18.sp)
+            if (uiState.isFetching) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
+            } else {
+                Text(stringResource(R.string.reset_password))
+            }
+        }
+
+        if (uiState.error != null) {
+            Text(
+                text = uiState.error!!.message,
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodyMedium,
+                modifier = Modifier.padding(top = 16.dp)
+            )
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        TextButton(
+            onClick = { navController.navigate("login") }
+        ) {
+            Text(stringResource(R.string.back_to_login))
+        }
+    }
+
+    LaunchedEffect(uiState.isAuthenticated) {
+        if (uiState.isAuthenticated) {
+            navController.navigate("main")
         }
     }
 }
+
+
+
+
+
+@Composable
+fun PasswordField(
+    password: String,
+    onPasswordChange: (String) -> Unit,
+    passwordVisible: Boolean,
+    onPasswordVisibilityChange: (Boolean) -> Unit,
+    label: String
+) {
+    OutlinedTextField(
+        value = password,
+        onValueChange = onPasswordChange,
+        label = { Text(label) },
+        singleLine = true,
+        visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
+        trailingIcon = {
+            IconButton(onClick = { onPasswordVisibilityChange(!passwordVisible) }) {
+                Icon(
+                    imageVector = if (passwordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                    contentDescription = if (passwordVisible) stringResource(R.string.hide_password) else stringResource(R.string.show_password)
+                )
+            }
+        },
+        modifier = Modifier.fillMaxWidth()
+    )
+}
+
+@Composable
+fun PasswordRequirementsDisplay(requirements: PasswordRequirements, password: String) {
+    Column {
+        requirements.getRequirements().forEach { requirement ->
+            ValidationMessage(
+                text = requirement.description,
+                isValid = requirement.isValid(password)
+            )
+        }
+    }
+}
+
+class PasswordRequirements {
+    private val minLength = 8
+    private val requirements = listOf(
+        PasswordRequirement("At least $minLength characters") { it.length >= minLength },
+        PasswordRequirement("At least one uppercase letter") { it.any { c -> c.isUpperCase() } },
+        PasswordRequirement("At least one lowercase letter") { it.any { c -> c.isLowerCase() } },
+        PasswordRequirement("At least one number") { it.any { c -> c.isDigit() } },
+        PasswordRequirement("Only alphanumeric characters") { it.all { c -> c.isLetterOrDigit() } }
+    )
+
+    fun getRequirements() = requirements
+
+    fun validatePassword(password: String): Boolean =
+        requirements.all { it.isValid(password) }
+}
+
+data class PasswordRequirement(
+    val description: String,
+    val isValid: (String) -> Boolean
+)
 
 @Composable
 private fun ValidationMessage(text: String, isValid: Boolean) {
@@ -284,19 +314,15 @@ private fun ValidationMessage(text: String, isValid: Boolean) {
         Icon(
             imageVector = if (isValid) Icons.Default.CheckCircle else Icons.Default.Cancel,
             contentDescription = if (isValid) stringResource(R.string.valid) else stringResource(R.string.invalid),
-            tint = if (isValid) Color(0xFF4CAF50) else Color(0xFFE57373),
+            tint = if (isValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error,
             modifier = Modifier.padding(end = 8.dp)
         )
         Text(
             text = text,
             style = MaterialTheme.typography.bodySmall,
-            color = if (isValid) Color(0xFF4CAF50) else Color(0xFFE57373)
+            color = if (isValid) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.error
         )
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewEmailVerificationScreen() {
-    EmailVerificationScreen(navController = rememberNavController())
-}
+
