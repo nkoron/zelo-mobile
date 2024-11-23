@@ -51,6 +51,7 @@ class ExpensesViewModel(
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 expensesStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(movements = emptyList()) }
             }
             }
     }

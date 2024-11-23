@@ -61,6 +61,7 @@ class MovementsViewModel(
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 paymentStreamJob?.cancel()
+                _uiState.update { c -> c.copy(movements = emptyList())  }
             }
         }
     }

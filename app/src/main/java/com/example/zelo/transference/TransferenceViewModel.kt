@@ -53,6 +53,7 @@ class TransferenceViewModel(
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 paymentsStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(movements = emptyList()) }
             }
         }
     }

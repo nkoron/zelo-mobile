@@ -59,6 +59,8 @@ class DashboardViewModel(
             sessionManager.logoutSignal.collect {
                 walletDetailStreamJob?.cancel()
                 paymentStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(movements = emptyList()) }
+                _uiState.update { currentState -> currentState.copy(walletDetail = null) }
             }
         }
     }

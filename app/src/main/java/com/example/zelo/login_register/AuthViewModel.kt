@@ -73,8 +73,10 @@ class AuthViewModel(
         { state, _ ->
             state.copy(
                 isAuthenticated = false,
-                walletDetail = null,
-                user = null
+            walletDetail = null, // Reinicia datos de wallet
+            user = null,         // Reinicia datos de usuario
+            isResetLinkSent = false,
+            error = null         // Limpia errores previos
             )
         }
     )
@@ -137,6 +139,7 @@ class AuthViewModel(
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 walletDetailStreamJob?.cancel()
+                _uiState.update { c ->c.copy(walletDetail = null, user = null) }
             }
         }
     }

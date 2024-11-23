@@ -47,6 +47,7 @@ class DepositViewModel(
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 walletDetailStreamJob?.cancel()
+                _uiState.update { currentState -> currentState.copy(walletDetail = null) }
             }
         }
     }
