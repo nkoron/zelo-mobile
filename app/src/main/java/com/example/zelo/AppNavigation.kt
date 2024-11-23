@@ -280,6 +280,6 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             composable("profile/messages") { MessagesScreen(onBack = { navController.popBackStack() }) }
             composable("profile/help") { HelpScreen(onBack = { navController.popBackStack() }) }
             composable("home/deposit") { DepositScreen(onBack = { navController.navigate("home") },) }
-            composable("qr") { QRScannerScreen() }
+            composable("qr") { QRScannerScreen(onSuccess = { result ->  navController.navigate("home/transference/form?email=$result?amount=0") })}
         }
     }

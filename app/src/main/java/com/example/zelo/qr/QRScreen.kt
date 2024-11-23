@@ -31,8 +31,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 
 @Composable
-fun QRScannerScreen() {
-    val navController: NavController = rememberNavController()
+fun QRScannerScreen(onSuccess: (String) -> Unit) {
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -88,7 +87,6 @@ fun QRScannerScreen() {
                 val onQrCodeScanned: (String) -> Unit = { result ->
                     scannedResult = result
                     isCameraActive = false
-                    navController.navigate("home/transference/form?email={$scannedResult}")
                     // Pause the camera immediately after scan
                 }
 
@@ -131,20 +129,8 @@ fun QRScannerScreen() {
 
     // Show Dialog with the scanned data
     if (showDialog) {
-        AlertDialog(
-            onDismissRequest = { scannedResult = null }, // Dismiss dialog
-            title = { Text("Scanned QR Code") },
-            text = { Text("Scanned Data: $scannedResult") },
-            confirmButton = {
-                Button(onClick = {
-                    // Close dialog and resume the camera
-                    scannedResult = null
-                    isCameraActive = true // Resume the camera after confirmation
-                }) {
-                    Text("OK")
-                }
-            }
-        )
+        scannedResult?.let { onSuccess(it) }
+        scannedResult = null
     }
 }
 
@@ -175,8 +161,6 @@ class QRCodeAnalyzer(
                     for (barcode in barcodes) {
                         barcode.rawValue?.let { result ->
                             // Save the result locally
-                            saveScannedData(context, result)
-
                             // Log and pass the result to the Composable function
                             onQrCodeScanned(result)
                         }
@@ -191,11 +175,4 @@ class QRCodeAnalyzer(
                 }
         }
     }
-}
-
-fun saveScannedData(context: Context, data: String) {
-    val sharedPreferences = context.getSharedPreferences("QRData", Context.MODE_PRIVATE)
-    val editor = sharedPreferences.edit()
-    editor.putString("last_scanned_qr", data)
-    editor.apply()
 }
