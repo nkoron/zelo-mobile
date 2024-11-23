@@ -1,4 +1,4 @@
-package com.example.zelo.dashboard
+package com.example.zelo.qr
 
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter

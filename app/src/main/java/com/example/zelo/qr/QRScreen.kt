@@ -11,27 +11,71 @@ import androidx.camera.core.ImageProxy
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.zelo.MyApplication
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.common.InputImage
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
+import com.example.zelo.R
+import com.example.zelo.dashboard.DashboardViewModel
+import com.example.zelo.profile.ProfileViewModel
 
 @Composable
-fun QRScannerScreen(onSuccess: (String) -> Unit) {
+fun QRCodeDialog(
+    onDismiss: () -> Unit,
+    content: String
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
+        ) {
+            Column(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Image(
+                    bitmap = generateQRCode(content).asImageBitmap(),
+                    contentDescription = stringResource(R.string.qr_code),
+                    modifier = Modifier
+                        .size(200.dp)
+                        .align(Alignment.CenterHorizontally)
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                TextButton(onClick = onDismiss) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun QRScannerScreen(
+    onSuccess: (String) -> Unit,
+    viewModel: ProfileViewModel = viewModel(factory = ProfileViewModel.provideFactory(LocalContext.current.applicationContext as MyApplication))
+) {
+    val email = viewModel.uiState.user?.email
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -45,12 +89,11 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
         )
     }
     var scannedResult by remember { mutableStateOf<String?>(null) }
-    var isCameraActive by remember { mutableStateOf(true) } // To control the camera
+    var isCameraActive by remember { mutableStateOf(true) }
+    var showQr by remember { mutableStateOf(false) } // Estado para controlar el diálogo de "Mostrar mi QR"
     var cameraProvider: ProcessCameraProvider? by remember { mutableStateOf(null) }
     var previewView: PreviewView? by remember { mutableStateOf(null) }
-    val coroutineScope = rememberCoroutineScope()
 
-    // Request camera permission
     val cameraPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { granted ->
@@ -64,14 +107,10 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
         }
     }
 
-    // Show Dialog when QR code is scanned
-    val showDialog = scannedResult != null
-
-    // Initialize camera
     LaunchedEffect(key1 = isCameraActive) {
         if (isCameraActive) {
             val cameraProvider = cameraProviderFuture.get()
-            this@LaunchedEffect.runCatching {
+            runCatching {
                 val preview = Preview.Builder().build()
                 previewView?.let {
                     preview.setSurfaceProvider(it.surfaceProvider)
@@ -87,7 +126,6 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
                 val onQrCodeScanned: (String) -> Unit = { result ->
                     scannedResult = result
                     isCameraActive = false
-                    // Pause the camera immediately after scan
                 }
 
                 imageAnalysis.setAnalyzer(
@@ -95,7 +133,6 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
                     QRCodeAnalyzer(context, onQrCodeScanned)
                 )
 
-                // Bind the camera to the lifecycle
                 cameraProvider.bindToLifecycle(
                     lifecycleOwner,
                     cameraSelector,
@@ -108,6 +145,7 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
 
     Column(
         modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.SpaceBetween
     ) {
         if (hasCameraPermission && isCameraActive) {
             Box(
@@ -118,30 +156,50 @@ fun QRScannerScreen(onSuccess: (String) -> Unit) {
                 AndroidView(
                     factory = { ctx ->
                         val previewViewInstance = PreviewView(ctx)
-                        previewView = previewViewInstance // Save the previewView for later use
+                        previewView = previewViewInstance
                         previewViewInstance
                     },
                     modifier = Modifier.fillMaxSize()
                 )
             }
         }
+
+        Button(
+            onClick = { showQr = true },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+                .height(48.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            )
+        ) {
+            Text(
+                text = "Mostrar mi QR",
+                style = MaterialTheme.typography.bodyLarge,
+                color = Color.White
+            )
+        }
+
+        Spacer(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(16.dp)
+        )
     }
 
-    // Show Dialog with the scanned data
-    if (showDialog) {
-        scannedResult?.let { onSuccess(it) }
+    if (showQr) {
+        QRCodeDialog(
+            content = email.toString(), // Reemplaza con el contenido adecuado
+            onDismiss = { showQr = false }
+        )
+    }
+
+    if (scannedResult != null) {
+        onSuccess(scannedResult!!)
         scannedResult = null
     }
 }
-
-
-
-
-
-
-
-
-
 
 class QRCodeAnalyzer(
     private val context: Context,
@@ -153,7 +211,8 @@ class QRCodeAnalyzer(
     override fun analyze(imageProxy: ImageProxy) {
         val mediaImage = imageProxy.image
         if (mediaImage != null) {
-            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
+            val image =
+                InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
 
             // Start scanning the image
             scanner.process(image)
