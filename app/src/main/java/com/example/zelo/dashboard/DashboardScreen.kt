@@ -413,7 +413,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
                 color = MaterialTheme.colorScheme.tertiary
             )
             Text(
-                text = if (!isBalanceVisible)
+                text = if (isBalanceVisible)
                     "$${String.format("%,.2f", balance)}"
                 else "****",
                 style = MaterialTheme.typography.headlineLarge,
@@ -421,7 +421,7 @@ private fun BalanceCard(balance: Double?, navController: NavController) {
             )
             IconButton(onClick = { isBalanceVisible = !isBalanceVisible }) {
                 Icon(
-                    imageVector = if (isBalanceVisible) Icons.Default.VisibilityOff
+                    imageVector = if (!isBalanceVisible) Icons.Default.VisibilityOff
                     else Icons.Default.Visibility,
                     contentDescription = stringResource(R.string.balance_visibility)
                 )
