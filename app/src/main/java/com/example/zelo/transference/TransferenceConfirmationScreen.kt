@@ -88,8 +88,10 @@ fun TransferConfirmationScreen(
         // Confirm Button
         Button(
             onClick = {
-                viewModel.makeTransfer()
-                onConfirm()
+                val result = viewModel.makeTransfer()
+                if (result.isSuccess) {
+                    onConfirm()
+                }
 
             },
             modifier = Modifier

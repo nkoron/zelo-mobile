@@ -14,6 +14,7 @@ import com.example.zelo.network.repository.PaymentRepository
 import com.example.zelo.network.repository.WalletRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Locale
 
 data class TransferenceCBUUiState(
@@ -121,8 +122,8 @@ class TransferenceCBUViewModel(
     val invalidPaymentMethod = if (Locale.getDefault().language == "es") "Método de pago seleccionado inválido" else "Invalid payment method selected"
 
 
-    fun makeTransfer() = runOnViewModelScope(
-        {
+    fun makeTransfer(): Result<Unit> = runOnViewModelScopeReturning(
+        block = {
             val currentState = _uiState.value
             val amount = currentState.amount.toDoubleOrNull() ?: 0.0
             val paymentRequest: PaymentRequest = when (currentState.selectedPaymentMethod?.type) {
@@ -143,8 +144,9 @@ class TransferenceCBUViewModel(
             }
             paymentRepository.makePayment(paymentRequest)
         },
-        { state, _ -> state.copy(transferSuccess = true) }
+        updateState = { state, _ -> state.copy(transferSuccess = true) }
     )
+
 
     fun resetTransferForm() {
         _uiState.update { it.copy(
@@ -168,6 +170,21 @@ class TransferenceCBUViewModel(
             _uiState.update { it.copy(isLoading = false, error = handleError(e)) }
         }
     }
+
+    private fun <R> runOnViewModelScopeReturning(
+        block: suspend () -> R,
+        updateState: (TransferenceCBUUiState, R) -> TransferenceCBUUiState
+    ): Result<R> = runBlocking {
+        _uiState.update { it.copy(isLoading = true, error = null) }
+        runCatching {
+            block()
+        }.onSuccess { response ->
+            _uiState.update { currentState -> updateState(currentState, response).copy(isLoading = false) }
+        }.onFailure { e ->
+            _uiState.update { it.copy(isLoading = false, error = handleError(e)) }
+        }
+    }
+
 
     private fun handleError(e: Throwable): Error {
         return if (e is DataSourceException) {
