@@ -1,5 +1,6 @@
 package com.example.zelo.activity
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -58,12 +59,11 @@ class MovementsViewModel(
     private fun observePaymentStream() {
         paymentStreamJob = viewModelScope.launch {
             paymentRepository.paymentStream
-                .distinctUntilChanged { old, new ->
-                    old.size == new.size && old.zip(new).all { (a, b) -> a.id == b.id && a.amount == b.amount }
-                }
+                .distinctUntilChanged()
                 .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
                 .collect { payments ->
                     _uiState.update { currentState ->
+                        Log.d("MovementsViewModel", "Payments: $payments")
                         currentState.copy(movements = payments.toList())
                     }
                 }
@@ -92,7 +92,7 @@ class MovementsViewModel(
                 paymentRepository.paymentStream,
                 _uiState.map { it.user }
             ) { payments, user ->
-                payments.filter { it.payer.id == user?.id }.sumOf { it.amount }
+                payments.filter { it.payer != null && it.payer.id == user?.id }.sumOf { it.amount }
             }
                 .distinctUntilChanged()
                 .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }

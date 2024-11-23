@@ -36,6 +36,9 @@ class PaymentRepository(
             this.payments = emptyList()
         }
     }
+    suspend fun logout(){
+        payments = emptyList()
+    }
 
     suspend fun createPayLink(payment: CreateLinkPaymentRequest): LinkPayment {
         val linkUUID =  dataSource.makeLinkPayment(payment)
@@ -49,7 +52,7 @@ class PaymentRepository(
     }
     suspend fun getPaymentById(paymentId: Int): Payment {
         return dataSource.getPaymentById(paymentId)
-        }
+    }
     suspend fun payPaymentByLinkUUID(payment: LinkPaymentRequest, linkUUID: String): Payment {
         return dataSource.payPaymentByLinkUUID(payment, linkUUID)
     }

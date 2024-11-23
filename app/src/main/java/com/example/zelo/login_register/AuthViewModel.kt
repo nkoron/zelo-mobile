@@ -10,6 +10,7 @@ import com.example.zelo.network.model.Error
 import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.WalletDetails
+import com.example.zelo.network.repository.PaymentRepository
 import com.example.zelo.network.repository.UserRepository
 import com.example.zelo.network.repository.WalletRepository
 import kotlinx.coroutines.Job
@@ -34,7 +35,8 @@ data class AuthUiState (
 class AuthViewModel(
     private val walletRepository: WalletRepository,
     sessionManager: SessionManager,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val paymentRepository: PaymentRepository
 ) : ViewModel() {
 
 
@@ -60,6 +62,8 @@ class AuthViewModel(
     fun logout() = runOnViewModelScope(
         {
             walletDetailStreamJob?.cancel()
+            paymentRepository.logout()
+            walletRepository.logout()
             userRepository.logout()
         },
         { state, _ ->
@@ -135,7 +139,8 @@ class AuthViewModel(
                 return AuthViewModel(
                     application.walletRepository,
                     application.sessionManager,
-                    application.userRepository
+                    application.userRepository,
+                    application.paymentRepository
                 ) as T
             }
         }
