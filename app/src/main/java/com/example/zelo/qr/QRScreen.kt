@@ -27,9 +27,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.concurrent.Executors
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun QRScannerScreen() {
+    val navController: NavController = rememberNavController()
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember { ProcessCameraProvider.getInstance(context) }
@@ -84,9 +87,9 @@ fun QRScannerScreen() {
 
                 val onQrCodeScanned: (String) -> Unit = { result ->
                     scannedResult = result
-                    isCameraActive = false // Pause the camera immediately after scan
-                    cameraProvider.unbindAll() // Unbind the camera to pause it
-                    println("Scanned QR Code: $result")
+                    isCameraActive = false
+                    navController.navigate("home/transference/form?email={$scannedResult}")
+                    // Pause the camera immediately after scan
                 }
 
                 imageAnalysis.setAnalyzer(
