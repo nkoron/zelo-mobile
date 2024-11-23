@@ -53,7 +53,7 @@ class TransferenceViewModel(
                 paymentRepository.paymentStream,
                 _uiState.map { it.user }
             ) { payments, user ->
-                payments.filter { it.payer.id == user?.id }
+                payments.filter { it.payer?.id == user?.id }
             }
                 .distinctUntilChanged()
                 .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }

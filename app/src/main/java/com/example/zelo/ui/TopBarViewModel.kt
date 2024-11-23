@@ -36,6 +36,9 @@ class TopBarViewModel(
             getCurrentUser()
         }
     }
+    fun logout() {
+        uiState = uiState.copy(isAuthenticated = false, user = null)
+    }
 
     fun getCurrentUser() = runOnViewModelScope(
         {

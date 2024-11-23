@@ -68,13 +68,13 @@ fun TransferDetailsDialog(
                 ) {
                     Column(modifier = Modifier.padding(16.dp)) {
                         Text(
-                            text = if (isPayer) "${payment.receiver.firstName} ${payment.receiver.lastName}" else "${payment.payer.firstName} ${payment.payer.lastName}",
+                            text = if (isPayer) "${payment.receiver.firstName} ${payment.receiver.lastName}" else "${payment.payer?.firstName} ${payment.payer?.lastName}",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Medium,
                             color = Color.Black
                         )
                         Text(
-                            text = if (isPayer) payment.receiver.email else payment.payer.email,
+                            text = if (isPayer) payment.receiver.email else if(payment.payer?.email != null) payment.payer.email else "",
                             style = MaterialTheme.typography.bodyMedium,
                             color = Color.Gray
                         )

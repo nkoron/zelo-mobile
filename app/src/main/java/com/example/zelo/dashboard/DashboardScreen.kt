@@ -157,8 +157,8 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
                 ) {
                     items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
                         val payment = uiState.movements[it]
-                        val me: User;
-                        val you: User;
+                        val me: User?;
+                        val you: User?;
                         val receive: Boolean
                         if (payment.receiver.id == uiState.user?.id) {
                             receive = true
@@ -170,7 +170,7 @@ private fun RecentMovementsFullScreen(uiState: DashboardUiState, viewModel: Dash
                             you = payment.receiver
                         }
                         TransactionItem(
-                            name = "${you.firstName} ${you.lastName}",
+                            name = "${you?.firstName} ${you?.lastName}",
                             description = "${
                                 if (receive) stringResource(R.string.transferred) else stringResource(
                                     R.string.sent
@@ -272,8 +272,8 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
             LazyColumn {
                 items(if (uiState.movements.size > 10) 10 else uiState.movements.size) {
                     val payment = uiState.movements[it]
-                    val me: User
-                    val you: User
+                    val me: User?
+                    val you: User?
                     val receive: Boolean
                     if (payment.receiver.id == uiState.user?.id) {
                         receive = true
@@ -285,7 +285,7 @@ private fun RecentMovements(uiState: DashboardUiState, viewModel: DashboardViewM
                         you = payment.receiver
                     }
                     TransactionItem(
-                        name = "${you.firstName} ${you.lastName}",
+                        name = "${you?.firstName} ${you?.lastName}",
                         description = "${
                             if (receive) stringResource(R.string.transferred) else stringResource(
                                 R.string.sent

@@ -10,7 +10,6 @@ data class Card(
     val fullName: String,
     val type: String,
     val cvv: String?= null, //chequear
-    val createdAt: String?,
-    val updatedAt: String?
-
+    val createdAt: String?= null,
+    val updatedAt: String?= null
 )

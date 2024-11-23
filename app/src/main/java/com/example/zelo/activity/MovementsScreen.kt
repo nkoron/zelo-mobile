@@ -75,8 +75,8 @@ fun MovementsScreen(
 @Composable
 fun FormatItems(uiState: MovementsUiState, it: Int) {
     val payment = uiState.movements[it]
-    val me: User;
-    val you: User;
+    val me: User?;
+    val you: User?;
     val receive: Boolean
     if (payment.receiver.id == uiState.user?.id) {
         receive = true
@@ -88,7 +88,7 @@ fun FormatItems(uiState: MovementsUiState, it: Int) {
         you = payment.receiver
     }
     TransactionItem(
-        name = "${you.firstName} ${you.lastName}",
+        name = "${you?.firstName} ${you?.lastName}",
         description = "${if (receive) stringResource(R.string.transferred) else stringResource(R.string.sent)}: ${payment.amount}",
         time = payment.createdAt,
         showAvatar = true,

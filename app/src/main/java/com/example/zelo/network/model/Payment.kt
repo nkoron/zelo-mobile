@@ -14,7 +14,7 @@ data class Payment(
     val createdAt: String,
     val updatedAt: String,
     val card: Card?,
-    val payer: User,
+    val payer: User? = null,
     val receiver: User
 )
 

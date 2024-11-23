@@ -18,15 +18,18 @@ class WalletRepository(
     private var cards: List<Card> = emptyList()
 
     suspend fun getCards(refresh: Boolean = false): List<Card> {
-     if(refresh || cards.isEmpty()){
-        val result =  walletRemoteDataSource.getCards()
+        if(refresh || cards.isEmpty()){
+            val result =  walletRemoteDataSource.getCards()
 
-        cardsMutex.withLock {
-            Log.d("WalletRepository", "Cards: $result")
-         this.cards = result
+            cardsMutex.withLock {
+                Log.d("WalletRepository", "Cards: $result")
+                this.cards = result
+            }
         }
-     }
         return cardsMutex.withLock { this.cards }
+    }
+    suspend fun logout(){
+        cards = emptyList()
     }
     suspend fun addCard(card: Card): Card{
         val newCard =  walletRemoteDataSource.addCard(card)
