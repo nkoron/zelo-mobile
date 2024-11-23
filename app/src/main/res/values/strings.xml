@@ -219,6 +219,8 @@
     <string name="reset_link_sent">Sent</string>"
     <string name="recover_password">Recover password</string>
     <string name="proceed_to_reset_password">Proceed to reset password</string>
+    <string name="no_contacts">No contacts found</string>
+
 
 
 

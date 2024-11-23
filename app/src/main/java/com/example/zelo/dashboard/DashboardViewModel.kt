@@ -36,7 +36,7 @@ data class DashboardUiState (
 
 class DashboardViewModel(
     private val walletRepository: WalletRepository,
-    sessionManager: SessionManager,
+    private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
@@ -51,6 +51,15 @@ class DashboardViewModel(
             getUser()
             observeWalletDetailStream()
             observePaymentStream()
+            observeLogoutSignal()
+        }
+    }
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                walletDetailStreamJob?.cancel()
+                paymentStreamJob?.cancel()
+            }
         }
     }
     private fun observePaymentStream() {

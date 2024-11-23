@@ -48,6 +48,7 @@ class TransferenceCBUViewModel(
 
     init {
         loadPaymentMethods()
+//        observeLogoutSignal()
     }
 
     private fun loadPaymentMethods() = runOnViewModelScope(
@@ -58,6 +59,12 @@ class TransferenceCBUViewModel(
         },
         { state, paymentMethods -> state.copy(availablePaymentMethods = paymentMethods) }
     )
+//    private fun observeLogoutSignal(){
+//        viewModelScope.launch {
+//            sessionManager.logoutSignal.collect {
+//                walletRepository.cardsStream?.cancel()
+//            }
+//        }    }
 
     private fun createPaymentMethods(walletDetails: WalletDetails, cards: List<Card>): List<PaymentMethod> {
         val paymentMethods = mutableListOf<PaymentMethod>()

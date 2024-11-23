@@ -38,7 +38,8 @@ data class MovementsUiState (
 
 class MovementsViewModel(
     private val paymentRepository: PaymentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var paymentStreamJob: Job? = null
@@ -49,12 +50,20 @@ class MovementsViewModel(
         observeIncomeStream()
         observeExpenseStream()
         observePaymentStream()
+        observeLogoutSignal()
         getCurrentUser()
     }
     fun getCurrentUser()= runOnViewModelScope(
             block = { userRepository.getCurrentUser() },
             updateState = { state, response -> state.copy(user = response) }
         )
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                paymentStreamJob?.cancel()
+            }
+        }
+    }
 
     private fun observePaymentStream() {
         paymentStreamJob = viewModelScope.launch {
@@ -140,7 +149,8 @@ class MovementsViewModel(
             override fun<T : ViewModel> create(modelClass: Class<T>): T {
                 return MovementsViewModel(
                     application.paymentRepository,
-                    application.userRepository
+                    application.userRepository,
+                    application.sessionManager
                 ) as T
             }
         }

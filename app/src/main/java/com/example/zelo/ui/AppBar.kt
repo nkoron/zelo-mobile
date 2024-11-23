@@ -29,7 +29,8 @@ fun AppBar(
         )
     ),
     currentRoute: String,
-    onBackClick: () -> Unit
+    onBackClick: () -> Unit,
+    isAuthenticated: Boolean
 ) {
     val uiState = viewModel.uiState
     val configuration = LocalConfiguration.current
@@ -37,74 +38,84 @@ fun AppBar(
 
     LaunchedEffect(Unit) {
         viewModel.checkAuthenticationStatus()
+        viewModel.getCurrentUser()
     }
+    if(isAuthenticated) {
 
-    val showBackButton = currentRoute.count { it == '/' } > 0
+        val showBackButton = currentRoute.count { it == '/' } > 0
 
-    Surface(
-        color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 2.dp,
-        modifier = Modifier.height(64.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(horizontal = 16.dp)
+        Surface(
+            color = MaterialTheme.colorScheme.surface,
+            tonalElevation = 2.dp,
+            modifier = Modifier.height(64.dp)
         ) {
-            // Back Button (if it's a second-level route)
-            if (showBackButton) {
-                IconButton(
-                    onClick = onBackClick,
-                    modifier = Modifier
-                        .align(Alignment.CenterStart)
-                        .size(48.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = stringResource(R.string.back),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-
-            // Section Title
-            Text(
-                text = uiState.currentSection,
-                style = MaterialTheme.typography.titleLarge.copy(
-                    fontWeight = FontWeight.Bold
-                ),
-                textAlign = TextAlign.Center,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
+            Box(
                 modifier = Modifier
-                    .align(Alignment.Center)
-                    .padding(horizontal = if (showBackButton) 48.dp else 0.dp)
-            )
-
-            // User Avatar
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(40.dp)
+                    .fillMaxSize()
+                    .padding(horizontal = 16.dp)
             ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
-                ) {
-                    val initials = buildString {
-                        uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
-                        uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
+                // Back Button (if it's a second-level route)
+                if (showBackButton) {
+                    IconButton(
+                        onClick = onBackClick,
+                        modifier = Modifier
+                            .align(Alignment.CenterStart)
+                            .size(48.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = stringResource(R.string.back),
+                            tint = MaterialTheme.colorScheme.primary
+                        )
                     }
-
-                    Text(
-                        text = initials,
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
                 }
+
+                // Section Title
+                Text(
+                    text = uiState.currentSection,
+                    style = MaterialTheme.typography.titleLarge.copy(
+                        fontWeight = FontWeight.Bold
+                    ),
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = if (showBackButton) 48.dp else 0.dp)
+                )
+
+                // User Avatar
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(40.dp)
+                ) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        if (uiState.isFetching) {
+                            CircularProgressIndicator(color = Color.White, strokeWidth = 2.dp)
+                        } else {
+                            val initials = uiState.user?.let { user ->
+                                buildString {
+                                    user.firstName.firstOrNull()?.let { append(it.uppercaseChar()) }
+                                    user.lastName.firstOrNull()?.let { append(it.uppercaseChar()) }
+                                }
+                            } ?: "?"
+
+                            Text(
+                                text = initials,
+                                color = Color.White,
+                                style = MaterialTheme.typography.bodyLarge,
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+                    }
+                }
+
             }
         }
     }

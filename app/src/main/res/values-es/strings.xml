@@ -220,4 +220,5 @@
     <string name="reset_link_sent">Enviado</string>"
     <string name="recover_password">Recuperar contraseña</string>
     <string name="proceed_to_reset_password">Proceder a reestablecer contraseña</string>
+    <string name="no_contacts">No tienes contactos</string>
 </resources>

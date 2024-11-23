@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.zelo.MyApplication
+import com.example.zelo.network.SessionManager
 import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
 import com.example.zelo.network.model.Payment
@@ -30,7 +31,8 @@ data class TransferenceUiState(
 
 class TransferenceViewModel(
     private val paymentRepository: PaymentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var paymentsStreamJob: Job? = null
@@ -39,6 +41,7 @@ class TransferenceViewModel(
 
     init {
         getCurrentUser()
+        observeLogoutSignal()
         observePaymentStream()
     }
 
@@ -46,6 +49,13 @@ class TransferenceViewModel(
         block = { userRepository.getCurrentUser() },
         updateState = { state, response -> state.copy(user = response) }
     )
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                paymentsStreamJob?.cancel()
+            }
+        }
+    }
 
     private fun observePaymentStream() {
         paymentsStreamJob = viewModelScope.launch {
@@ -93,7 +103,8 @@ class TransferenceViewModel(
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 return TransferenceViewModel(
                     application.paymentRepository,
-                    application.userRepository
+                    application.userRepository,
+                    application.sessionManager
                 ) as T
             }
         }

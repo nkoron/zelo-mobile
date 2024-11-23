@@ -35,7 +35,7 @@ data class AuthUiState (
 
 class AuthViewModel(
     private val walletRepository: WalletRepository,
-    sessionManager: SessionManager,
+    private val sessionManager: SessionManager,
     private val userRepository: UserRepository,
     private val paymentRepository: PaymentRepository
 ) : ViewModel() {
@@ -46,6 +46,7 @@ class AuthViewModel(
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
     init {
+        observeLogoutSignal()
         if (uiState.value.isAuthenticated) {
             observeWalletDetailStream()
             getCurrentUser()
@@ -55,6 +56,7 @@ class AuthViewModel(
     fun login(username: String, password: String) = runOnViewModelScope(
         {
             userRepository.login(username, password)
+            userRepository.getCurrentUser()
             observeWalletDetailStream()
         },
         { state, _ -> state.copy(isAuthenticated = true) }
@@ -62,6 +64,7 @@ class AuthViewModel(
 
     fun logout() = runOnViewModelScope(
         {
+            sessionManager.logout()
             walletDetailStreamJob?.cancel()
             paymentRepository.logout()
             walletRepository.logout()
@@ -128,6 +131,13 @@ class AuthViewModel(
             Error(e.code, e.message ?: "")
         } else {
             Error(null, e.message ?: "")
+        }
+    }
+    private fun observeLogoutSignal(){
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                walletDetailStreamJob?.cancel()
+            }
         }
     }
 

@@ -77,44 +77,58 @@ fun TransferenceContactsScreen(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 16.dp)
         )
-
-        // Display Contacts
-        LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            // Filter contacts based on the search query
-            items(contacts.filter { it.name.contains(searchQuery, ignoreCase = true) }) { contact ->
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
+        if(contacts.isEmpty()){
+         Text(text = stringResource(R.string.no_contacts), color = MaterialTheme.colorScheme.tertiary, textAlign = TextAlign.Center)
+        } else {
+            // Display Contacts
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                // Filter contacts based on the search query
+                items(contacts.filter {
+                    it.name.contains(
+                        searchQuery,
+                        ignoreCase = true
+                    )
+                }) { contact ->
                     Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Icon(
-                            Icons.Default.AccountCircle,
-                            contentDescription = null,
-                            modifier = Modifier.size(40.dp)
-                        )
-                        Text(contact.name, fontSize = 16.sp)
-                    }
-                    val amount = 0.0
-                    Button(
-                        onClick = {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Icon(
+                                Icons.Default.AccountCircle,
+                                contentDescription = null,
+                                modifier = Modifier.size(40.dp)
+                            )
+                            Text(contact.name, fontSize = 16.sp)
+                        }
+                        val amount = 0.0
+                        Button(
+                            onClick = {
 
-                            Log.d("TransferenceContacts", "Transfer button clicked for contact: ${contact.name} with email: ${contact.email}")
-                            contact.email?.let { email->
-                                onNavigateToTransferenceCBU(email, 0.0)  // Pass email to the navigation callback
-                            }
-                        },
-                        enabled = contact.email != null, // Disable if email is null
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF854EF9))
-                    ) {
-                        Text(stringResource(R.string.transfer))
-                    }
+                                Log.d(
+                                    "TransferenceContacts",
+                                    "Transfer button clicked for contact: ${contact.name} with email: ${contact.email}"
+                                )
+                                contact.email?.let { email ->
+                                    onNavigateToTransferenceCBU(
+                                        email,
+                                        0.0
+                                    )  // Pass email to the navigation callback
+                                }
+                            },
+                            enabled = contact.email != null, // Disable if email is null
+                            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF854EF9))
+                        ) {
+                            Text(stringResource(R.string.transfer))
+                        }
 
+                    }
                 }
             }
         }

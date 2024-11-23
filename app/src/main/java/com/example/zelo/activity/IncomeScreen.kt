@@ -65,7 +65,7 @@ fun IncomeScreen(
                 items(uiState.movements.size) {
                     val payment = uiState.movements[it]
                     TransactionItem(
-                        name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
+                        name = "${payment.payer?.firstName} ${payment.payer?.lastName}",
                         description = "${stringResource(R.string.transferred)}: ${payment.amount}",
                         time = payment.createdAt,
                         showAvatar = true,

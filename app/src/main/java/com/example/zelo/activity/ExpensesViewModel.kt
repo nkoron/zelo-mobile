@@ -34,7 +34,8 @@ data class ExpensesUiState (
 
 class ExpensesViewModel(
     private val paymentRepository: PaymentRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
     private var expensesStreamJob: Job? = null
@@ -44,6 +45,14 @@ class ExpensesViewModel(
     init {
         getCurrentUser()
         observeExpenseStream()
+        observeLogoutSignal()
+    }
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                expensesStreamJob?.cancel()
+            }
+            }
     }
     fun getCurrentUser()= runOnViewModelScope(
         block = { userRepository.getCurrentUser() },
@@ -104,7 +113,8 @@ class ExpensesViewModel(
             override fun<T : ViewModel> create(modelClass: Class<T>): T {
                 return ExpensesViewModel(
                     application.paymentRepository,
-                    application.userRepository
+                    application.userRepository,
+                    application.sessionManager
                 ) as T
             }
         }

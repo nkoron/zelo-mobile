@@ -26,14 +26,20 @@ data class TopBarUiState(
 class TopBarViewModel(
     private val userRepository: UserRepository,
     private val sessionManager: SessionManager,
+    private val isAuthenticated: Boolean = sessionManager.loadAuthToken() != null
 ) : ViewModel() {
 
     var uiState by mutableStateOf(TopBarUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
-        private set
 
     init {
-        if (uiState.isAuthenticated) {
-            getCurrentUser()
+        observeLogoutSignal()
+        getCurrentUser()
+    }
+    private fun observeLogoutSignal() {
+        viewModelScope.launch {
+            sessionManager.logoutSignal.collect {
+                logout()
+            }
         }
     }
     fun logout() {
