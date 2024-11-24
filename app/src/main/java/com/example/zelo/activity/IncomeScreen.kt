@@ -95,15 +95,17 @@ fun IncomeScreen(
             LazyColumn {
                 items(filteredMovements.size) { index ->
                     val payment = filteredMovements[index]
-                    TransactionItem(
-                        name = "${payment.payer?.firstName} ${payment.payer?.lastName}",
-                        description = "${stringResource(R.string.transferred)}: ${payment.amount}",
-                        time = payment.createdAt,
-                        showAvatar = true,
-                        movements = filteredMovements,
-                        id = index,
-                        isPayer = false
-                    )
+                    if (payment.payer?.firstName != null) {
+                        TransactionItem(
+                            name = "${payment.payer?.firstName} ${payment.payer?.lastName}",
+                            description = "${stringResource(R.string.transferred)}: ${payment.amount}",
+                            time = payment.createdAt,
+                            showAvatar = true,
+                            movements = filteredMovements,
+                            id = index,
+                            isPayer = false
+                        )
+                    }
                 }
             }
         }

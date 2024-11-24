@@ -187,7 +187,9 @@ fun PhoneLayout(
 
             LazyColumn {
                 items(uiState.movements) { payment ->
-                    FormatItems(uiState, uiState.movements.indexOf(payment))
+                    if (payment.payer?.firstName != null) {
+                        FormatItems(uiState, uiState.movements.indexOf(payment))
+                    }
                 }
             }
         }
