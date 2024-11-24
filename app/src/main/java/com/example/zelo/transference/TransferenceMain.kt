@@ -45,12 +45,23 @@ fun TransferScreen(
         viewModel.checkAuthenticationStatus()
     }
 
+    // Filtrar los movimientos según el texto de búsqueda
+    val filteredMovements = if (searchQuery.isEmpty()) {
+        uiState.movements
+    } else {
+        uiState.movements.filter { payment ->
+            val fullName = "${payment.receiver.firstName} ${payment.receiver.lastName}"
+            fullName.contains(searchQuery, ignoreCase = true) ||
+                    payment.receiver.email.contains(searchQuery, ignoreCase = true)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        // Action Buttons
+        // Botones de acción
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +92,7 @@ fun TransferScreen(
             }
         }
 
-        // Search Bar
+        // Barra de búsqueda
         val containerColor = MaterialTheme.colorScheme.onSurface
         TextField(
             value = searchQuery,
@@ -101,16 +112,19 @@ fun TransferScreen(
             ),
             singleLine = true
         )
+
+        // Título
         Text(
             stringResource(R.string.recent_transfers),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        if(uiState.isFetching){
+        // Indicador de carga o lista filtrada
+        if (uiState.isFetching) {
             CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
         } else {
-            if (uiState.movements.isEmpty()) {
+            if (filteredMovements.isEmpty()) {
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -128,8 +142,8 @@ fun TransferScreen(
                 LazyColumn(
                     modifier = Modifier.weight(1f)
                 ) {
-                    items(uiState.movements.size) { index ->
-                        val payment = uiState.movements[index]
+                    items(filteredMovements.size) { index ->
+                        val payment = filteredMovements[index]
                         TransactionItem(
                             name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
                             description = "${stringResource(R.string.sent)}: ${payment.amount}",
@@ -143,10 +157,7 @@ fun TransferScreen(
                         )
                     }
                 }
-        }
-        // Recent Transfers
-
-
+            }
         }
     }
 }

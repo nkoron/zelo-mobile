@@ -52,13 +52,15 @@ fun IncomeScreen(
         } else {
             uiState.movements.filter { movement ->
                 val payer = movement.payer
-                // Verificar si el nombre o el monto coinciden con la búsqueda
-                payer?.firstName?.contains(searchQuery, ignoreCase = true) == true ||
-                        payer?.lastName?.contains(searchQuery, ignoreCase = true) == true ||
+                val fullName = "${payer?.firstName.orEmpty()} ${payer?.lastName.orEmpty()}".lowercase()
+
+                // Verificar si el texto de búsqueda coincide con el nombre completo o el monto
+                fullName.contains(searchQuery.lowercase()) ||
                         movement.amount.toString().contains(searchQuery, ignoreCase = true)
             }
         }
     }
+
 
     Column(
         modifier = Modifier
