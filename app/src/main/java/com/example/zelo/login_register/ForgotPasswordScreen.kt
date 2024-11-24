@@ -49,7 +49,7 @@ fun EmailVerificationScreen(
         Text(
             text = stringResource(R.string.recover_password),
             style = MaterialTheme.typography.headlineMedium,
-            color = MaterialTheme.colorScheme.tertiary,
+            color = Color.White,
             modifier = Modifier.padding(vertical = 32.dp)
         )
 
@@ -237,7 +237,8 @@ fun ResetPasswordScreen(
 
     LaunchedEffect(uiState.isAuthenticated) {
         if (uiState.isAuthenticated) {
-            navController.navigate("main")
+
+            navController.navigate("login")
         }
     }
 }

@@ -182,7 +182,7 @@ class AuthViewModel(
         _uiState.update { it.copy(isFetching = true, error = null) }
         try {
             userRepository.resetPassword(token, newPassword)
-            _uiState.update { it.copy(isAuthenticated = true, isFetching = false) }
+            _uiState.update { it.copy(isAuthenticated = false, isFetching = false) }
         } catch (e: Exception) {
             _uiState.update { it.copy(error = Error(null, e.message ?: FailedPasswordError), isFetching = false) }
         }
