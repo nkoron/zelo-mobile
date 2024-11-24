@@ -26,25 +26,24 @@ import com.example.zelo.R
 fun ContactsScreen(
     navController: NavController,
     modifier: Modifier = Modifier,
-    onBack: () -> Unit = {navController.navigate("transference")},
+    onBack: () -> Unit = { navController.navigate("transference") },
     onTransfer: (Contact) -> Unit = {}
 ) {
     var searchQuery by remember { mutableStateOf("") }
     var showFilters by remember { mutableStateOf(false) }
 
-    val contacts =
-        listOf(
-            Contact(firstName = "Jose", lastName = "Rodriguez", group = stringResource(R.string.friend), hasCustomAvatar = true),
-            Contact(firstName = "Martin", lastName = "Garcia", group = stringResource(R.string.family), hasCustomAvatar = true),
-            Contact(firstName = "Miguel", lastName = "Lopez", group = stringResource(R.string.work), hasCustomAvatar = true),
-            Contact(firstName = "Juan", lastName = "Martinez", group = stringResource(R.string.friend), hasCustomAvatar = true),
-            Contact(firstName = "Ana", lastName = "Gonzalez", group = stringResource(R.string.family), hasCustomAvatar = false),
-            Contact(firstName = "Carlos", lastName = "Fernandez", group = stringResource(R.string.work), hasCustomAvatar = false),
-            Contact(firstName = "Laura", lastName = "Diaz", group = stringResource(R.string.friend), hasCustomAvatar = false),
-            Contact(firstName = "Pedro", lastName = "Sanchez", group = stringResource(R.string.family), hasCustomAvatar = false)
-        )
+    val contacts = listOf(
+        Contact(firstName = "Jose", lastName = "Rodriguez", group = stringResource(R.string.friend), hasCustomAvatar = true),
+        Contact(firstName = "Martin", lastName = "Garcia", group = stringResource(R.string.family), hasCustomAvatar = true),
+        Contact(firstName = "Miguel", lastName = "Lopez", group = stringResource(R.string.work), hasCustomAvatar = true),
+        Contact(firstName = "Juan", lastName = "Martinez", group = stringResource(R.string.friend), hasCustomAvatar = true),
+        Contact(firstName = "Ana", lastName = "Gonzalez", group = stringResource(R.string.family), hasCustomAvatar = false),
+        Contact(firstName = "Carlos", lastName = "Fernandez", group = stringResource(R.string.work), hasCustomAvatar = false),
+        Contact(firstName = "Laura", lastName = "Diaz", group = stringResource(R.string.friend), hasCustomAvatar = false),
+        Contact(firstName = "Pedro", lastName = "Sanchez", group = stringResource(R.string.family), hasCustomAvatar = false)
+    )
 
-
+    // Filtrar los contactos en base a la búsqueda
     val filteredContacts = contacts.filter {
         it.firstName.contains(searchQuery, ignoreCase = true) ||
                 it.lastName.contains(searchQuery, ignoreCase = true)
@@ -65,7 +64,7 @@ fun ContactsScreen(
                     navigationIconContentColor = Color.Black
                 )
             )
-        },
+        }
     ) { paddingValues ->
         Column(
             modifier = Modifier
@@ -73,7 +72,7 @@ fun ContactsScreen(
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
         ) {
-            // Search Bar
+            // Barra de búsqueda
             TextField(
                 value = searchQuery,
                 onValueChange = { searchQuery = it },
@@ -90,10 +89,10 @@ fun ContactsScreen(
                     }
                 },
                 colors = TextFieldDefaults.colors(
-                    focusedContainerColor = MaterialTheme.colorScheme.onSurface, // Background color when focused
-                    unfocusedContainerColor = MaterialTheme.colorScheme.onSurface, // Background color when unfocused
-                    focusedIndicatorColor = Color.Transparent, // Remove focused underline
-                    unfocusedIndicatorColor = Color.Transparent // Remove unfocused underline
+                    focusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
+                    focusedIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent
                 ),
                 shape = RoundedCornerShape(24.dp)
             )
@@ -128,6 +127,7 @@ fun ContactsScreen(
                 }
             }
 
+            // Mostrar los contactos filtrados
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(12.dp)
             ) {
