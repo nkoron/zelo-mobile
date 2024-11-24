@@ -175,7 +175,7 @@ fun QRScannerScreen(
             )
         ) {
             Text(
-                text = "Mostrar mi QR",
+                text = stringResource(R.string.show_qr),
                 style = MaterialTheme.typography.bodyLarge,
                 color = Color.White
             )
