@@ -65,11 +65,11 @@ class AuthViewModel(
 
     fun logout() = runOnViewModelScope(
         {
-            sessionManager.logout()
             walletDetailStreamJob?.cancel()
             paymentRepository.logout()
             walletRepository.logout()
             userRepository.logout()
+            sessionManager.logout()
         },
         { state, _ ->
             state.copy(
