@@ -224,5 +224,6 @@
     <string name="valid_amount">Por favor ingrese un monto válido</string>
     <string name="valid_email">El correo eléctronico no puede estar vacío</string>
     <string name="show_qr">Show my QR</string>
+    <string name="invalid_amount">Por Favor Ingrese un Monto Valido.</string>
 
 </resources>

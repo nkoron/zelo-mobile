@@ -3,10 +3,7 @@ package com.example.zelo.enter_money
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -17,14 +14,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.zelo.MyApplication
 import com.example.zelo.R
-import com.example.zelo.dashboard.DashboardViewModel
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,10 +29,11 @@ fun DepositScreen(
     ))
 ) {
     val uiState by viewModel.uiState.collectAsState()
-    var selectedBank by remember { mutableStateOf("") }
+    var selectedBank by remember { mutableStateOf("Banco Nación") }
     var amount by remember { mutableStateOf("") }
     var expanded by remember { mutableStateOf(false) }
     var showSuccessMessage by remember { mutableStateOf(false) }
+    var isAmountValid by remember { mutableStateOf(false) }
 
     val banks = listOf("Banco Nación", "Banco Galicia", "Banco Santander", "BBVA", "Banco Macro")
 
@@ -49,7 +43,6 @@ fun DepositScreen(
             .padding(horizontal = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // Header: Bank Selection and Amount Input
         item {
             Text(
                 stringResource(R.string.deposit_by_bank),
@@ -95,7 +88,6 @@ fun DepositScreen(
                                 selectedBank = bank
                                 expanded = false
                             }
-
                         )
                     }
                 }
@@ -103,7 +95,11 @@ fun DepositScreen(
 
             OutlinedTextField(
                 value = amount,
-                onValueChange = { amount = it; showSuccessMessage = false },
+                onValueChange = {
+                    amount = it
+                    showSuccessMessage = false
+                    isAmountValid = it.toDoubleOrNull()?.let { amount -> amount > 0 } == true
+                },
                 placeholder = { Text(stringResource(R.string.amount_to_deposit)) },
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,13 +107,23 @@ fun DepositScreen(
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedTextColor = MaterialTheme.colorScheme.tertiary,
                     unfocusedTextColor =  MaterialTheme.colorScheme.tertiary,
+                    errorTextColor = MaterialTheme.colorScheme.error,
                     focusedContainerColor = MaterialTheme.colorScheme.onSurface,
                     unfocusedContainerColor = MaterialTheme.colorScheme.onSurface,
                     disabledContainerColor = MaterialTheme.colorScheme.onSurface,
                     errorContainerColor = Color.Transparent,
                     unfocusedBorderColor = Color.Transparent,
                 ),
-                shape = RoundedCornerShape(8.dp)
+                shape = RoundedCornerShape(8.dp),
+                isError = amount.isNotEmpty() && !isAmountValid,
+                supportingText = {
+                    if (amount.isNotEmpty() && !isAmountValid) {
+                        Text(
+                            text = stringResource(R.string.invalid_amount),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             )
 
             Card(
@@ -158,13 +164,21 @@ fun DepositScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(48.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(8.dp)
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.5f)
+                ),
+                shape = RoundedCornerShape(8.dp),
+                enabled = isAmountValid
             ) {
-                Text(text = stringResource(R.string.start_deposit), color = Color.White)
+                Text(
+                    text = stringResource(R.string.start_deposit),
+                    color = if (isAmountValid) Color.White else Color.White.copy(alpha = 0.5f)
+                )
             }
+
             LaunchedEffect(uiState.balance) {
-                if ( !uiState.isFetching && uiState.error == null && uiState.balance > 0) {
+                if (!uiState.isFetching && uiState.error == null && uiState.balance > 0) {
                     showSuccessMessage = true
                 }
             }
@@ -204,58 +218,3 @@ fun DepositScreen(
     }
 }
 
-
-@Composable
-private fun DepositItem(deposit: Deposit, onRepeat: (deposit:Deposit)-> Unit) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 4.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                "${deposit.name} - $${String.format("%,.0f", deposit.amount)}",
-                style = MaterialTheme.typography.bodyLarge.copy(
-                    fontWeight = FontWeight.Medium
-                )
-            )
-            Text(
-                deposit.date.format(DateTimeFormatter.ofPattern(stringResource(R.string.date_format))),
-                style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
-            )
-        }
-
-        IconButton(
-            onClick = { onRepeat(deposit) },
-            modifier = Modifier
-                .size(40.dp)
-                .background(
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(8.dp)
-                )
-        ) {
-            Icon(
-                Icons.Default.Repeat,
-                contentDescription = stringResource(R.string.repeat_transfer),
-                tint = Color.White
-            )
-        }
-    }
-}
-
-data class Deposit(
-    val name: String,
-    val amount: Double,
-    val date: LocalDate
-)
-
-@Preview(showBackground = true)
-@Composable
-fun DepositScreenPreview() {
-    MaterialTheme {
-        DepositScreen()
-    }
-}
