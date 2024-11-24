@@ -355,6 +355,8 @@ fun AddCardButton(onAddCard: (Card) -> Unit, isTablet: Boolean, modifier: Modifi
     }
 
     if (showAddCardDialog) {
+        val ctype = stringResource(R.string.credit)
+        val dtype = stringResource(R.string.debit)
         AddCardDialog(
             onDismiss = { showAddCardDialog = false },
             onAddCard = { number, expirationDate, fullName, type, cvv ->
@@ -364,7 +366,7 @@ fun AddCardButton(onAddCard: (Card) -> Unit, isTablet: Boolean, modifier: Modifi
                         number = number,
                         expirationDate = expirationDate,
                         fullName = fullName,
-                        type = type,
+                        type = if (type == ctype) "CREDIT" else "DEBIT",
                         cvv = cvv,
                         createdAt = null,
                         updatedAt = null
@@ -384,10 +386,12 @@ fun AddCardDialog(
     onAddCard: (String, String, String, String, String) -> Unit,
     isTablet: Boolean
 ) {
+    val ctype = stringResource(R.string.credit)
+    val dtype = stringResource(R.string.debit)
     var number by remember { mutableStateOf("") }
     var expirationDate by remember { mutableStateOf(LocalDate.now()) }
     var fullName by remember { mutableStateOf("") }
-    var type by remember { mutableStateOf("CREDIT") }
+    var type by remember { mutableStateOf(ctype) }
     var cvv by remember { mutableStateOf("") }
     var showDatePicker by remember { mutableStateOf(false) }
     var expanded by remember { mutableStateOf(false) }
@@ -525,14 +529,14 @@ fun AddCardDialog(
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.credit), color = MaterialTheme.colorScheme.tertiary) },
                                         onClick = {
-                                            type = "CREDIT"
+                                            type = ctype
                                             expanded = false
                                         }
                                     )
                                     DropdownMenuItem(
                                         text = { Text(text = stringResource(R.string.debit), color = MaterialTheme.colorScheme.tertiary) },
                                         onClick = {
-                                            type = "DEBIT"
+                                            type = dtype
                                             expanded = false
                                         }
                                     )
@@ -628,17 +632,18 @@ fun AddCardDialog(
                             expanded = expanded,
                             onDismissRequest = { expanded = false },
                         ) {
+
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(R.string.credit), color = MaterialTheme.colorScheme.tertiary) },
                                 onClick = {
-                                    type = "CREDIT"
+                                    type = ctype
                                     expanded = false
                                 }
                             )
                             DropdownMenuItem(
                                 text = { Text(text = stringResource(R.string.debit), color = MaterialTheme.colorScheme.tertiary) },
                                 onClick = {
-                                    type = "DEBIT"
+                                    type = dtype
                                     expanded = false
                                 }
                             )
