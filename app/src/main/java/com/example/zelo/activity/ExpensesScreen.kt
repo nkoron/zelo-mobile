@@ -35,7 +35,6 @@ import com.example.zelo.components.ZeloSearchBar
 import com.example.zelo.network.model.User
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ExpensesScreen(
     navController: NavController,
@@ -46,25 +45,40 @@ fun ExpensesScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
-    val contacts = listOf("Jose", "Martin", "Miguel", "Juan")
+
+    // Filtrar movimientos basados en la búsqueda
+    val filteredMovements = remember(searchQuery, uiState.movements) {
+        if (searchQuery.isBlank()) {
+            uiState.movements
+        } else {
+            uiState.movements.filter { movement ->
+                val payer = movement.receiver
+                // Verificar si el nombre o el monto coinciden con la búsqueda
+                payer?.firstName?.contains(searchQuery, ignoreCase = true) == true ||
+                        payer?.lastName?.contains(searchQuery, ignoreCase = true) == true ||
+                        movement.amount.toString().contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
 
     Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding()
-                .padding(16.dp)
-        ) {
-            Text(
-                stringResource(R.string.recent_expenses),
-                style = MaterialTheme.typography.titleMedium,
-                modifier = Modifier.padding(vertical = 16.dp)
-            )
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.recent_expenses),
+            style = MaterialTheme.typography.titleMedium,
+            modifier = Modifier.padding(vertical = 16.dp)
+        )
+        ZeloSearchBar(
+            searchQuery = searchQuery,
+            valueChange = { searchQuery = it }
+        )
 
-            ZeloSearchBar(searchQuery= searchQuery, valueChange = { searchQuery = it })
+        Spacer(modifier = Modifier.height(24.dp))
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-        if (uiState.movements.isEmpty()) {
+        if (filteredMovements.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -80,19 +94,18 @@ fun ExpensesScreen(
             }
         } else {
             LazyColumn {
-                items(uiState.movements.size) {
-                    val payment = uiState.movements[it]
+                items(filteredMovements.size) { index ->
+                    val payment = filteredMovements[index]
                     TransactionItem(
                         name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
                         description = "${stringResource(R.string.sent)}: ${payment.amount}",
                         time = payment.createdAt,
                         showAvatar = true,
-                        movements = uiState.movements,
-                        id = it,
+                        movements = filteredMovements,
+                        id = index,
                         isPayer = true
                     )
                 }
-
             }
         }
     }
