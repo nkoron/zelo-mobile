@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.style.TextAlign
 import com.example.zelo.MyApplication
 import com.example.zelo.R
 import com.example.zelo.activity.MovementsUiState
@@ -148,10 +149,26 @@ fun PhoneLayout(
         ZeloSearchBar(searchQuery = searchQuery, valueChange = onSearchQueryChange)
 
         Spacer(modifier = Modifier.height(24.dp))
+        if(uiState.movements.isEmpty()){
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .weight(1f),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = stringResource(R.string.no_recent_transactions),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    textAlign = TextAlign.Center
+                )
+            }
+        } else {
 
-        LazyColumn {
-            items(uiState.movements) { payment ->
-                FormatItems(uiState, uiState.movements.indexOf(payment))
+            LazyColumn {
+                items(uiState.movements) { payment ->
+                    FormatItems(uiState, uiState.movements.indexOf(payment))
+                }
             }
         }
     }
