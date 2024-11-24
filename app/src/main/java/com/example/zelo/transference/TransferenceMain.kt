@@ -23,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,6 +40,11 @@ fun TransferScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    LaunchedEffect(Unit) {
+        viewModel.checkAuthenticationStatus()
+        viewModel.getCurrentUser()
+    }
 
     Column(
         modifier = Modifier
@@ -96,47 +102,52 @@ fun TransferScreen(
             ),
             singleLine = true
         )
-
-        // Recent Transfers
         Text(
             stringResource(R.string.recent_transfers),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 16.dp)
         )
 
-        if (uiState.movements.isEmpty()) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .weight(1f),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = stringResource(R.string.no_recent_transactions),
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    textAlign = TextAlign.Center
-                )
-            }
+        if(uiState.isFetching){
+            CircularProgressIndicator(color = Color.White, modifier = Modifier.size(24.dp))
         } else {
-            LazyColumn(
-                modifier = Modifier.weight(1f)
-            ) {
-                items(uiState.movements.size) { index ->
-                    val payment = uiState.movements[index]
-                    TransactionItem(
-                        name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
-                        description = "${stringResource(R.string.sent)}: ${payment.amount}",
-                        time = payment.createdAt,
-                        showAvatar = true,
-                        email = payment.receiver.email,
-                        amount = payment.amount,
-                        onRedoTransfer = { email, amount ->
-                            onNavigateToTransferenceCBU(email, amount)
-                        }
+            if (uiState.movements.isEmpty()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = stringResource(R.string.no_recent_transactions),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
                     )
                 }
-            }
+            } else {
+                LazyColumn(
+                    modifier = Modifier.weight(1f)
+                ) {
+                    items(uiState.movements.size) { index ->
+                        val payment = uiState.movements[index]
+                        TransactionItem(
+                            name = "${payment.receiver.firstName} ${payment.receiver.lastName}",
+                            description = "${stringResource(R.string.sent)}: ${payment.amount}",
+                            time = payment.createdAt,
+                            showAvatar = true,
+                            email = payment.receiver.email,
+                            amount = payment.amount,
+                            onRedoTransfer = { email, amount ->
+                                onNavigateToTransferenceCBU(email, amount)
+                            }
+                        )
+                    }
+                }
+        }
+        // Recent Transfers
+
+
         }
     }
 }

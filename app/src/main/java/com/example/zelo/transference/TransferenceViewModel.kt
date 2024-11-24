@@ -26,6 +26,7 @@ data class TransferenceUiState(
     val isFetching: Boolean = false,
     val movements: List<Payment> = emptyList(),
     val user: User? = null,
+    val isAuthenticated: Boolean = false,
     val error: Error? = null
 )
 
@@ -45,15 +46,31 @@ class TransferenceViewModel(
         observePaymentStream()
     }
 
-    fun getCurrentUser() = runOnViewModelScope(
-        block = { userRepository.getCurrentUser() },
-        updateState = { state, response -> state.copy(user = response) }
-    )
+    fun checkAuthenticationStatus() {
+        val isAuthenticated = sessionManager.loadAuthToken() != null
+        if (isAuthenticated) {
+            getCurrentUser()
+        } else {
+            _uiState.value = _uiState.value.copy(isAuthenticated = false, user = null)
+        }
+    }
+
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isFetching = true, error = null)
+            try {
+                val user = userRepository.getCurrentUser(true)
+                _uiState.value = _uiState.value.copy(user = user, isAuthenticated = true, isFetching = false)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = handleError(e), isFetching = false)
+            }
+        }
+    }
     private fun observeLogoutSignal() {
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 paymentsStreamJob?.cancel()
-                _uiState.update { currentState -> currentState.copy(movements = emptyList(), user = null) }
+                _uiState.update { currentState -> currentState.copy(movements = emptyList(), user = null, isAuthenticated = false) }
             }
         }
     }

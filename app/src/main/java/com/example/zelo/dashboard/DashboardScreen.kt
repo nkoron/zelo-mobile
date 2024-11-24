@@ -2,6 +2,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.provider.ContactsContract
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -587,7 +588,7 @@ fun analyzeDate(inputDate: String): String {
             val daysAgo = ChronoUnit.DAYS.between(date, today)
             "${daysAgo}D"
         }
-        else -> throw IllegalArgumentException("La fecha ingresada es mayor a hoy")
+        else -> date.toString()
     }
 }
 

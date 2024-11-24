@@ -188,7 +188,8 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
                 onNavigateToTransferenceCBU = { email, amount ->
                     navController.navigate("home/transference/form?email=$email?amount=$amount")
                 },
-                viewModel = transferenceViewModel
+                viewModel = transferenceViewModel,
+
             )
         }
 
