@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.zelo.MyApplication
 import com.example.zelo.R
+import android.content.res.Configuration
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,6 +37,7 @@ fun AppBar(
     val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
+    val isLandscape = configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 
     LaunchedEffect(Unit) {
         viewModel.checkAuthenticationStatus()
@@ -43,10 +45,12 @@ fun AppBar(
 
     val showBackButton = currentRoute.count { it == '/' } > 0
 
+    val appBarHeight = if (isLandscape) 48.dp else 64.dp
+
     Surface(
         color = MaterialTheme.colorScheme.surface,
         tonalElevation = 2.dp,
-        modifier = Modifier.height(64.dp)
+        modifier = Modifier.height(appBarHeight)
     ) {
         Box(
             modifier = Modifier
@@ -60,7 +64,7 @@ fun AppBar(
                         onClick = onHome,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .size(48.dp)
+                            .size(if (isLandscape) 40.dp else 48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Close,
@@ -73,7 +77,7 @@ fun AppBar(
                         onClick = onBackClick,
                         modifier = Modifier
                             .align(Alignment.CenterStart)
-                            .size(48.dp)
+                            .size(if (isLandscape) 40.dp else 48.dp)
                     ) {
                         Icon(
                             imageVector = Icons.AutoMirrored.Filled.ArrowBack,
@@ -105,7 +109,7 @@ fun AppBar(
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .size(40.dp)
+                        .size(if (isLandscape) 32.dp else 40.dp)
                 ) {
                     Box(
                         contentAlignment = Alignment.Center,

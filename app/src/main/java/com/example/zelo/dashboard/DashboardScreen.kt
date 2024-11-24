@@ -511,7 +511,8 @@ fun TransactionItem(
             onRequestRefund = { /* Handle refund request */ },
             movements = movements,
             id = id,
-            isPayer = isPayer
+            isPayer = isPayer,
+
         )
     }
     Row(
