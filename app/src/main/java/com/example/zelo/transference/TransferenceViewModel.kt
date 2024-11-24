@@ -26,8 +26,8 @@ data class TransferenceUiState(
     val isFetching: Boolean = false,
     val movements: List<Payment> = emptyList(),
     val user: User? = null,
-    val isAuthenticated: Boolean = false,
-    val error: Error? = null
+    val error: Error? = null,
+    val isAuthenticated: Boolean = false
 )
 
 class TransferenceViewModel(
@@ -41,36 +41,38 @@ class TransferenceViewModel(
     val uiState: StateFlow<TransferenceUiState> = _uiState.asStateFlow()
 
     init {
-        getCurrentUser()
         observeLogoutSignal()
-        observePaymentStream()
+        checkAuthenticationStatus()
     }
 
     fun checkAuthenticationStatus() {
         val isAuthenticated = sessionManager.loadAuthToken() != null
+        _uiState.update { it.copy(isAuthenticated = isAuthenticated) }
         if (isAuthenticated) {
             getCurrentUser()
+            observePaymentStream()
         } else {
-            _uiState.value = _uiState.value.copy(isAuthenticated = false, user = null)
+            _uiState.update { it.copy(user = null, movements = emptyList()) }
         }
     }
 
     fun getCurrentUser() {
         viewModelScope.launch {
-            _uiState.value = _uiState.value.copy(isFetching = true, error = null)
+            _uiState.update { it.copy(isFetching = true, error = null) }
             try {
-                val user = userRepository.getCurrentUser(true)
-                _uiState.value = _uiState.value.copy(user = user, isAuthenticated = true, isFetching = false)
+                val user = userRepository.getCurrentUser(refresh = true)
+                _uiState.update { it.copy(user = user, isAuthenticated = true, isFetching = false) }
             } catch (e: Exception) {
-                _uiState.value = _uiState.value.copy(error = handleError(e), isFetching = false)
+                _uiState.update { it.copy(error = handleError(e), isFetching = false) }
             }
         }
     }
+
     private fun observeLogoutSignal() {
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
                 paymentsStreamJob?.cancel()
-                _uiState.update { currentState -> currentState.copy(movements = emptyList(), user = null, isAuthenticated = false) }
+                _uiState.update { it.copy(movements = emptyList(), user = null, isAuthenticated = false) }
             }
         }
     }
@@ -85,24 +87,10 @@ class TransferenceViewModel(
                 payments.filter { it.payer?.id == user?.id }
             }
                 .distinctUntilChanged()
-                .catch { e -> _uiState.update { currentState -> currentState.copy(error = handleError(e)) } }
+                .catch { e -> _uiState.update { it.copy(error = handleError(e)) } }
                 .collect { totalPayments ->
-                    _uiState.update { currentState -> currentState.copy(movements = totalPayments) }
+                    _uiState.update { it.copy(movements = totalPayments) }
                 }
-        }
-    }
-
-    private fun <R> runOnViewModelScope(
-        block: suspend () -> R,
-        updateState: (TransferenceUiState, R) -> TransferenceUiState
-    ): Job = viewModelScope.launch {
-        _uiState.update { currentState -> currentState.copy(isFetching = true, error = null) }
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            _uiState.update { currentState -> updateState(currentState, response).copy(isFetching = false) }
-        }.onFailure { e ->
-            _uiState.update { currentState -> currentState.copy(isFetching = false, error = handleError(e)) }
         }
     }
 

@@ -30,13 +30,17 @@ class UserRepository(
     }
 
     suspend fun getCurrentUser(refresh: Boolean = false): User? {
-        if (refresh || currentUser == null) {
-            val result = userRemoteDataSource.getCurrentUser()
-            currentUserMutex.withLock {
-                this.currentUser = result
+        return currentUserMutex.withLock {
+            if (refresh || currentUser == null) {
+                try {
+                    currentUser = userRemoteDataSource.getCurrentUser()
+                } catch (e: Exception) {
+                    Log.e("UserRepository", "Error fetching current user", e)
+                    currentUser = null
+                }
             }
+            currentUser
         }
-        return currentUserMutex.withLock { this.currentUser }
     }
 
     suspend fun registerUser(user: RegisterUser): User {

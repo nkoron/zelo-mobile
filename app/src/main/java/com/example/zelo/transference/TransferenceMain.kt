@@ -43,7 +43,6 @@ fun TransferScreen(
 
     LaunchedEffect(Unit) {
         viewModel.checkAuthenticationStatus()
-        viewModel.getCurrentUser()
     }
 
     Column(

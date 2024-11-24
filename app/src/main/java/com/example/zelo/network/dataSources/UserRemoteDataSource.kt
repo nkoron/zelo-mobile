@@ -5,7 +5,6 @@ import com.example.zelo.network.SessionManager
 import com.example.zelo.network.WalletApiService
 import com.example.zelo.network.model.EmailRequest
 import com.example.zelo.network.model.LoginRequest
-import com.example.zelo.network.model.RegisterResponse
 import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.ResetPasswordRequest
 import com.example.zelo.network.model.User
@@ -28,7 +27,6 @@ class UserRemoteDataSource(
             userService.logoutUser()
         }
         sessionManager.removeAuthToken()
-
     }
 
     suspend fun getCurrentUser(): User {
@@ -42,6 +40,7 @@ class UserRemoteDataSource(
             userService.registerUser(user)
         }
     }
+
     suspend fun verifyUser(token: VerificationCodeRequest): User {
         return handleApiResponse {
             userService.verifyUser(token)
@@ -60,3 +59,4 @@ class UserRemoteDataSource(
         }
     }
 }
+
