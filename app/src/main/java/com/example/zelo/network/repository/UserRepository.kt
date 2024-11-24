@@ -2,11 +2,9 @@ package com.example.zelo.network.repository
 
 import android.util.Log
 import com.example.zelo.network.dataSources.UserRemoteDataSource
-import com.example.zelo.network.model.Payment
 import com.example.zelo.network.model.RegisterUser
 import com.example.zelo.network.model.User
 import com.example.zelo.network.model.VerificationCodeRequest
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 
@@ -14,7 +12,6 @@ class UserRepository(
     private val userRemoteDataSource: UserRemoteDataSource,
 ) {
     private val currentUserMutex = Mutex()
-
     private var currentUser: User? = null
 
     suspend fun login(username: String, password: String) {
@@ -24,12 +21,14 @@ class UserRepository(
             this.currentUser = null
         }
     }
-    suspend fun logout(){
+
+    suspend fun logout() {
         userRemoteDataSource.logout()
         currentUserMutex.withLock {
             this.currentUser = null
         }
     }
+
     suspend fun getCurrentUser(refresh: Boolean = false): User? {
         if (refresh || currentUser == null) {
             val result = userRemoteDataSource.getCurrentUser()
@@ -39,11 +38,13 @@ class UserRepository(
         }
         return currentUserMutex.withLock { this.currentUser }
     }
+
     suspend fun registerUser(user: RegisterUser): User {
         return userRemoteDataSource.registerUser(user)
     }
+
     suspend fun verifyUser(token: String): User {
-        return userRemoteDataSource.verifyUser(VerificationCodeRequest( token))
+        return userRemoteDataSource.verifyUser(VerificationCodeRequest(token))
     }
 
     suspend fun recoverPassword(email: String) {
@@ -54,8 +55,8 @@ class UserRepository(
         userRemoteDataSource.resetPassword(token, newPassword)
     }
 
-
     fun isAuthenticated(): Boolean {
         return this.currentUser != null
     }
 }
+

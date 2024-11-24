@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -34,7 +33,7 @@ fun AppBar(
     onBackClick: () -> Unit,
     onHome: () -> Unit,
 ) {
-    val uiState = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp >= 600
 
@@ -83,7 +82,6 @@ fun AppBar(
                         )
                     }
                 }
-
             }
 
             // Section Title
@@ -101,28 +99,30 @@ fun AppBar(
             )
 
             // User Avatar
-            Surface(
-                shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .size(40.dp)
-            ) {
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier.fillMaxSize()
+            if (uiState.isAuthenticated && uiState.user != null) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .size(40.dp)
                 ) {
-                    val initials = buildString {
-                        uiState.user?.firstName?.firstOrNull()?.let { append(it.uppercaseChar()) }
-                        uiState.user?.lastName?.firstOrNull()?.let { append(it.uppercaseChar()) }
-                    }
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier.fillMaxSize()
+                    ) {
+                        val initials = buildString {
+                            uiState.user!!.firstName.firstOrNull()?.let { append(it.uppercaseChar()) }
+                            uiState.user!!.lastName.firstOrNull()?.let { append(it.uppercaseChar()) }
+                        }
 
-                    Text(
-                        text = initials,
-                        color = Color.White,
-                        style = MaterialTheme.typography.bodyLarge,
-                        fontWeight = FontWeight.Bold
-                    )
+                        Text(
+                            text = initials,
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
                 }
             }
         }

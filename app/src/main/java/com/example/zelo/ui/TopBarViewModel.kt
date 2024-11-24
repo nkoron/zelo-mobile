@@ -9,32 +9,32 @@ import com.example.zelo.network.dataSources.DataSourceException
 import com.example.zelo.network.model.Error
 import com.example.zelo.network.model.User
 import com.example.zelo.network.repository.UserRepository
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 
 data class TopBarUiState(
     val isAuthenticated: Boolean = false,
     val user: User? = null,
     val isFetching: Boolean = false,
     val error: Error? = null,
-    val currentSection: String = "" // New property to store the current section
+    val currentSection: String = ""
 )
 
 class TopBarViewModel(
     private val userRepository: UserRepository,
-    private val sessionManager: SessionManager,
-    private val isAuthenticated: Boolean = sessionManager.loadAuthToken() != null
+    private val sessionManager: SessionManager
 ) : ViewModel() {
 
-    var uiState by mutableStateOf(TopBarUiState(isAuthenticated = sessionManager.loadAuthToken() != null))
+    private val _uiState = MutableStateFlow(TopBarUiState())
+    val uiState: StateFlow<TopBarUiState> = _uiState.asStateFlow()
 
     init {
         observeLogoutSignal()
-        getCurrentUser()
+        checkAuthenticationStatus()
     }
+
     private fun observeLogoutSignal() {
         viewModelScope.launch {
             sessionManager.logoutSignal.collect {
@@ -42,43 +42,37 @@ class TopBarViewModel(
             }
         }
     }
+
     fun logout() {
-        uiState = uiState.copy(isAuthenticated = false, user = null)
+        viewModelScope.launch {
+            userRepository.logout()
+            _uiState.value = TopBarUiState()
+        }
     }
 
-    fun getCurrentUser() = runOnViewModelScope(
-        {
-            userRepository.getCurrentUser()
-        },
-        { state, response -> state.copy(user = response, isAuthenticated = true) }
-    )
+    fun getCurrentUser() {
+        viewModelScope.launch {
+            _uiState.value = _uiState.value.copy(isFetching = true, error = null)
+            try {
+                val user = userRepository.getCurrentUser(true)
+                _uiState.value = _uiState.value.copy(user = user, isAuthenticated = true, isFetching = false)
+            } catch (e: Exception) {
+                _uiState.value = _uiState.value.copy(error = handleError(e), isFetching = false)
+            }
+        }
+    }
 
     fun checkAuthenticationStatus() {
         val isAuthenticated = sessionManager.loadAuthToken() != null
-        if (isAuthenticated && uiState.user == null) {
+        if (isAuthenticated) {
             getCurrentUser()
         } else {
-            uiState = uiState.copy(isAuthenticated = isAuthenticated)
+            _uiState.value = _uiState.value.copy(isAuthenticated = false, user = null)
         }
     }
 
-    // New function to update the current section
     fun updateCurrentSection(section: String) {
-        uiState = uiState.copy(currentSection = section)
-    }
-
-    private fun <R> runOnViewModelScope(
-        block: suspend () -> R,
-        updateState: (TopBarUiState, R) -> TopBarUiState
-    ): Job = viewModelScope.launch {
-        uiState = uiState.copy(isFetching = true, error = null)
-        runCatching {
-            block()
-        }.onSuccess { response ->
-            uiState = updateState(uiState, response).copy(isFetching = false)
-        }.onFailure { e ->
-            uiState = uiState.copy(isFetching = false, error = handleError(e))
-        }
+        _uiState.value = _uiState.value.copy(currentSection = section)
     }
 
     private fun handleError(e: Throwable): Error {
@@ -103,3 +97,4 @@ class TopBarViewModel(
         }
     }
 }
+
