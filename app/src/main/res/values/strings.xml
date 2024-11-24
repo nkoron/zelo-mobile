@@ -224,5 +224,6 @@
     <string name="valid_email">Email cannot be empty.</string>
     <string name="show_qr">Mostrar mi QR</string>
     <string name="invalid_amount">Please Enter a Valid Amount.</string>
+    <string name="expires">Expires</string>
 
 </resources>

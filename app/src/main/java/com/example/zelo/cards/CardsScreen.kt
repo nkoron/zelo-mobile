@@ -293,8 +293,9 @@ fun CardItem(card: Card, onDelete: (Card) -> Unit, isTablet: Boolean) {
                     color = Color.White,
                     fontSize = 18.sp
                 )
+                val expire= stringResource(R.string.expires)
                 Text(
-                    text = "Expires: ${card.expirationDate}",
+                    text = expire + ": ${card.expirationDate}",
                     color = Color.White,
                     fontSize = 14.sp
                 )
@@ -304,7 +305,7 @@ fun CardItem(card: Card, onDelete: (Card) -> Unit, isTablet: Boolean) {
                     fontSize = 14.sp
                 )
                 Text(
-                    text = card.type,
+                    text = if (card.type == "CREDIT") stringResource(R.string.credit) else stringResource(R.string.debit),
                     color = Color.White,
                     fontSize = 14.sp
                 )

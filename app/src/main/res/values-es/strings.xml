@@ -225,5 +225,6 @@
     <string name="valid_email">El correo eléctronico no puede estar vacío</string>
     <string name="show_qr">Show my QR</string>
     <string name="invalid_amount">Por Favor Ingrese un Monto Valido.</string>
+    <string name="expires">Expira</string>
 
 </resources>
