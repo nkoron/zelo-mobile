@@ -48,7 +48,7 @@ class PaymentLinkViewModel(
 
                 val linkPaymentRequest = CreateLinkPaymentRequest(
                     amount = amount,
-                    description = _uiState.value.description
+                    description = _uiState.value.description.ifEmpty { "-" }
                 )
 
                 val result = paymentRepository.createPayLink(linkPaymentRequest)
