@@ -42,6 +42,25 @@ fun MovementsScreen(
     val configuration = LocalConfiguration.current
     val isTablet = configuration.screenWidthDp > 600
 
+    // Filtrar movimientos según el texto de búsqueda
+    val filteredMovements = remember(searchQuery, uiState.movements) {
+        if (searchQuery.isBlank()) {
+            uiState.movements
+        } else {
+            uiState.movements.filter { movement ->
+                val you = if (movement.receiver.id == uiState.user?.id) {
+                    movement.payer
+                } else {
+                    movement.receiver
+                }
+                // Verifica si el nombre del usuario o el monto coinciden con la búsqueda
+                you?.firstName?.contains(searchQuery, ignoreCase = true) == true ||
+                        you?.lastName?.contains(searchQuery, ignoreCase = true) == true ||
+                        movement.amount.toString().contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -49,7 +68,7 @@ fun MovementsScreen(
     ) {
         if (isTablet) {
             TabletLayout(
-                uiState = uiState,
+                uiState = uiState.copy(movements = filteredMovements), // Usa la lista filtrada
                 searchQuery = searchQuery,
                 onSearchQueryChange = { searchQuery = it },
                 onNavigateToIncomes = onNavigateToIncomes,
@@ -57,7 +76,7 @@ fun MovementsScreen(
             )
         } else {
             PhoneLayout(
-                uiState = uiState,
+                uiState = uiState.copy(movements = filteredMovements), // Usa la lista filtrada
                 searchQuery = searchQuery,
                 onSearchQueryChange = { searchQuery = it },
                 onNavigateToIncomes = onNavigateToIncomes,
@@ -66,6 +85,7 @@ fun MovementsScreen(
         }
     }
 }
+
 
 @Composable
 fun TabletLayout(
