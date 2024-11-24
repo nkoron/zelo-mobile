@@ -48,7 +48,6 @@ fun ProfileScreen(
         MenuItemData(Icons.Outlined.Info, stringResource(R.string.personal_info), stringResource(R.string.personal_info_desc), "profile/personal_info"),
         MenuItemData(Icons.Outlined.Lock, stringResource(R.string.reset_password), stringResource(R.string.forgot_password) + stringResource(R.string.reset_it), "profile/reset_password"),
         MenuItemData(Icons.Outlined.PrivacyTip, stringResource(R.string.privacy), stringResource(R.string.data_preferences), "profile/privacy"),
-        MenuItemData(Icons.Outlined.Settings, stringResource(R.string.custom), stringResource(R.string.message_settings), "profile/messages"),
         MenuItemData(Icons.Outlined.Help, stringResource(R.string.help), stringResource(R.string.assistance), "profile/help")
     )
     LaunchedEffect(Unit) {

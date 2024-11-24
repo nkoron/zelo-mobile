@@ -2,7 +2,6 @@ package com.example.zelo
 
 import BottomNavBar
 import DashboardScreen
-import MessagesScreen
 import MovementsScreen
 import ProfileScreen
 import com.example.zelo.transference.TransferDetailScreen
@@ -279,7 +278,6 @@ fun MyNavHost(navController: NavHostController, isLoggedIn: Boolean, paddingValu
             composable("profile/personal_info") { PersonalInfoScreen(onBack = { navController.popBackStack() }) }
             composable("profile/reset_password") { ResetPassScreen(onBack = { navController.popBackStack() }) }
             composable("profile/privacy") { PrivacyScreen(onBack = { navController.popBackStack() }) }
-            composable("profile/messages") { MessagesScreen(onBack = { navController.popBackStack() }) }
             composable("profile/help") { HelpScreen(onBack = { navController.popBackStack() }) }
             composable("home/deposit") { DepositScreen(onBack = { navController.navigate("home") },) }
             composable("qr") { QRScannerScreen(onSuccess = { result ->  navController.navigate("home/transference/form?email=$result?amount=0") })}
