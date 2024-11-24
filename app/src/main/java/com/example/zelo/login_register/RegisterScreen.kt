@@ -103,7 +103,7 @@ fun RegisterScreen(
     }
 
     fun validatePassword(password: String): Boolean {
-        val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=])(?=\\S+$).{8,}$"
+        val passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=\\S+$).{8,}$"
         return password.matches(passwordRegex.toRegex())
     }
 
@@ -113,7 +113,7 @@ fun RegisterScreen(
     }
 
     fun validateDNI(dni: String): Boolean {
-        val dniRegex = "^[0-9]{8}[A-Za-z]$"
+        val dniRegex = "^[0-9]{8}$"
         return dni.matches(dniRegex.toRegex())
     }
 
@@ -160,7 +160,7 @@ fun RegisterScreen(
                     },
                     onPasswordChange = {
                         password = it
-                        passwordError = if (validatePassword(it)) null else "Password must be at least 8 characters long, contain at least one digit, one lowercase, one uppercase letter, and one special character"
+                        passwordError = if (validatePassword(it)) null else "Password must be at least 8 characters long, contain at least one digit, one lowercase, one uppercase letter"
                     },
                     onConfirmPasswordChange = {
                         confirmPassword = it
