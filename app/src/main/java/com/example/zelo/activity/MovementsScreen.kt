@@ -53,13 +53,15 @@ fun MovementsScreen(
                 } else {
                     movement.receiver
                 }
-                // Verifica si el nombre del usuario o el monto coinciden con la búsqueda
-                you?.firstName?.contains(searchQuery, ignoreCase = true) == true ||
-                        you?.lastName?.contains(searchQuery, ignoreCase = true) == true ||
+                val fullName = "${you?.firstName.orEmpty()} ${you?.lastName.orEmpty()}".lowercase()
+
+                // Verifica si el nombre completo o el monto coinciden con la búsqueda
+                fullName.contains(searchQuery.lowercase()) ||
                         movement.amount.toString().contains(searchQuery, ignoreCase = true)
             }
         }
     }
+
 
     Column(
         modifier = Modifier

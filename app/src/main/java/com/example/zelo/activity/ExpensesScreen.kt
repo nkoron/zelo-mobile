@@ -46,20 +46,21 @@ fun ExpensesScreen(
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
 
-    // Filtrar movimientos basados en la búsqueda
     val filteredMovements = remember(searchQuery, uiState.movements) {
         if (searchQuery.isBlank()) {
             uiState.movements
         } else {
             uiState.movements.filter { movement ->
-                val payer = movement.receiver
-                // Verificar si el nombre o el monto coinciden con la búsqueda
-                payer?.firstName?.contains(searchQuery, ignoreCase = true) == true ||
-                        payer?.lastName?.contains(searchQuery, ignoreCase = true) == true ||
+                val receiver = movement.receiver
+                val fullName = "${receiver?.firstName.orEmpty()} ${receiver?.lastName.orEmpty()}".lowercase()
+
+                // Verificar si el texto de búsqueda coincide con el nombre completo o el monto
+                fullName.contains(searchQuery.lowercase()) ||
                         movement.amount.toString().contains(searchQuery, ignoreCase = true)
             }
         }
     }
+
 
     Column(
         modifier = Modifier
