@@ -44,22 +44,42 @@ fun IncomeScreen(
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchQuery by remember { mutableStateOf("") }
+
+    // Filtrar movimientos basados en la búsqueda
+    val filteredMovements = remember(searchQuery, uiState.movements) {
+        if (searchQuery.isBlank()) {
+            uiState.movements
+        } else {
+            uiState.movements.filter { movement ->
+                val payer = movement.payer
+                val fullName = "${payer?.firstName.orEmpty()} ${payer?.lastName.orEmpty()}".lowercase()
+
+                // Verificar si el texto de búsqueda coincide con el nombre completo o el monto
+                fullName.contains(searchQuery.lowercase()) ||
+                        movement.amount.toString().contains(searchQuery, ignoreCase = true)
+            }
+        }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding()
             .padding(16.dp)
     ) {
         Text(
-            stringResource(R.string.recent_incomes),
+            text = stringResource(R.string.recent_incomes),
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.padding(vertical = 16.dp)
         )
-        ZeloSearchBar(searchQuery = searchQuery, valueChange = { searchQuery = it })
+        ZeloSearchBar(
+            searchQuery = searchQuery,
+            valueChange = { searchQuery = it }
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        if (uiState.movements.isEmpty()) {
+        if (filteredMovements.isEmpty()) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
@@ -74,22 +94,24 @@ fun IncomeScreen(
                 )
             }
         } else {
-
             LazyColumn {
-                items(uiState.movements.size) {
-                    val payment = uiState.movements[it]
-                    TransactionItem(
-                        name = "${payment.payer?.firstName} ${payment.payer?.lastName}",
-                        description = "${stringResource(R.string.transferred)}: ${payment.amount}",
-                        time = payment.createdAt,
-                        showAvatar = true,
-                        movements = uiState.movements,
-                        id = it,
-                        isPayer = false
-                    )
+                items(filteredMovements.size) { index ->
+                    val payment = filteredMovements[index]
+                    if (payment.payer?.firstName != null) {
+                        TransactionItem(
+                            name = "${payment.payer?.firstName} ${payment.payer?.lastName}",
+                            description = "${stringResource(R.string.transferred)}: ${payment.amount}",
+                            time = payment.createdAt,
+                            showAvatar = true,
+                            movements = filteredMovements,
+                            id = index,
+                            isPayer = false
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
